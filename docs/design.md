@@ -4,19 +4,25 @@
 
 ### エンティティ一覧
 Article
--Article ID (PK)
--Title
--Web Link
--Create Data
--Edit Data
+|カラム名      | 型　     　| 
+| ----------- | ---------- |
+| Article ID  | INT      　| (PK)
+| Title       | VARCHAR  　|
+| Web Link    | VARCHAR  　| 
+| Create Data | TIMESTAMP |
+| Edit Data   | TIMESTAMP |
 
 Tag
--Tag ID (PK)
--Tag Name
+|カラム名   | 型      |
+| -------- | ------- |
+| Tag ID   | INT     | (PK)
+| Tag Name | VARCHAR |
 
 ArticleTag
--Article ID (PK FK)
--Tag ID (PK FK)
+|カラム名     | 型  |
+| ---------- | --- |
+| Article ID | INT | (PK FK)
+| Tag ID     | INT | (PK FK)
 
 ## 設計上の判断
 Article と Tag は多対多関係である。

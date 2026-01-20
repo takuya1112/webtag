@@ -5,25 +5,25 @@
 ### エンティティ一覧
 
 ### article
-|カラム名        | 型　     　| 制約      | 説明  　      |
-| ------------- | ---------- | -------- | ------------  |
-| article_id    | INT      　| PK       | 記事のID      |
-| article_title | VARCHAR  　| NOT NULL | 記事のタイトル |
-| article_link  | VARCHAR  　| NOT NULL | 記事のリンク   |
-| created_at    | TIMESTAMP | NOT NULL  | 作成日時      |
-| edited_at     | TIMESTAMP | NOT NULL  | 編集日時      |
+|カラム名     | 型　     　   | 制約      | 説明  　      |
+| ---------- | ------------- | -------- | ------------  |
+| id         | INT      　   | PK       | 記事のID       |
+| title      | VARCHAR(300)  | NOT NULL | 記事のタイトル |
+| url        | VARCHAR(2083) | NOT NULL | 記事のURL     |
+| created_at | TIMESTAMP     | NOT NULL  | 作成日時      |
+| edited_at  | TIMESTAMP     | NOT NULL  | 編集日時      |
 
 ### tag
-|カラム名   | 型      | 制約     | 説明       |
-| -------- | ------- | -------- | --------- |
-| tag_id   | INT     | PK       | タグのID   |
-| tag_name | VARCHAR | NOT NULL | タグの名前 |
+|カラム名 | 型           | 制約     | 説明       |
+| ------ | ------------ | -------- | --------- |
+| id     | INT          | PK       | タグのID   |
+| name   | VARCHAR(300) | NOT NULL | タグの名前 |
 
 ### article_tag
-|カラム名     | 型  |　制約  |　説明　             |
-| ---------- | --- | ------ | ------------------ |
-| article_id | INT | PK, FK | article.article_id |
-| tag_id     | INT | PK, FK | tag.tag_id         |
+|カラム名     | 型  |　制約  |　説明　     |
+| ---------- | --- | ------ | ---------- |
+| article_id | INT | PK, FK | article.id |
+| tag_id     | INT | PK, FK | tag.id     |
 
 ## 説明
 Article と Tag は多対多関係である。

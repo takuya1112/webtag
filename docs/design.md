@@ -5,13 +5,15 @@
 ### エンティティ一覧
 
 ### article
-|カラム名     | 型　     　   | 制約      | 説明  　      |
-| ---------- | ------------- | -------- | ------------  |
-| id         | INT      　   | PK       | 記事のID       |
-| title      | VARCHAR(300)  | NOT NULL | 記事のタイトル |
-| url        | VARCHAR(2083) | NOT NULL | 記事のURL     |
-| created_at | TIMESTAMP     | NOT NULL  | 作成日時      |
-| edited_at  | TIMESTAMP     | NOT NULL  | 編集日時      |
+|カラム名     | 型　     　   | 制約                                 | 説明  　      |
+| ---------- | ------------- | ----------------------------------- | ------------  |
+| id         | INT      　   | PK                                  | 記事のID       |
+| title      | VARCHAR(300)  | NOT NULL                            | 記事のタイトル |
+| url        | VARCHAR(2083) | NOT NULL                            | 記事のURL      |
+| created_at | TIMESTAMP     | NOT NULL, DEFAULT CURRENT_TIMESTAMP | 作成日時      |
+| edited_at  | TIMESTAMP     | NOT NULL, DEFAULT CURRENT_TIMESTAMP | 編集日時      |
+| is_deleted | BOOLEAN       | NOT NULL, DEFAULT FALSE             | 論理削除フラグ |
+| deleted_at | TIMESTAMP     | NULL                                | 削除日時      |
 
 ### tag
 |カラム名 | 型           | 制約     | 説明       |

@@ -2,8 +2,7 @@ from sqlalchemy import Column, Integer, ForeignKey
 from ..database import Base
 
 class ArticleTag(Base):
-    """
-    ArticleTag の情報を管理するモデル
+    """ArticleTag の情報を管理するモデル
 
     Attribute:
         article_id: article.id (Primary Key, Foreign Key)

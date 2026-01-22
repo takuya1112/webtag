@@ -3,8 +3,7 @@ from sqlalchemy.orm import relationship
 from ..database import Base
 
 class Tag(Base):
-    """
-    Tag の情報を管理するモデル
+    """Tag の情報を管理するモデル
 
     Attribute:
         id: タグのID (Primary Key)
@@ -12,7 +11,7 @@ class Tag(Base):
     """
 
     __tablename__ = 'tag'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(300), nullable=False)
 
     articles = relationship("Article", secondary="article_tag", back_populates="tags") 

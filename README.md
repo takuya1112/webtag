@@ -1,92 +1,88 @@
 # WebTag
 
-## 1.プロジェクトの概要
-WebTag は学習中に見つけた有益な記事を
-タグを用いて管理、ピン留め出来るアプリです
+## 1. Description
+WebTag is an application that allows you to tag websites you want to revisit later, 
+and find them easily and quickly.
 
 
-## 2.プロジェクトの目的
-汚くなりがちなお気に入りバーや、大量のショートカットアイコンを綺麗にし、
-さらに、後から目的の記事を検索しやすくすることを目的とします
+## 2. Purpose
+The goal of this project is to keep the bookmarks bar and the desktop clean by removing excessive shortcut icons 
+and to make it easier to find the websites you need.
 
 
-## 3.機能一覧
+## 3. Features
 
-### 記事管理
-- 記事の追加
-- 記事の名前編集
-- 記事のURL編集
-- 記事の論理削除
-- 記事の論理全削除
+### Article Management
+- Create article
+- Soft delete article
+- Soft delete all articles
+- View article
+- List all articles
+- Rename article
+- Update article URL
+- Search articles
 
-### タグ管理
-- タグの作成
-- タグの名前編集
-- タグの物理削除
-- タグの物理全削除
-- 記事へのタグ付け
-- タグの取り外し
+### Tag Management
+- Create tag
+- Hard delete tag
+- Hard delete all tags
+- View tag
+- List all tags
+- Update tag
+- Attach tag to article
+- Remove tag from article
 
-### 削除された記事の管理
-- 削除された記事の一覧表示
-- 削除された記事の物理削除
-- 削除された記事の全物理削除
-- 削除された記事の復元
-- 削除された記事の全復元
+### Deleted Article Management
+- View deleted article
+- List all deleted articles 
+- Hard delete deleted article
+- Hard delete all deleted articles
+- Restore deleted article
+- Restore all deleted articles
 
-### 検索機能
-- 記事のキーワード検索
-- 記事のタグ検索
-- 記事の一覧表示
-- タグの一覧表示
 
 <!--
-### 記事管理
-- 記事の追加: done
-- 記事の名前編集: done
-- 記事のURL編集: done
-- 記事の論理削除: done
-- 記事の論理全削除: done
+Article Management
+- Rename article: todo
+- Update article URL: todo
+名前編集とURL編集を合わせてもっといい感じのを作りたい
 
-### タグ管理
-- タグの作成: done
-- タグの名前編集: done
-- タグの物理削除: done
-- タグの物理全削除: done
-- 記事へのタグ付け: done
-- タグの取り外し: done
-
-### 削除された記事の管理
-- 削除された記事の一覧表示: done
-- 削除された記事の物理削除: done
-- 削除された記事の全物理削除: done
-- 削除された記事の復元: done
-- 削除された記事の全復元: done
-
-### 検索機能
-- 記事のキーワード検索: todo
-- 記事のタグ検索: todo
-- 記事の一覧表示: done
-- タグの一覧表示: done
+- Search articles: todo
+計算量問題
 -->
 
 
-## 4.使用技術
-### バックエンド
-|使用言語    | バージョン |
-| --------- | ---------- |
-| Python    | 3.12.3     |
+## 4. Tech Stack
+### Backend
+- **Python**
+- **SQLAlchemy**
+- **Alembic**
 
-###　データベース
-|使用言語     | バージョン |
-| ---------- | ---------- |
-| PostgreSQL | 16.11      |
+### API
+- **FastAPI**
 
-## 5.ディレクトリ構成
+### Database
+- **PostgreSQL**
+
+## 5. Structure
 ```
 .
+├── README.md
+├── alembic.ini
+├── backend
+│   └── db
+│       ├── config.py
+│       ├── crud
+│       │   ├── article.py
+│       │   ├── deleted_article.py
+│       │   └── tag.py
+│       ├── database.py
+│       └── models
+│           ├── article.py
+│           ├── article_tag.py
+│           └── tag.py
+├── docs
+│   ├── ER diagram.png
+│   └── design.md
+└── main.py
 ```
-
-
-## 6.開発環境構築方法
-未定

@@ -10,7 +10,7 @@ def _get_tag_or_raise(session: Session, tag_id: int) -> Tag:
 
 
 def create(session: Session, name: str) -> Tag:
-    new_tag = Tag(name=name)
+    new_tag = Tag(name=name, name_lower=name.lower())
     session.add(new_tag)
     return new_tag
 
@@ -26,14 +26,20 @@ def delete_all(session: Session) -> int:
     return count
 
 
+def read(session: Session, tag_id: int) -> Tag:
+    tag = _get_tag_or_raise(session, tag_id)
+    return tag
+
+
 def read_all(session: Session) -> list[Tag]:
     tags = session.query(Tag).all()
     return tags
 
 
-def rename(session: Session, tag_id: int, new_name: str) -> Tag:
+def update(session: Session, tag_id: int, new_name: str) -> Tag:
     tag = _get_tag_or_raise(session, tag_id)
     tag.name = new_name
+    tag.name_lower = new_name.lower()
     return tag
 
 

@@ -13,6 +13,7 @@ class Tag(Base):
     __tablename__ = 'tag'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(300), nullable=False)
+    name_lower = Column(String(300), nullable=False)
 
     articles = relationship("Article", secondary="article_tag", back_populates="tags") 
 

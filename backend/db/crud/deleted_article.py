@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from ..models import Article
 
 
-def _get_article_or_raise(session: Session, article_id: int):
+def _get_article_or_raise(session: Session, article_id: int) -> Article:
     article = session.get(Article, article_id)
     if not article:
         raise ValueError(f"Article with id {article_id} not found")
@@ -11,6 +11,11 @@ def _get_article_or_raise(session: Session, article_id: int):
     if not article.is_deleted:
         raise ValueError(f"Article with id {article_id} is not deleted")
 
+    return article
+
+
+def read(session: Session, article_id: int) -> Article:
+    article = _get_article_or_raise(session, article_id)
     return article
 
 

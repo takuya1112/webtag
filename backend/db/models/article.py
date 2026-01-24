@@ -1,19 +1,20 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text, event
 from sqlalchemy.orm import relationship
 from ..database import Base
 
 
 class Article(Base):
-    """Article の情報を管理するモデル
+    """Article Model
 
-    Attribute:
-        id: 記事のID (Primary Key)
-        title: 記事のタイトル (最大300文字)
-        url: 記事のURL (最大2083文字)
-        created_at: 作成日時が自動で挿入される
-        edited_at: 最終編集日時が自動で更新される
-        is_deleted: 論理削除フラグ
-        deleted_at: 削除日時
+    Attributes:
+        id: The Primary Key of the article.
+        title: The title of the article.
+        title_lower: Lowercase title for case-insensitive search.
+        url: The URL of the article.
+        created_at: The timestamp when the article was created.
+        updated_at: The timestamp when the article was last updated.
+        is_deleted: A flag indicating if the article is soft-deleted.
+        deleted_at: The timestamp when the article was soft-deleted
     """
 
     __tablename__ = 'article'
@@ -38,5 +39,10 @@ class Article(Base):
     tags = relationship("Tag", secondary="article_tag", back_populates="articles")
 
     def __repr__(self) -> str:
-        """ デバッグ用 """
-        return f"<Aricle(id = {self.id}, title = {self.title}, url = {self.url})>"
+        return f"<Article(id = {self.id}, title = {self.title}, url = {self.url})>"
+
+@event.listens_for(Article, "before_insert")
+@event.listens_for(Article, "before_update")
+def lowercase_title(mapper, connection, target):
+    if target.title:
+        target.title_lower = target.title.lower()

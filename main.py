@@ -4,4 +4,4 @@ from backend.db.crud import deleted_article
 from backend.db.crud import tag
 
 with get_session() as session:
-    print(article.search(session=session, keywords=["akTaKUUUUUU", "tk"]))
+    print(tag.create(session=session, name="TAKU TAKU"))

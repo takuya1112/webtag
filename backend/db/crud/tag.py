@@ -10,7 +10,7 @@ def _get_tag_or_raise(session: Session, tag_id: int) -> Tag:
 
 
 def create(session: Session, name: str) -> Tag:
-    new_tag = Tag(name=name, name_lower=name.lower())
+    new_tag = Tag(name=name)
     session.add(new_tag)
     return new_tag
 
@@ -39,7 +39,6 @@ def read_all(session: Session) -> list[Tag]:
 def update(session: Session, tag_id: int, new_name: str) -> Tag:
     tag = _get_tag_or_raise(session, tag_id)
     tag.name = new_name
-    tag.name_lower = new_name.lower()
     return tag
 
 

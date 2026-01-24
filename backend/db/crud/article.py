@@ -11,7 +11,7 @@ def _get_article_or_raise(session: Session, article_id: int) -> Article:
 
 
 def create(session: Session, title: str, url: str) -> Article:
-    new_article = Article(title=title, title_lower=title.lower(), url=url)
+    new_article = Article(title=title, url=url)
     session.add(new_article)
     return new_article
 
@@ -44,7 +44,6 @@ def read_all(session: Session) -> list[Article]:
 def rename(session: Session, article_id: int, new_title: str) -> Article:
     article = _get_article_or_raise(session, article_id)
     article.title = new_title
-    article.title_lower = new_title.lower()
     return article
 
 
@@ -68,7 +67,7 @@ def search(session: Session, keywords: list[str]) -> list[Article]:
         .filter(
             or_(
                 Tag.name_lower.in_(keywords_lower),
-                *[Article.title.ilike(f"%{keyword}%") for keyword in keywords]
+                *[Article.title_lower.ilike(f"%{keyword}%") for keyword in keywords_lower]
             )
         )
         .distinct()

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from ..database import Base
 
+
 class ArticleTag(Base):
     """ArticleTag の情報を管理するモデル
 

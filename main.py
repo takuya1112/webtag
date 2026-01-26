@@ -1,7 +1,10 @@
 from backend.db import get_session
-from backend.db.crud import article
-from backend.db.crud import deleted_article
-from backend.db.crud import tag
+from backend.db.services import article
+from backend.db.services import deleted_article
+from backend.db.services import tag
 
 with get_session() as session:
-    print(tag.create(session=session, name="TAKU TAKU"))
+    with session.begin():
+        a = tag.TagService(session)
+        print(a.update(7, "take"))
+        

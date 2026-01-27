@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text, event
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text
 from sqlalchemy.orm import relationship
 from ..database import Base
 
@@ -9,7 +9,6 @@ class Article(Base):
     Attributes:
         id: The Primary Key of the article.
         title: The title of the article.
-        title_lower: Lowercase title for case-insensitive search.
         url: The URL of the article.
         created_at: The timestamp when the article was created.
         updated_at: The timestamp when the article was last updated.
@@ -20,7 +19,6 @@ class Article(Base):
     __tablename__ = 'article'
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(300), nullable=False)
-    title_lower = Column(String(300), nullable=False)
     url = Column(String(2083), nullable=False)
     created_at = Column(
         DateTime(timezone=True),
@@ -40,9 +38,3 @@ class Article(Base):
 
     def __repr__(self) -> str:
         return f"<Article(id = {self.id}, title = {self.title}, url = {self.url})>"
-
-@event.listens_for(Article, "before_insert")
-@event.listens_for(Article, "before_update")
-def lowercase_title(mapper, connection, target):
-    if target.title:
-        target.title_lower = target.title.lower()

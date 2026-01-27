@@ -14,11 +14,11 @@ class Tag(Base):
 
     __tablename__ = 'tag'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    alias_id = Column(Integer, ForeignKey('tag_alias.id'), nullable=False)
+    synonym_id = Column(Integer, ForeignKey('tag_synonym.id'), nullable=False)
     name = Column(String(300), nullable=False)
 
     articles = relationship("Article", secondary="article_tag", back_populates="tags") 
-    alias = relationship("TagAlias", back_populates="tags") 
+    synonym = relationship("TagSynonym", back_populates="tags") 
 
     def __repr__(self) -> str:
         return f"<Tag(id = {self.id}, name = {self.name})>"

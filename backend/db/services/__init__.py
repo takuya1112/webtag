@@ -1,8 +1,15 @@
-from . import article, deleted_article
+from .article import ArticleService
+from .deleted_article import DeletedArticleService
+from .article_search import ArticleSearchService
 from .tag import TagService
-from .tag_alias import TagAliasService
-from .article_tag import ArticleTagRepository
+from .tag_synonym import TagSynonymService
+from .article_tag import ArticleTagService
 
-__all__ = ["article", "deleted_article", 
-           "TagService", "TagAliasService", 
-           "ArticleTagRepository"]
+__all__ = [
+    "ArticleService", 
+    "DeletedArticleService", 
+    "ArticleSearchService",
+    "TagService", 
+    "TagSynonymService", 
+    "ArticleTagService"
+    ]

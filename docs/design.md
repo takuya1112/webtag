@@ -1,5 +1,15 @@
 # Design Doc
 
+<!--
+TODO
+１. searchの計算量問題
+***必要ならデータ構造の変更***
+
+2. dogstring や README 等の書き物を完成させる
+
+3. API 設計
+-->
+
 
 ## 1. Context
 
@@ -37,7 +47,6 @@
 | ----------- | ------------------------ | ----------------------------------- | ------------------- |
 | id          | INTEGER      　          | PK                                  | Article id          |
 | title       | VARCHAR(300)             | NOT NULL                            | Article title       |
-| title_lower | VARCHAR(300)             | NOT NULL                            | Article title lower |
 | url         | VARCHAR(2083)            | NOT NULL                            | Article URL         |
 | created_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time       |
 | updated_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time   |
@@ -45,14 +54,20 @@
 | deleted_at  | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time       |
 
 ### tag Table
-|Column      | Type         | Constraints | Description    |
+| Column     | Type         | Constraints | Description    |
 | ---------- | ------------ | ----------- | -------------- |
 | id         | INTEGER      | PK          | Tag id         |
+| synonym_id | INTEGER      | FK          | tag_synonym.id |
 | name       | VARCHAR(300) | NOT NULL    | Tag name       |
-| name_lower | VARCHAR(300) | NOT NULL    | Tag name lower |
+
+### tag_synonym Table
+| Column | Type         | Constraints | Description  |
+| ------ | ------------ | ----------- | ------------ |
+| id     | INTEGER      | NOT NULL    | Synonym id   |
+| name   | VARCHAR(300) | NOT NULL    | Synonym name |
 
 ### article_tag Table
-|Column      | Type     | Constraints | Description |
+| Column     | Type     | Constraints | Description |
 | ---------- | -------- | ----------- | ----------- |
 | article_id | INTEGER  | PK, FK      | article.id  |
 | tag_id     | INTEGER  | PK, FK      | tag.id      |

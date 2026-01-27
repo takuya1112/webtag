@@ -1,53 +1,36 @@
-from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 from ..models import Article
+from ..repositories import DeletedArticleRepository
 
 
-def _get_article_or_raise(session: Session, article_id: int) -> Article:
-    article = session.get(Article, article_id)
-    if not article:
-        raise ValueError(f"Article with id {article_id} not found")
-    
-    if not article.is_deleted:
-        raise ValueError(f"Article with id {article_id} is not deleted")
+class DeletedArticleService:
+    def __init__(self, session: Session):
+        self.repo = DeletedArticleRepository(session)
 
-    return article
+    def read(self, article_id: int) -> Article:
+        deleted_article = self.repo.get_deleted_article_or_raise(article_id)
+        return deleted_article
 
+    def read_all(self) -> list[Article]:
+        self.repo.delete_outdated_articles()
+        deleted_articles = self.repo.get_all()
+        return deleted_articles
 
-def read(session: Session, article_id: int) -> Article:
-    article = _get_article_or_raise(session, article_id)
-    return article
+    def delete(self, article_id: int) -> Article:
+        article = self.repo.get_deleted_article_or_raise(article_id)
+        self.repo.delete(article)
+        return article
 
+    def delete_all(self) -> int:
+        count = self.repo.delete_all()
+        return count
 
-def read_all(session: Session) -> list[Article]:
-    session.query(Article).filter(
-        Article.is_deleted == True,
-        Article.deleted_at < func.now() - text("INTERVAL '30 days'")
-        ).delete(synchronize_session=False)
-    deleted_articles = session.query(Article).filter(Article.is_deleted == True).all()
-    return deleted_articles
+    def restore(self, article_id: int) -> Article:
+        article = self.repo.get_deleted_article_or_raise(article_id)
+        article.is_deleted = False
+        article.deleted_at = None
+        return article
 
-
-def delete(session: Session, article_id: int) -> Article:
-    article = _get_article_or_raise(session, article_id)
-    session.delete(article)
-    return article
-
-
-def delete_all(session: Session) -> int:
-    count = session.query(Article).filter(Article.is_deleted == True).delete()
-    return count
-
-
-def restore(session: Session, article_id: int) -> Article:
-    article = _get_article_or_raise(session, article_id)
-    article.is_deleted = False
-    article.deleted_at = None
-    return article
-
-
-def restore_all(session: Session) -> int:
-    count = session.query(Article).filter(Article.is_deleted == True).update(
-        {Article.is_deleted: False, Article.deleted_at: None}, synchronize_session=False
-    )
-    return count
+    def restore_all(self) -> int:
+        count = self.repo.restore_all()
+        return count

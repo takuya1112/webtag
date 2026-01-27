@@ -41,17 +41,6 @@ and to make it easier to find the websites you need.
 - Restore all deleted articles
 
 
-<!--
-Article Management
-- Rename article: todo
-- Update article URL: todo
-名前編集とURL編集を合わせてもっといい感じのを作りたい
-
-- Search articles: todo
-計算量問題
--->
-
-
 ## 4. Tech Stack
 ### Backend
 - **Python**

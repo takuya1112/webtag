@@ -27,8 +27,7 @@ class DeletedArticleService:
 
     def restore(self, article_id: int) -> Article:
         article = self.repo.get_deleted_article_or_raise(article_id)
-        article.is_deleted = False
-        article.deleted_at = None
+        self.repo.restore(article)
         return article
 
     def restore_all(self) -> int:

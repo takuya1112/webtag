@@ -6,15 +6,6 @@ class TagRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def exists_by_alias_id(self, synonym_id: int) -> bool:
-        return (
-            self.session
-            .query(Tag)
-            .filter(Tag.synonym_id == synonym_id)
-            .first()
-            is not None
-        )
-
     def get(self, tag_id: int) -> Tag | None:
         return self.session.get(Tag, tag_id)
     
@@ -35,7 +26,7 @@ class TagRepository:
         self.session.flush()
         return count
 
-    def update(self, tag: Tag, new_name: str, new_synonym_id: int) -> None:
+    def update(self, tag: Tag, new_name: str, normalized_name: str) -> None:
         tag.name = new_name
-        tag.synonym_id = new_synonym_id
+        tag.normalized_name = normalized_name
         self.session.flush()

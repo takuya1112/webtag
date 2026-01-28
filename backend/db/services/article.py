@@ -7,8 +7,16 @@ class ArticleService:
     def __init__(self, session: Session):
         self.repo = ArticleRepository(session)
 
-    def create(self, title: str, url: str) -> Article:
-        new_article = Article(title=title, url=url)
+    def normalize(self, title: str) -> str:
+        return title.lower().strip()
+
+    def create(self, *, title: str, url: str) -> Article:
+        normalized_title = self.normalize(title)
+        new_article = Article(
+            title=title, 
+            normalized_title=normalized_title, 
+            url=url
+        )
         self.repo.add(new_article)
         return new_article
 
@@ -31,11 +39,17 @@ class ArticleService:
 
     def update(
             self, 
-            article_id: int, 
-            *, 
+            *,
+            article_id: int,  
             new_title: str | None = None, 
             new_url: str | None = None
         ) -> Article:
         article = self.repo.get_article_or_raise(article_id)
-        self.repo.update(article=article, new_title=new_title, new_url=new_url)
+        new_normalized_title = self.normalize(new_title)
+        self.repo.update(
+            article=article, 
+            new_title=new_title,
+            new_normalized_title=new_normalized_title,
+            new_url=new_url
+        )
         return article

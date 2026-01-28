@@ -45,13 +45,15 @@ class ArticleRepository:
 
     def update(
             self, 
-            article: Article, 
-            *, 
+            *,
+            article: Article,  
             new_title: str | None = None, 
+            new_normalized_title: str | None = None,
             new_url: str | None = None
         ) -> None:
         if new_title is not None:
             article.title = new_title
+            article.normalized_title = new_normalized_title
         if new_url is not None:
             article.url = new_url
         self.session.flush()

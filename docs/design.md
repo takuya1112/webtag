@@ -43,28 +43,23 @@ TODO
 ## 5. Database Schema
 
 ### article Table
-| Column      | Type                     |  Constraints                        | Description         |
-| ----------- | ------------------------ | ----------------------------------- | ------------------- |
-| id          | INTEGER      　          | PK                                  | Article id          |
-| title       | VARCHAR(300)             | NOT NULL                            | Article title       |
-| url         | VARCHAR(2083)            | NOT NULL                            | Article URL         |
-| created_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time       |
-| updated_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time   |
-| is_deleted  | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag    |
-| deleted_at  | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time       |
+| Column           | Type                     |  Constraints                        | Description              |
+| ---------------- | ------------------------ | ----------------------------------- | ------------------------ |
+| id               | INTEGER      　          | PK                                  | Article id               |
+| title            | VARCHAR(300)             | NOT NULL                            | Article title            |
+| normalized_title | VARCHAR(300)             | NOT NULL                            | Article normalized title |
+| url              | VARCHAR(2083)            | NOT NULL                            | Article URL              |
+| created_at       | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time            |
+| updated_at       | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time        |
+| is_deleted       | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag         |
+| deleted_at       | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time            |
 
 ### tag Table
-| Column     | Type         | Constraints | Description    |
-| ---------- | ------------ | ----------- | -------------- |
-| id         | INTEGER      | PK          | Tag id         |
-| synonym_id | INTEGER      | FK          | tag_synonym.id |
-| name       | VARCHAR(300) | NOT NULL    | Tag name       |
-
-### tag_synonym Table
-| Column | Type         | Constraints | Description  |
-| ------ | ------------ | ----------- | ------------ |
-| id     | INTEGER      | NOT NULL    | Synonym id   |
-| name   | VARCHAR(300) | NOT NULL    | Synonym name |
+| Column          | Type         | Constraints | Description         |
+| --------------- | ------------ | ----------- | ------------------- |
+| id              | INTEGER      | PK          | Tag id              |
+| name            | VARCHAR(300) | NOT NULL    | Tag name            |
+| normalized_name | VARCHAR(300) | NOT NULL    | Tag normalized name |
 
 ### article_tag Table
 | Column     | Type     | Constraints | Description |

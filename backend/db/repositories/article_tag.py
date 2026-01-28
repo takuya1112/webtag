@@ -12,6 +12,8 @@ class ArticleTagRepository:
     
     def add(self, new_article_tag: ArticleTag) -> None:
         self.session.add(new_article_tag)
+        self.session.flush()
 
     def delete(self, article_tag: ArticleTag) -> None:
         self.session.delete(article_tag)
+        self.session.flush()

@@ -1,13 +1,11 @@
 from sqlalchemy.orm import Session
 from ..models import Tag
-from .tag_synonym import TagSynonymService
 from ..repositories import TagRepository
 
 
 class TagService:
     def __init__(self, session: Session):
         self.repo = TagRepository(session)
-        self.synonym_service = TagSynonymService(session)
 
     def get_tag_or_raise(self, tag_id: int) -> Tag:
         tag = self.repo.get(tag_id)
@@ -15,26 +13,23 @@ class TagService:
             raise ValueError(f"Tag with id {tag_id} not found")
         return tag
     
-    def delete_synonym_if_unused(self, synonym_id: int):
-        if not self.repo.exists_by_alias_id(synonym_id):
-            self.synonym_service.delete(synonym_id)
+    def normalize(self, name: str) -> str:
+        return name.lower().strip()
         
     def create(self, name: str) -> Tag:
-        synonym = self.synonym_service.normalize(name)
-        new_tag = Tag(name=name, synonym_id=synonym.id)
+        normalized_name = self.normalize(name)
+        new_tag = Tag(name=name, normalized_name=normalized_name)
         self.repo.add(new_tag)
         return new_tag
 
-    def delete(self, tag_id: int) -> None:
+    def delete(self, tag_id: int) -> Tag:
         tag = self.get_tag_or_raise(tag_id)
-        synonym = tag.synonym
         self.repo.delete(tag)
-        self.delete_synonym_if_unused(synonym.id)
+        return tag
     
-    def delete_all(self) -> tuple[int, int]:
-        tag_count = self.repo.delete_all()
-        synonym_count = self.synonym_service.delete_all()
-        return tag_count, synonym_count
+    def delete_all(self) -> int:
+        count = self.repo.delete_all()
+        return count
     
     def read(self, tag_id: int) -> Tag:
         tag = self.get_tag_or_raise(tag_id)
@@ -45,9 +40,7 @@ class TagService:
         return tags
 
     def update(self, tag_id: int, new_name: str) -> Tag:
-        new_synonym = self.synonym_service.normalize(new_name)
+        normalized_name = self.normalize(new_name)
         tag = self.get_tag_or_raise(tag_id)
-        synonym = tag.synonym
-        self.repo.update(tag, new_name, new_synonym.id)
-        self.delete_synonym_if_unused(synonym.id)
+        self.repo.update(tag, new_name, normalized_name)
         return tag

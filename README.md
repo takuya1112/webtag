@@ -18,8 +18,7 @@ and to make it easier to find the websites you need.
 - Soft delete all articles
 - View article
 - List all articles
-- Rename article
-- Update article URL
+- Update article
 - Search articles
 
 ### Tag Management
@@ -49,6 +48,7 @@ and to make it easier to find the websites you need.
 
 ### API
 - **FastAPI**
+- **pydantic**
 
 ### Database
 - **PostgreSQL**
@@ -59,19 +59,34 @@ and to make it easier to find the websites you need.
 ├── README.md
 ├── alembic.ini
 ├── backend
-│   └── db
-│       ├── config.py
-│       ├── crud
-│       │   ├── article.py
-│       │   ├── deleted_article.py
-│       │   └── tag.py
-│       ├── database.py
-│       └── models
-│           ├── article.py
-│           ├── article_tag.py
-│           └── tag.py
+│   ├── db
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── models
+│   │   │   ├── article.py
+│   │   │   ├── article_tag.py
+│   │   │   ├── tag.py
+│   │   │   └── user.py
+│   │   ├── repositories
+│   │   │   ├── article.py
+│   │   │   ├── article_search.py
+│   │   │   ├── article_tag.py
+│   │   │   ├── deleted_article.py
+│   │   │   └── tag.py
+│   │   └── services
+│   │       ├── article.py
+│   │       ├── article_search.py
+│   │       ├── article_tag.py
+│   │       ├── deleted_article.py
+│   │       └── tag.py
+│   └── router
+│       ├── article.py
+│       ├── article_search.py
+│       ├── article_tag.py
+│       ├── deleted_article.py
+│       └── tag.py
 ├── docs
-│   ├── ER diagram.png
+│   ├── ER diagram.drawio.png
 │   └── design.md
 └── main.py
 ```

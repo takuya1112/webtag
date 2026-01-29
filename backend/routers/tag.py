@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import TagService
 
-tag_router = APIRouter(
-    prefix="/tag",
+router = APIRouter(
+    prefix="/tags",
     tags=["Tag"]
 )
 
@@ -29,41 +29,41 @@ class TagResponse(BaseModel):
 class DeleteAllResponse(BaseModel):
     deleted_count: int
 
-@tag_router.post("/", response_model=TagResponse)
+@router.post("/", response_model=TagResponse)
 def create(
     tag: TagCreate,
     service: TagService = Depends(get_tag_service)
 ):
     return service.create(name=tag.name)
 
-@tag_router.delete("/{tag_id}", response_model=TagResponse)
-def delete(
+@router.delete("/{tag_id}", response_model=TagResponse)
+def hard_delete(
     tag_id: int,
     service: TagService = Depends(get_tag_service)
 ):
-    return service.delete(tag_id)
+    return service.hard_delete(tag_id)
 
-@tag_router.delete("/", response_model=DeleteAllResponse)
-def delete_all(
+@router.delete("/", response_model=DeleteAllResponse)
+def hard_delete_all(
     service: TagService = Depends(get_tag_service)
 ):
-    deleted_count = service.delete_all()
+    deleted_count = service.hard_delete_all()
     return {"deleted_count": deleted_count}
 
-@tag_router.get("/{tag_id}", response_model=TagResponse)
+@router.get("/{tag_id}", response_model=TagResponse)
 def read(
     tag_id: int,
     service: TagService = Depends(get_tag_service)
 ):
     return service.read(tag_id)
 
-@tag_router.get("/", response_model=list[TagResponse])
+@router.get("/", response_model=list[TagResponse])
 def read_all(
     service: TagService = Depends(get_tag_service)
 ):
     return service.read_all()
 
-@tag_router.patch("/{tag_id}", response_model=TagResponse)
+@router.put("/{tag_id}", response_model=TagResponse)
 def update(
     tag_id: int,
     tag: TagUpdate,

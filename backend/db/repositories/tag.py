@@ -17,11 +17,11 @@ class TagRepository:
         self.session.add(tag)
         self.session.flush()
 
-    def delete(self, tag: Tag) -> None:
+    def hard_delete(self, tag: Tag) -> None:
         self.session.delete(tag)
         self.session.flush()
 
-    def delete_all(self) -> int:
+    def hard_delete_all(self) -> int:
         count = self.session.query(Tag).delete()
         self.session.flush()
         return count

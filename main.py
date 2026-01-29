@@ -11,4 +11,4 @@ from fastapi import FastAPI
 from backend.router import *
 
 app = FastAPI()
-app.include_router(article_tag_router)
+app.include_router(article.router)

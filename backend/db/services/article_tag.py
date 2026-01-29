@@ -12,7 +12,6 @@ class ArticleTagService:
         if not article_tag:
             raise ValueError(f"Tag with id {tag_id} is not tagging Article with id {article_id}")
         return article_tag
-    
 
     def attach(self, *, article_id: int, tag_id: int) -> ArticleTag:
         exsiting = self.repo.get(article_id=article_id, tag_id=tag_id)
@@ -22,7 +21,6 @@ class ArticleTagService:
         new_article_tag = ArticleTag(article_id=article_id, tag_id=tag_id)
         self.repo.add(new_article_tag)
         return new_article_tag
-
 
     def remove(self, *, article_id: int, tag_id: int) -> ArticleTag:
         article_tag = self.get_article_tag_or_raise(article_id, tag_id)

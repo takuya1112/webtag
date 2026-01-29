@@ -22,13 +22,13 @@ class TagService:
         self.repo.add(new_tag)
         return new_tag
 
-    def delete(self, tag_id: int) -> Tag:
+    def hard_delete(self, tag_id: int) -> Tag:
         tag = self.get_tag_or_raise(tag_id)
-        self.repo.delete(tag)
+        self.repo.hard_delete(tag)
         return tag
     
-    def delete_all(self) -> int:
-        count = self.repo.delete_all()
+    def hard_delete_all(self) -> int:
+        count = self.repo.hard_delete_all()
         return count
     
     def read(self, tag_id: int) -> Tag:

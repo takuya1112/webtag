@@ -8,6 +8,8 @@ TODO
 2. dogstring や README 等の書き物を完成させる
 
 3. API 設計
+
+4. repositories での fluch() 多用問題、
 -->
 
 
@@ -30,9 +32,10 @@ TODO
 | Migration | Alembic    | 1.18.1  |
 
 ### API
-| Component | Technology | Version |
-| --------- | ---------- | ------- |
-| Framework | FastAPI    | 0.128.0 |
+| Component       | Technology | Version |
+| --------------- | ---------- | ------- |
+| Framework       | FastAPI    | 0.128.0 |
+| Data Validation | Pydantic   | 2.12.5  |
 
 ### Database
 | Component | Technology | Version |

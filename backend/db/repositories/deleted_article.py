@@ -31,11 +31,11 @@ class DeletedArticleRepository:
         deleted_articles = self.session.query(Article).filter(Article.is_deleted.is_(True)).all()
         return deleted_articles
     
-    def delete(self, article: Article) -> None:
+    def hard_delete(self, article: Article) -> None:
         self.session.delete(article)
         self.session.flush()
 
-    def delete_all(self) -> int:
+    def hard_delete_all(self) -> int:
         count = self.session.query(Article).filter(Article.is_deleted.is_(True)).delete()
         self.session.flush()
         return count

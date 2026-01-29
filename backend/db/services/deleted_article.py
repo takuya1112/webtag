@@ -16,13 +16,13 @@ class DeletedArticleService:
         deleted_articles = self.repo.get_all()
         return deleted_articles
 
-    def delete(self, article_id: int) -> Article:
+    def hard_delete(self, article_id: int) -> Article:
         article = self.repo.get_deleted_article_or_raise(article_id)
-        self.repo.delete(article)
+        self.repo.hard_delete(article)
         return article
 
-    def delete_all(self) -> int:
-        count = self.repo.delete_all()
+    def hard_delete_all(self) -> int:
+        count = self.repo.hard_delete_all()
         return count
 
     def restore(self, article_id: int) -> Article:

@@ -20,13 +20,13 @@ class ArticleService:
         self.repo.add(new_article)
         return new_article
 
-    def delete(self, article_id: int) -> Article:
+    def soft_delete(self, article_id: int) -> Article:
         article = self.repo.get_article_or_raise(article_id)
-        self.repo.delete(article)
+        self.repo.soft_delete(article)
         return article
 
-    def delete_all(self) -> int:
-        count = self.repo.delete_all()
+    def soft_delete_all(self) -> int:
+        count = self.repo.soft_delete_all()
         return count
 
     def read(self, article_id: int) -> Article:

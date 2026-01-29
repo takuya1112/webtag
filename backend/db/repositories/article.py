@@ -21,12 +21,12 @@ class ArticleRepository:
         self.session.add(article)
         self.session.flush()
 
-    def delete(self, article: Article) -> None:
+    def soft_delete(self, article: Article) -> None:
         article.is_deleted = True
         article.deleted_at = func.now()
         self.session.flush()
 
-    def delete_all(self) -> int:
+    def soft_delete_all(self) -> int:
         now = func.now()
         count = (
             self.session

@@ -7,15 +7,11 @@ class ArticleRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def get_article_or_raise(self, article_id: int) -> Article:
-        article = self.session.get(Article, article_id)
-        if not article or article.is_deleted:
-            raise ValueError(f"Article with id {article_id} not found")
-        return article
+    def get(self, article_id: int) -> Article | None:
+        return self.session.get(Article, article_id)
     
     def get_all(self) -> list[Article]:
-        articles = self.session.query(Article).filter(Article.is_deleted.is_(False)).all()
-        return articles
+        return self.session.query(Article).filter(Article.is_deleted.is_(False)).all()
     
     def add(self, article: Article) -> None:
         self.session.add(article)
@@ -26,22 +22,15 @@ class ArticleRepository:
         article.deleted_at = func.now()
         self.session.flush()
 
-    def soft_delete_all(self) -> int:
+    def soft_delete_all(self) -> None:
         now = func.now()
-        count = (
-            self.session
-            .query(Article)
-            .filter(Article.is_deleted.is_(False))
+        self.session.query(Article)\
+            .filter(Article.is_deleted.is_(False))\
             .update(
-                {
-                    Article.is_deleted: True, 
-                    Article.deleted_at: now
-                }, 
+                {Article.is_deleted: True, Article.deleted_at: now}, 
                 synchronize_session=False
             )
-        )
         self.session.flush()
-        return count
 
     def update(
             self, 

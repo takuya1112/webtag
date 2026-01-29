@@ -72,3 +72,16 @@ TODO
 
 
 ## 6. API Design
+
+| Endpoint       | Method | Request Body  | Response Body         | Status Code | Description              |
+| -------------- | ------ | ------------- | --------------------- | ----------- | ------------------------ |
+| /articles      | POST   | ArticleCreate | ArticleResponse       | 201 / 400   | Create article           |
+| /articles/{id} | DELETE | None          | None                  | 204 / 404   | Soft delete an article   |
+| /articles      | DELETE | None          | None                  | 204         | Soft delete all articles |
+| /articles/{id} | GET    | None          | ArticleResponse       | 200 / 404   | Get article              |
+| /articles      | GET    | None          | List[ArticleResponse] | 200         | Get all articles         |
+| /articles/{id} | PATCH  | ArticleUpdate | ArticleResponse       | 200 / 404   | Update article           |
+
+### Error Responses
+- 400: title or url are empty
+- 404: Resource not found

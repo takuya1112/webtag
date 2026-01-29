@@ -29,24 +29,21 @@ class ArticleResponse(BaseModel):
     title: str
     url: str
 
-class DeleteAllResponse(BaseModel):
-    deleted_count: int
-
-@router.post("/", response_model=ArticleResponse)
+@router.post("/", response_model=ArticleResponse, status_code=201)
 def create(
     article: ArticleCreate,
     service: ArticleService = Depends(get_article_service)
 ):
     return service.create(title=article.title, url=article.url)
 
-@router.delete("/{article_id}", response_model=ArticleResponse)
+@router.delete("/{article_id}", status_code=204)
 def soft_delete(
     article_id: int,
     service: ArticleService = Depends(get_article_service)
 ):
     return service.soft_delete(article_id)
 
-@router.delete("/", response_model=DeleteAllResponse)
+@router.delete("/", status_code=204)
 def soft_delete_all(
     service: ArticleService = Depends(get_article_service)
 ):

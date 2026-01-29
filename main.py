@@ -8,7 +8,7 @@
         
 
 from fastapi import FastAPI
-from backend.router import *
+from backend.routers import *
 
 app = FastAPI()
 app.include_router(article.router)

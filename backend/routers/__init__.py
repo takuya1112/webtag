@@ -1,8 +1,8 @@
-import article
-import deleted_article 
-import article_search
-import tag 
-import article_tag
+from . import article
+from . import deleted_article 
+from . import article_search
+from . import tag 
+from . import article_tag
 
 __all__ = [
     "article",

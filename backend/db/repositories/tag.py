@@ -10,8 +10,7 @@ class TagRepository:
         return self.session.get(Tag, tag_id)
     
     def get_all(self) -> list[Tag]:
-        tags = self.session.query(Tag).all()
-        return tags
+        return self.session.query(Tag).all()
 
     def add(self, tag: Tag) -> None:
         self.session.add(tag)
@@ -21,10 +20,9 @@ class TagRepository:
         self.session.delete(tag)
         self.session.flush()
 
-    def hard_delete_all(self) -> int:
-        count = self.session.query(Tag).delete()
+    def hard_delete_all(self) -> None:
+        self.session.query(Tag).delete()
         self.session.flush()
-        return count
 
     def update(self, tag: Tag, new_name: str, normalized_name: str) -> None:
         tag.name = new_name

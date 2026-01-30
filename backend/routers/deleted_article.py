@@ -21,11 +21,21 @@ class DeletedArticleResponse(BaseModel):
     title: str
     url: str
 
-class DeleteAllResponse(BaseModel):
-    deleted_count: int
-
 class RestoreAllResponse(BaseModel):
     restored_count: int
+
+@router.delete("/{article_id}", status_code=204)
+def hard_delete(
+    article_id: int,
+    service: DeletedArticleService = Depends(get_deleted_article_service)
+):
+    service.hard_delete(article_id)
+
+@router.delete("/", status_code=204)
+def hard_delete_all(
+    service: DeletedArticleService = Depends(get_deleted_article_service)
+):
+    service.hard_delete_all()
 
 @router.get("/{article_id}", response_model=DeletedArticleResponse)
 def read(
@@ -39,20 +49,6 @@ def read_all(
     service: DeletedArticleService = Depends(get_deleted_article_service)
 ):
     return service.read_all()
-
-@router.delete("/{article_id}", response_model=DeletedArticleResponse)
-def hard_delete(
-    article_id: int,
-    service: DeletedArticleService = Depends(get_deleted_article_service)
-):
-    return service.hard_delete(article_id)
-
-@router.delete("/", response_model=DeleteAllResponse)
-def hard_delete_all(
-    service: DeletedArticleService = Depends(get_deleted_article_service)
-):
-    deleted_count = service.hard_delete_all()
-    return {"deleted_count": deleted_count}
 
 @router.patch("/{article_id}", response_model=DeletedArticleResponse)
 def restore(

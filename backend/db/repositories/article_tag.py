@@ -7,8 +7,7 @@ class ArticleTagRepository:
         self.session = session
 
     def get(self, article_id: int, tag_id: int) -> ArticleTag | None:
-        article_tag = self.session.get(ArticleTag, (article_id, tag_id))
-        return article_tag
+        return self.session.get(ArticleTag, (article_id, tag_id))
     
     def add(self, new_article_tag: ArticleTag) -> None:
         self.session.add(new_article_tag)

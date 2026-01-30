@@ -10,21 +10,22 @@ TODO
 3. API 設計
 
 4. repositories での fluch() 多用問題、
--->
 
+5. None.strip() エラー問題
+
+6. ?sort= 機能の追加
+-->
 
 ## 1. Context
 
-
 ## 2. Goals
 
-
 ## 3. Non-Goals
-
 
 ## 4. Tech Stack
 
 ### Backend
+
 | Component | Technology | Version |
 | --------- | ---------- | ------- |
 | Language  | Python     | 3.12.3  |
@@ -32,23 +33,25 @@ TODO
 | Migration | Alembic    | 1.18.1  |
 
 ### API
+
 | Component       | Technology | Version |
 | --------------- | ---------- | ------- |
 | Framework       | FastAPI    | 0.128.0 |
 | Data Validation | Pydantic   | 2.12.5  |
 
 ### Database
+
 | Component | Technology | Version |
 | --------- | ---------- | ------- |
 | Database  | PostgreSQL | 16.11   |
 
-
 ## 5. Database Schema
 
 ### article Table
-| Column           | Type                     |  Constraints                        | Description              |
+
+| Column           | Type                     | Constraints                         | Description              |
 | ---------------- | ------------------------ | ----------------------------------- | ------------------------ |
-| id               | INTEGER      　          | PK                                  | Article id               |
+| id               | INTEGER 　               | PK                                  | Article id               |
 | title            | VARCHAR(300)             | NOT NULL                            | Article title            |
 | normalized_title | VARCHAR(300)             | NOT NULL                            | Article normalized title |
 | url              | VARCHAR(2083)            | NOT NULL                            | Article URL              |
@@ -58,6 +61,7 @@ TODO
 | deleted_at       | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time            |
 
 ### tag Table
+
 | Column          | Type         | Constraints | Description         |
 | --------------- | ------------ | ----------- | ------------------- |
 | id              | INTEGER      | PK          | Tag id              |
@@ -65,23 +69,40 @@ TODO
 | normalized_name | VARCHAR(300) | NOT NULL    | Tag normalized name |
 
 ### article_tag Table
-| Column     | Type     | Constraints | Description |
-| ---------- | -------- | ----------- | ----------- |
-| article_id | INTEGER  | PK, FK      | article.id  |
-| tag_id     | INTEGER  | PK, FK      | tag.id      |
 
+| Column     | Type    | Constraints | Description |
+| ---------- | ------- | ----------- | ----------- |
+| article_id | INTEGER | PK, FK      | article.id  |
+| tag_id     | INTEGER | PK, FK      | tag.id      |
 
 ## 6. API Design
 
-| Endpoint       | Method | Request Body  | Response Body         | Status Code | Description              |
-| -------------- | ------ | ------------- | --------------------- | ----------- | ------------------------ |
-| /articles      | POST   | ArticleCreate | ArticleResponse       | 201 / 400   | Create article           |
-| /articles/{id} | DELETE | None          | None                  | 204 / 404   | Soft delete an article   |
-| /articles      | DELETE | None          | None                  | 204         | Soft delete all articles |
-| /articles/{id} | GET    | None          | ArticleResponse       | 200 / 404   | Get article              |
-| /articles      | GET    | None          | List[ArticleResponse] | 200         | Get all articles         |
-| /articles/{id} | PATCH  | ArticleUpdate | ArticleResponse       | 200 / 404   | Update article           |
+| Endpoint                             | Method | Request Body  | Response Body                | Status Code | Description                  | X   |
+| ------------------------------------ | ------ | ------------- | ---------------------------- | ----------- | ---------------------------- | --- |
+| /articles                            | POST   | ArticleCreate | ArticleResponse              | 201/400     | Create article               |     |
+| /articles/{id}                       | DELETE | None          | None                         | 204/404     | Soft delete article          |     |
+| /articles                            | DELETE | None          | None                         | 204         | Soft delete all articles     |     |
+| /articles/{id}                       | GET    | None          | ArticleResponse              | 200/404     | Get article                  |     |
+| /articles                            | GET    | None          | list[ArticleResponse]        | 200         | Get all articles             |     |
+| /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse              | 200/400/404 | Update article               |     |
+| /articles/search                     | GET    | None          | list[ArticleResponse]        | 200         | Search articles              |     |
+| /articles/deleted/{id}               | DELETE | None          | None                         | 204/404/409 | Hard delete article          |     |
+| /articles/deleted                    | DELETE | None          | None                         | 204         | Hard delete all articles     |     |
+| /articles/deleted/{id}               | GET    | None          | DeletedArticleResponse       | 200/404/409 | Get deleted article          |     |
+| /articles/deleted                    | GET    | None          | list[DeletedArticleResponse] | 200         | Get all deleted articles     |     |
+| /articles/deleted/{id}               | PATCH  | None          | DeletedArticleResponse       | 200/404/409 | Restore article              |     |
+| /articles/deleted                    | PATCH  | None          | RestoreAllResponse           | 200         | Restore all deleted articles |     |
+| /tags                                | POST   | TagCreate     | TagResponse                  | 201/400     | Create tag                   |     |
+| /tags/{id}                           | DELETE | None          | None                         | 204/404     | Hard delete tag              |     |
+| /tags                                | DELETE | None          | None                         | 204         | Hard delete all tags         |     |
+| /tags/{id}                           | GET    | None          | TagResponse                  | 200/404     | Get tag                      |     |
+| /tags                                | GET    | None          | list[TagResponse]            | 200         | Get all tags                 |     |
+| /tags/{id}                           | PATCH  | TagUpdate     | TagResponse                  | 200/400/404 | Update tag                   |     |
+| /articles/{article_id}/tags/{tag_id} | POST   | None          | ArticleTagResponse           | 201/404/409 | attach tag to the article    |     |
+| /articles/{article_id}/tags/{tag_id} | DELETE | None          | None                         | 204/404     | remove tag from the article  |     |
 
 ### Error Responses
-- 400: title or url are empty
+
+- 400: Invalid request
 - 404: Resource not found
+- 409: Conflict

@@ -20,7 +20,7 @@ class ArticleTagResponse(BaseModel):
     article_id: int
     tag_id: int
 
-@router.post("/{tag_id}", response_model=ArticleTagResponse)
+@router.post("/{tag_id}", response_model=ArticleTagResponse, status_code=201)
 def attach(
     article_id: int,
     tag_id: int,
@@ -31,13 +31,13 @@ def attach(
         tag_id=tag_id
     )
 
-@router.delete("/{tag_id}", response_model=ArticleTagResponse)
+@router.delete("/{tag_id}", status_code=204)
 def remove(
     article_id: int,
     tag_id: int,
     service: ArticleTagService = Depends(get_article_tag_service)
 ):
-    return service.remove(
+    service.remove(
         article_id=article_id, 
         tag_id=tag_id
     )

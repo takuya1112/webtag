@@ -26,29 +26,25 @@ class TagResponse(BaseModel):
     id: int
     name: str
 
-class DeleteAllResponse(BaseModel):
-    deleted_count: int
-
-@router.post("/", response_model=TagResponse)
+@router.post("/", response_model=TagResponse, status_code=201)
 def create(
     tag: TagCreate,
     service: TagService = Depends(get_tag_service)
 ):
     return service.create(name=tag.name)
 
-@router.delete("/{tag_id}", response_model=TagResponse)
+@router.delete("/{tag_id}", status_code=204)
 def hard_delete(
     tag_id: int,
     service: TagService = Depends(get_tag_service)
 ):
-    return service.hard_delete(tag_id)
+    service.hard_delete(tag_id)
 
-@router.delete("/", response_model=DeleteAllResponse)
+@router.delete("/", status_code=204)
 def hard_delete_all(
     service: TagService = Depends(get_tag_service)
 ):
-    deleted_count = service.hard_delete_all()
-    return {"deleted_count": deleted_count}
+    service.hard_delete_all()
 
 @router.get("/{tag_id}", response_model=TagResponse)
 def read(
@@ -63,7 +59,7 @@ def read_all(
 ):
     return service.read_all()
 
-@router.put("/{tag_id}", response_model=TagResponse)
+@router.patch("/{tag_id}", response_model=TagResponse)
 def update(
     tag_id: int,
     tag: TagUpdate,

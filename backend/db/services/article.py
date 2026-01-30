@@ -24,7 +24,7 @@ class ArticleService:
         if not title.strip() or not url.strip():
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="title and url must not be empty"
+                detail="title and url must be filled"
             )
         normalized_title = self.normalize(title)
         new_article = Article(
@@ -57,6 +57,11 @@ class ArticleService:
             new_title: str | None = None, 
             new_url: str | None = None
         ) -> Article:
+        if not new_title and not new_url:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="title or url must be filled"
+            )
         article = self.get_article_or_raise(article_id)
         new_normalized_title = self.normalize(new_title)
         self.repo.update(

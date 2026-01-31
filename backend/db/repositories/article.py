@@ -1,6 +1,7 @@
-from sqlalchemy import func
+from sqlalchemy import func, desc, asc
 from sqlalchemy.orm import Session
 from ..models import Article
+from ...schemas.article import ArticleSort
 
 
 class ArticleRepository:
@@ -10,8 +11,22 @@ class ArticleRepository:
     def get(self, article_id: int) -> Article | None:
         return self.session.get(Article, article_id)
     
-    def get_all(self) -> list[Article]:
-        return self.session.query(Article).filter(Article.is_deleted.is_(False)).all()
+    def get_all(self, sort: ArticleSort) -> list[Article]:
+        sort_config = {
+            ArticleSort.CREATED_ASC: asc(Article.created_at),
+            ArticleSort.CREATED_DESC: desc(Article.created_at),
+            ArticleSort.UPDATED_ASC: asc(Article.updated_at),
+            ArticleSort.UPDATED_DESC: desc(Article.updated_at),
+            ArticleSort.TITLE_ASC: asc(Article.normalized_title),
+            ArticleSort.TITLE_DESC: desc(Article.normalized_title),
+        }
+        order_by = sort_config[sort]
+        return (
+            self.session.query(Article)
+            .filter(Article.is_deleted.is_(False))
+            .order_by(order_by)
+            .all()
+        ) 
     
     def add(self, article: Article) -> None:
         self.session.add(article)

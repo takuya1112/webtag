@@ -26,14 +26,13 @@ def soft_delete(
     article_id: int,
     service: ArticleService = Depends(get_article_service)
 ):
-    return service.soft_delete(article_id)
+    service.soft_delete(article_id)
 
 @router.delete("/", status_code=204)
 def soft_delete_all(
     service: ArticleService = Depends(get_article_service)
 ):
-    deleted_count = service.soft_delete_all()
-    return {"deleted_count": deleted_count}
+    service.soft_delete_all()
 
 @router.get("/{article_id}", response_model=ArticleResponse)
 def read(
@@ -44,9 +43,10 @@ def read(
 
 @router.get("/", response_model=list[ArticleResponse])
 def read_all(
+    sort: ArticleSort = ArticleSort.CREATED_DESC,
     service: ArticleService = Depends(get_article_service)
-):
-    return service.read_all()
+):  
+    return service.read_all(sort)
 
 @router.patch("/{article_id}", response_model=ArticleResponse)
 def update(

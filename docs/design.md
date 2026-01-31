@@ -14,6 +14,8 @@ TODO
 5. None.strip() エラー問題
 
 6. ?sort= 機能の追加
+
+7. lower の方をタイトルにしてタイトルを表示タイトルみたいにする
 -->
 
 ## 1. Context
@@ -79,7 +81,7 @@ TODO
 
 | Endpoint                             | Method | Request Body  | Response Body                | Status Code | Description                  | X   |
 | ------------------------------------ | ------ | ------------- | ---------------------------- | ----------- | ---------------------------- | --- |
-| /articles                            | POST   | ArticleCreate | ArticleResponse              | 201/400     | Create article               | X   |
+| /articles                            | POST   | ArticleCreate | ArticleResponse              | 201/422     | Create article               | X   |
 | /articles/{id}                       | DELETE | None          | None                         | 204/404     | Soft delete article          | X   |
 | /articles                            | DELETE | None          | None                         | 204         | Soft delete all articles     | X   |
 | /articles/{id}                       | GET    | None          | ArticleResponse              | 200/404     | Get article                  | X   |
@@ -106,3 +108,4 @@ TODO
 - 400: Invalid request
 - 404: Resource not found
 - 409: Conflict
+- 422: Validation Error

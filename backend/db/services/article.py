@@ -2,30 +2,13 @@ from sqlalchemy.orm import Session
 from ..models import Article
 from ..repositories import ArticleRepository
 from fastapi import HTTPException, status
-from pydantic import HttpUrl
-from ...schemas.article import ArticleCreate, ArticleUpdate
+from ...schemas.article import ArticleCreate, ArticleUpdate, ArticleSort
 
 
 class ArticleService:
     def __init__(self, session: Session):
         self.repo = ArticleRepository(session)
 
-    def normalize_url_or_raise(self, url: HttpUrl) -> str:
-        if not url:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="url must be filled"
-            )
-        return str(url)
-
-    def normalize_title_or_raise(self, title: str) -> str:
-        if not title or not title.strip():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="title must be filled"
-            )
-        return title.lower().strip()
-    
     def get_article_or_raise(self, article_id: int) -> Article:
         article = self.repo.get(article_id)
         if not article or article.is_deleted:
@@ -36,14 +19,10 @@ class ArticleService:
         return article
 
     def create(self, article: ArticleCreate) -> Article:
-        title = article.title
-        normalized_title = self.normalize_title_or_raise(title)
-        url = self.normalize_url_or_raise(article.url)
-
         new_article = Article(
-            title=title, 
-            normalized_title=normalized_title, 
-            url=url
+            title=article.title, 
+            normalized_title=article.title.lower(), 
+            url=str(article.url)
         )
         self.repo.add(new_article)
         return new_article
@@ -58,13 +37,15 @@ class ArticleService:
     def read(self, article_id: int) -> Article:
         return self.get_article_or_raise(article_id)
 
-    def read_all(self) -> list[Article]:
-        return self.repo.get_all()
-
+    def read_all(self, sort: ArticleSort) -> list[Article]:        
+        return self.repo.get_all(sort)
+    
     def update(self, article_id: int, article: ArticleUpdate) -> Article:
+        ###TODO Put を patch　にしたい 
         title = article.title
-        new_normalized_title = self.normalize_title_or_raise(title)
-        url = self.normalize_url_or_raise(article.url)
+        new_normalized_title = title.strip().lower()
+        url = article.url
+
         article = self.get_article_or_raise(article_id)
         self.repo.update(
             article=article, 

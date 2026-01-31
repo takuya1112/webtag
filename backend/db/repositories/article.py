@@ -20,7 +20,6 @@ class ArticleRepository:
     def soft_delete(self, article: Article) -> None:
         article.is_deleted = True
         article.deleted_at = func.now()
-        self.session.flush()
 
     def soft_delete_all(self) -> None:
         now = func.now()
@@ -30,19 +29,16 @@ class ArticleRepository:
                 {Article.is_deleted: True, Article.deleted_at: now}, 
                 synchronize_session=False
             )
-        self.session.flush()
 
     def update(
             self, 
             *,
             article: Article,  
-            new_title: str | None = None, 
-            new_normalized_title: str | None = None,
-            new_url: str | None = None
+            title: str | None = None, 
+            normalized_title: str | None = None,
+            url: str | None = None
         ) -> None:
-        if new_title is not None:
-            article.title = new_title
-            article.normalized_title = new_normalized_title
-        if new_url is not None:
-            article.url = new_url
+        article.title = title
+        article.normalized_title = normalized_title
+        article.url = url
         self.session.flush()

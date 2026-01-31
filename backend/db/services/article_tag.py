@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 from ..models import ArticleTag
-from ..repositories import ArticleRepository, TagRepository, ArticleTagRepository
+from ..repositories import ArticleTagRepository
+from ..services import ArticleService, TagService
 from fastapi import HTTPException, status
 
 
 class ArticleTagService:
     def __init__(self, session: Session):
-        self.article_repo = ArticleRepository(session)
-        self.tag_repo = TagRepository(session)
+        self.article_service = ArticleService(session)
+        self.tag_service = TagService(session)
         self.repo = ArticleTagRepository(session)
 
     def get_article_tag_or_raise(self, article_id: int, tag_id: int) -> ArticleTag:
@@ -20,24 +21,11 @@ class ArticleTagService:
         return article_tag
 
     def attach(self, *, article_id: int, tag_id: int) -> ArticleTag:
-        ###TODO この３つを何か違うファイルにまとめる
-        article = self.article_repo.get(article_id)
-        if not article or article.is_deleted:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="Article not found"
-            )
-        
-        tag = self.tag_repo.get(tag_id)
-        if not tag:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Tag not found"
-            )
-
+        self.article_service.get_article_or_raise(article_id)
+        self.tag_service.get_tag_or_raise(tag_id)
         existing = self.repo.get(article_id=article_id, tag_id=tag_id)
         if existing:
-            return HTTPException(
+            raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Tag is already attached to the article"
             )

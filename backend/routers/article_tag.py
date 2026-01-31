@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import ArticleTagService
+from ..schemas.article_tag import ArticleTagResponse
 
 router = APIRouter(
     prefix="/articles/{article_id}/tags",
@@ -13,12 +13,6 @@ def get_article_tag_service(
         session: Session = Depends(get_session)
         ) -> ArticleTagService:
     return ArticleTagService(session)
-
-class ArticleTagResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    article_id: int
-    tag_id: int
 
 @router.post("/{tag_id}", response_model=ArticleTagResponse, status_code=201)
 def attach(

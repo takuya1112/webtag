@@ -79,11 +79,11 @@ TODO
 
 | Endpoint                             | Method | Request Body  | Response Body                | Status Code | Description                  | X   |
 | ------------------------------------ | ------ | ------------- | ---------------------------- | ----------- | ---------------------------- | --- |
-| /articles                            | POST   | ArticleCreate | ArticleResponse              | 201/400     | Create article               |     |
-| /articles/{id}                       | DELETE | None          | None                         | 204/404     | Soft delete article          |     |
-| /articles                            | DELETE | None          | None                         | 204         | Soft delete all articles     |     |
-| /articles/{id}                       | GET    | None          | ArticleResponse              | 200/404     | Get article                  |     |
-| /articles                            | GET    | None          | list[ArticleResponse]        | 200         | Get all articles             |     |
+| /articles                            | POST   | ArticleCreate | ArticleResponse              | 201/400     | Create article               | X   |
+| /articles/{id}                       | DELETE | None          | None                         | 204/404     | Soft delete article          | X   |
+| /articles                            | DELETE | None          | None                         | 204         | Soft delete all articles     | X   |
+| /articles/{id}                       | GET    | None          | ArticleResponse              | 200/404     | Get article                  | X   |
+| /articles                            | GET    | None          | list[ArticleResponse]        | 200         | Get all articles             | X   |
 | /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse              | 200/400/404 | Update article               |     |
 | /articles/search                     | GET    | None          | list[ArticleResponse]        | 200         | Search articles              |     |
 | /articles/deleted/{id}               | DELETE | None          | None                         | 204/404/409 | Hard delete article          |     |
@@ -98,8 +98,8 @@ TODO
 | /tags/{id}                           | GET    | None          | TagResponse                  | 200/404     | Get tag                      |     |
 | /tags                                | GET    | None          | list[TagResponse]            | 200         | Get all tags                 |     |
 | /tags/{id}                           | PATCH  | TagUpdate     | TagResponse                  | 200/400/404 | Update tag                   |     |
-| /articles/{article_id}/tags/{tag_id} | POST   | None          | ArticleTagResponse           | 201/404/409 | attach tag to the article    |     |
-| /articles/{article_id}/tags/{tag_id} | DELETE | None          | None                         | 204/404     | remove tag from the article  |     |
+| /articles/{article_id}/tags/{tag_id} | POST   | None          | ArticleTagResponse           | 201/404/409 | attach tag to the article    | X   |
+| /articles/{article_id}/tags/{tag_id} | DELETE | None          | None                         | 204/404     | remove tag from the article  | X   |
 
 ### Error Responses
 

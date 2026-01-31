@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import ArticleService
+from ..schemas.article import *
 
 router = APIRouter(
     prefix="/articles",
@@ -14,27 +14,12 @@ def get_article_service(
         ) -> ArticleService:
     return ArticleService(session)
 
-class ArticleCreate(BaseModel):
-    title: str
-    url: str
-
-class ArticleUpdate(BaseModel):
-    title: str | None = None
-    url: str | None = None
-
-class ArticleResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: int
-    title: str
-    url: str
-
 @router.post("/", response_model=ArticleResponse, status_code=201)
 def create(
     article: ArticleCreate,
     service: ArticleService = Depends(get_article_service)
 ):
-    return service.create(title=article.title, url=article.url)
+    return service.create(article)
 
 @router.delete("/{article_id}", status_code=204)
 def soft_delete(
@@ -71,6 +56,5 @@ def update(
 ):
     return service.update(
         article_id=article_id,
-        new_title=article.title,
-        new_url=article.url
+        article=article
     )

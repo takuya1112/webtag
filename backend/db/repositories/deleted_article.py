@@ -14,7 +14,6 @@ class DeletedArticleRepository:
             Article.is_deleted.is_(True),
             Article.deleted_at < func.now() - text(f"INTERVAL '{self.DELETE_INTERVAL} days'")
         ).delete(synchronize_session=False)
-        self.session.flush()
     
     def get(self, article_id: int) -> Article | None:
         return self.session.get(Article, article_id)
@@ -30,7 +29,6 @@ class DeletedArticleRepository:
     def restore(self, article: Article) -> None:
         article.is_deleted = False
         article.deleted_at = None
-        self.session.flush()
 
     def restore_all(self) -> int:
         count = (
@@ -45,7 +43,6 @@ class DeletedArticleRepository:
                 synchronize_session=False
             )
         )
-        self.session.flush()
         return count    
     
     def hard_delete(self, article: Article) -> None:

@@ -23,8 +23,7 @@ class DeletedArticleService:
         return article
 
     def restore_all(self) -> int:
-        count = self.repo.restore_all()
-        return count    
+        return self.repo.restore_all()
     
     def hard_delete(self, article_id: int) -> None:
         article = self.get_deleted_article_or_raise(article_id)

@@ -13,7 +13,7 @@ class TagRepository:
         return (
             self.session
             .query(Tag)
-            .order_by(Tag.normalized_name.asc())
+            .order_by(Tag.name_lower.asc())
             .all() 
         ) 
 
@@ -27,7 +27,6 @@ class TagRepository:
     def hard_delete_all(self) -> None:
         self.session.query(Tag).delete()
 
-    def update(self, tag: Tag, new_name: str, normalized_name: str) -> None:
+    def update(self, tag: Tag, new_name: str) -> None:
         tag.name = new_name
-        tag.normalized_name = normalized_name
         self.session.flush()

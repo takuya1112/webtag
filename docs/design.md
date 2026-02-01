@@ -7,8 +7,6 @@ TODO
 
 2. dogstring や README 等の書き物を完成させる
 
-4. repositories での fluch() 多用問題、
-
 5. None.strip() エラー問題
 
 6. ?sort= 機能の追加
@@ -48,24 +46,24 @@ TODO
 
 ### article Table
 
-| Column           | Type                     | Constraints                         | Description              |
-| ---------------- | ------------------------ | ----------------------------------- | ------------------------ |
-| id               | INTEGER 　               | PK                                  | Article id               |
-| title            | VARCHAR(300)             | NOT NULL                            | Article title            |
-| normalized_title | VARCHAR(300)             | NOT NULL                            | Article normalized title |
-| url              | VARCHAR(2083)            | NOT NULL                            | Article URL              |
-| created_at       | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time            |
-| updated_at       | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time        |
-| is_deleted       | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag         |
-| deleted_at       | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time            |
+| Column      | Type                     | Constraints                         | Description         |
+| ----------- | ------------------------ | ----------------------------------- | ------------------- |
+| id          | INTEGER 　               | PK                                  | Article id          |
+| title       | VARCHAR(300)             | NOT NULL                            | Article title       |
+| title_lower | VARCHAR(300)             | NOT NULL                            | Article title lower |
+| url         | VARCHAR(2083)            | NOT NULL                            | Article URL         |
+| created_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time       |
+| updated_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time   |
+| is_deleted  | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag    |
+| deleted_at  | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time       |
 
 ### tag Table
 
-| Column          | Type         | Constraints | Description         |
-| --------------- | ------------ | ----------- | ------------------- |
-| id              | INTEGER      | PK          | Tag id              |
-| name            | VARCHAR(300) | NOT NULL    | Tag name            |
-| normalized_name | VARCHAR(300) | NOT NULL    | Tag normalized name |
+| Column     | Type         | Constraints | Description    |
+| ---------- | ------------ | ----------- | -------------- |
+| id         | INTEGER      | PK          | Tag id         |
+| name       | VARCHAR(300) | NOT NULL    | Tag name       |
+| name_lower | VARCHAR(300) | NOT NULL    | Tag name lower |
 
 ### article_tag Table
 
@@ -95,7 +93,7 @@ TODO
 | /tags                                | DELETE | None          | None                  | 204         | Hard delete all tags             | X   |
 | /tags/{id}                           | GET    | None          | TagResponse           | 200/404     | Get tag                          | X   |
 | /tags                                | GET    | None          | list[TagResponse]     | 200         | Get all tags                     |     |
-| /tags/{id}                           | PATCH  | TagUpdate     | TagResponse           | 200/400/404 | Update tag                       |     |
+| /tags/{id}                           | PATCH  | TagUpdate     | TagResponse           | 200/400/404 | Update tag                       | X   |
 | /articles/{article_id}/tags/{tag_id} | POST   | None          | ArticleTagResponse    | 201/404/409 | Attach tag to the article        | X   |
 | /articles/{article_id}/tags/{tag_id} | DELETE | None          | None                  | 204/404     | Remove tag from the article      | X   |
 | /articles/{article_id}/tags          | GET    | None          | list[TagResponse]     | 200/404     | Get tags attached to the article | X   |

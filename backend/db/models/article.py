@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text, Computed
 from sqlalchemy.orm import relationship
 from ..database import Base
 
@@ -9,6 +9,7 @@ class Article(Base):
     Attributes:
         id: The Primary Key of the article.
         title: The title of the article.
+        title_lower: The lower title of the article.
         url: The URL of the article.
         created_at: The timestamp when the article was created.
         updated_at: The timestamp when the article was last updated.
@@ -19,7 +20,7 @@ class Article(Base):
     __tablename__ = 'article'
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(300), nullable=False)
-    normalized_title = Column(String(300), nullable=False)
+    title_lower = Column(String(300), Computed("LOWER(title)"), nullable=False)
     url = Column(String(2083), nullable=False)
     created_at = Column(
         DateTime(timezone=True),

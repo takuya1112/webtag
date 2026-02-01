@@ -17,20 +17,9 @@ class TagService:
                 detail="Tag not found"
             )
         return tag
-    
-    def normalize(self, name: str) -> str:
-        if not name.strip():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="name must not be empty"
-            )
-        return name.lower().strip()
         
     def create(self, tag: TagCreate) -> Tag:
-        new_tag = Tag(
-            name=tag.name, 
-            normalized_name=tag.name.lower()
-        )
+        new_tag = Tag(name=tag.name)
         self.repo.add(new_tag)
         return new_tag
 
@@ -45,7 +34,6 @@ class TagService:
         return self.repo.get_all()
 
     def update(self, tag_id: int, new_name: str) -> Tag:
-        normalized_name = self.normalize(new_name)
         tag = self.get_tag_or_raise(tag_id)
-        self.repo.update(tag, new_name, normalized_name)
+        self.repo.update(tag, new_name)
         return tag

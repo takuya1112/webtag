@@ -21,7 +21,6 @@ class ArticleService:
     def create(self, article: ArticleCreate) -> Article:
         new_article = Article(
             title=article.title, 
-            normalized_title=article.title.lower(), 
             url=str(article.url)
         )
         self.repo.add(new_article)
@@ -40,14 +39,12 @@ class ArticleService:
     def update(self, article_id: int, article: ArticleUpdate) -> Article:
         ###TODO Put を patch　にしたい 
         title = article.title
-        new_normalized_title = title.strip().lower()
         url = article.url
 
         article = self.get_article_or_raise(article_id)
         self.repo.update(
             article=article, 
             title=title,
-            normalized_title=new_normalized_title,
             url=url
         )
         return article

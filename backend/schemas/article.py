@@ -30,3 +30,6 @@ class ArticleSort(str, Enum):
     UPDATED_ASC = "updated_at"
     TITLE_DESC = "-title"
     TITLE_ASC = "title"
+
+class RestoreAllResponse(BaseModel):
+    restored_count: int

@@ -1,8 +1,12 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import TagService
+from ..schemas.tag import (
+    TagCreate,
+    TagUpdate,
+    TagResponse
+)
 
 router = APIRouter(
     prefix="/tags",
@@ -13,18 +17,6 @@ def get_tag_service(
         session: Session = Depends(get_session)
         ) -> TagService:
     return TagService(session)
-
-class TagCreate(BaseModel):
-    name: str
-
-class TagUpdate(BaseModel):
-    name: str
-
-class TagResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: int
-    name: str
 
 @router.post("/", response_model=TagResponse, status_code=201)
 def create(

@@ -20,15 +20,18 @@ class DeletedArticleRepository:
         return self.session.get(Article, article_id)
 
     def get_all(self) -> list[Article]:
-        return self.session.query(Article).filter(Article.is_deleted.is_(True)).all()
+        return (
+            self.session.query(Article)
+            .filter(Article.is_deleted.is_(True))
+            .order_by(Article.deleted_at.desc())
+            .all()
+        ) 
     
     def hard_delete(self, article: Article) -> None:
         self.session.delete(article)
-        self.session.flush()
 
     def hard_delete_all(self) -> None:
         self.session.query(Article).filter(Article.is_deleted.is_(True)).delete()
-        self.session.flush()
         
     def restore(self, article: Article) -> None:
         article.is_deleted = False

@@ -2,7 +2,12 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import ArticleService
-from ..schemas.article import *
+from ..schemas.article import (
+    ArticleCreate, 
+    ArticleResponse, 
+    ArticleSort, 
+    ArticleUpdate
+)
 
 router = APIRouter(
     prefix="/articles",
@@ -15,7 +20,7 @@ def get_article_service(
     return ArticleService(session)
 
 @router.post("/", response_model=ArticleResponse, status_code=201)
-def create(
+def post(
     article: ArticleCreate,
     service: ArticleService = Depends(get_article_service)
 ):
@@ -35,21 +40,21 @@ def soft_delete_all(
     service.soft_delete_all()
 
 @router.get("/{article_id}", response_model=ArticleResponse)
-def read(
+def get(
     article_id: int,
     service: ArticleService = Depends(get_article_service)
 ):
     return service.read(article_id)
 
 @router.get("/", response_model=list[ArticleResponse])
-def read_all(
+def get_all(
     sort: ArticleSort = ArticleSort.CREATED_DESC,
     service: ArticleService = Depends(get_article_service)
 ):  
     return service.read_all(sort)
 
 @router.patch("/{article_id}", response_model=ArticleResponse)
-def update(
+def patch(
     article_id: int, 
     article: ArticleUpdate,
     service: ArticleService = Depends(get_article_service)

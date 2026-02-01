@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..models import ArticleTag
+from ..models import ArticleTag, Tag
 from ..repositories import ArticleTagRepository
 from ..services import ArticleService, TagService
 from fastapi import HTTPException, status
@@ -19,6 +19,10 @@ class ArticleTagService:
                 detail=f"Tag is attached to the article"
             )
         return article_tag
+    
+    def read_tags(self, article_id: int) -> list[Tag]:
+        article = self.article_service.get_article_or_raise(article_id)
+        return self.repo.get_tags(article)
 
     def attach(self, *, article_id: int, tag_id: int) -> ArticleTag:
         self.article_service.get_article_or_raise(article_id)

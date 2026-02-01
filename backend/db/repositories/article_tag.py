@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..models import ArticleTag
+from ..models import ArticleTag, Article, Tag
 
 
 class ArticleTagRepository:
@@ -8,6 +8,9 @@ class ArticleTagRepository:
 
     def get(self, article_id: int, tag_id: int) -> ArticleTag | None:
         return self.session.get(ArticleTag, (article_id, tag_id))
+    
+    def get_tags(self, article: Article) -> list[Tag]:
+        return article.tags
     
     def add(self, new_article_tag: ArticleTag) -> None:
         self.session.add(new_article_tag)

@@ -44,7 +44,7 @@ def get(
     article_id: int,
     service: ArticleService = Depends(get_article_service)
 ):
-    return service.read(article_id)
+    return service.get_article_or_raise(article_id)
 
 @router.get("/", response_model=list[ArticleResponse])
 def get_all(

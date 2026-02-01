@@ -34,9 +34,6 @@ class ArticleService:
     def soft_delete_all(self) -> None:
         self.repo.soft_delete_all()
 
-    def read(self, article_id: int) -> Article:
-        return self.get_article_or_raise(article_id)
-
     def read_all(self, sort: ArticleSort) -> list[Article]:        
         return self.repo.get_all(sort)
     

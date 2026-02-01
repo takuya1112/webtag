@@ -14,6 +14,20 @@ def get_deleted_article_service(
         ) -> DeletedArticleService:
     return DeletedArticleService(session)
 
+@router.post("/{article_id}", response_model=ArticleResponse)
+def restore(
+    article_id: int,
+    service: DeletedArticleService = Depends(get_deleted_article_service)
+):
+    return service.restore(article_id)
+
+@router.post("/", response_model=RestoreAllResponse)
+def restore_all(
+    service: DeletedArticleService = Depends(get_deleted_article_service)
+):
+    restored_count = service.restore_all()
+    return {"restored_count": restored_count}
+
 @router.delete("/{article_id}", status_code=204)
 def hard_delete(
     article_id: int,
@@ -39,17 +53,3 @@ def get_all(
     service: DeletedArticleService = Depends(get_deleted_article_service)
 ):
     return service.read_all()
-
-@router.patch("/{article_id}", response_model=ArticleResponse)
-def restore(
-    article_id: int,
-    service: DeletedArticleService = Depends(get_deleted_article_service)
-):
-    return service.restore(article_id)
-
-@router.patch("/", response_model=RestoreAllResponse)
-def restore_all(
-    service: DeletedArticleService = Depends(get_deleted_article_service)
-):
-    restored_count = service.restore_all()
-    return {"restored_count": restored_count}

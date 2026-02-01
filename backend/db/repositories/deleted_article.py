@@ -27,12 +27,6 @@ class DeletedArticleRepository:
             .all()
         ) 
     
-    def hard_delete(self, article: Article) -> None:
-        self.session.delete(article)
-
-    def hard_delete_all(self) -> None:
-        self.session.query(Article).filter(Article.is_deleted.is_(True)).delete()
-        
     def restore(self, article: Article) -> None:
         article.is_deleted = False
         article.deleted_at = None
@@ -52,4 +46,10 @@ class DeletedArticleRepository:
             )
         )
         self.session.flush()
-        return count
+        return count    
+    
+    def hard_delete(self, article: Article) -> None:
+        self.session.delete(article)
+
+    def hard_delete_all(self) -> None:
+        self.session.query(Article).filter(Article.is_deleted.is_(True)).delete()

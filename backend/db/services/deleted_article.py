@@ -10,18 +10,21 @@ class DeletedArticleService:
 
     def get_deleted_article_or_raise(self, article_id: int) -> Article:
         deleted_article = self.repo.session.get(Article, article_id)
-        if not deleted_article:
+        if not deleted_article or not deleted_article.is_deleted:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Article not found"
             )
-        
-        if not deleted_article.is_deleted:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Article is not deleted"
-            )
         return deleted_article
+    
+    def restore(self, article_id: int) -> Article:
+        article = self.get_deleted_article_or_raise(article_id)
+        self.repo.restore(article)
+        return article
+
+    def restore_all(self) -> int:
+        count = self.repo.restore_all()
+        return count    
     
     def hard_delete(self, article_id: int) -> None:
         article = self.get_deleted_article_or_raise(article_id)
@@ -39,12 +42,3 @@ class DeletedArticleService:
         self.repo.delete_outdated_articles()
         deleted_articles = self.repo.get_all()
         return deleted_articles
-
-    def restore(self, article_id: int) -> Article:
-        article = self.get_deleted_article_or_raise(article_id)
-        self.repo.restore(article)
-        return article
-
-    def restore_all(self) -> int:
-        count = self.repo.restore_all()
-        return count

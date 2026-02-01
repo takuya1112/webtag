@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from ..models import Tag
 from ..repositories import TagRepository
 from fastapi import HTTPException, status
+from ...schemas.tag import TagCreate, TagUpdate
 
 
 class TagService:
@@ -25,9 +26,11 @@ class TagService:
             )
         return name.lower().strip()
         
-    def create(self, name: str) -> Tag:
-        normalized_name = self.normalize(name)
-        new_tag = Tag(name=name, normalized_name=normalized_name)
+    def create(self, tag: TagCreate) -> Tag:
+        new_tag = Tag(
+            name=tag.name, 
+            normalized_name=tag.name.lower()
+        )
         self.repo.add(new_tag)
         return new_tag
 
@@ -37,9 +40,6 @@ class TagService:
     
     def hard_delete_all(self) -> None:
         self.repo.hard_delete_all()
-    
-    def read(self, tag_id: int) -> Tag:
-        return self.get_tag_or_raise(tag_id)
 
     def read_all(self) -> list[Tag]:
         return self.repo.get_all()

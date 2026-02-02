@@ -1,4 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, text, Computed
+from sqlalchemy import (
+    Column, Integer, String, Boolean, DateTime, Index,
+    true, false, text, func
+) 
 from sqlalchemy.orm import relationship
 from ..database import Base
 
@@ -9,7 +12,6 @@ class Article(Base):
     Attributes:
         id: The Primary Key of the article.
         title: The title of the article.
-        title_lower: The lower title of the article.
         url: The URL of the article.
         created_at: The timestamp when the article was created.
         updated_at: The timestamp when the article was last updated.
@@ -20,7 +22,6 @@ class Article(Base):
     __tablename__ = 'article'
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(300), nullable=False)
-    title_lower = Column(String(300), Computed("LOWER(title)"), nullable=False)
     url = Column(String(2083), nullable=False)
     created_at = Column(
         DateTime(timezone=True),
@@ -35,6 +36,19 @@ class Article(Base):
         )
     is_deleted = Column(Boolean, server_default=text("false"), nullable=False)
     deleted_at = Column(DateTime(timezone=True))
+
+    __table_args__ = (
+        Index(
+            "idx_article_title_lower",
+            func.lower(title),
+            postgresql_where=(is_deleted.is_(false())),
+        ),
+        Index(
+            "idx_deleted_article",
+            id,
+            postgresql_where=(is_deleted.is_(true())),
+        ),
+    )
 
     tags = relationship("Tag", secondary="article_tag", back_populates="articles")
 

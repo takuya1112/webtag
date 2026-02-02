@@ -21,10 +21,10 @@ def get_article_service(
 
 @router.post("/", response_model=ArticleResponse, status_code=201)
 def post(
-    article: ArticleCreate,
+    create_data: ArticleCreate,
     service: ArticleService = Depends(get_article_service)
 ):
-    return service.create(article)
+    return service.create(create_data)
 
 @router.delete("/{article_id}", status_code=204)
 def soft_delete(

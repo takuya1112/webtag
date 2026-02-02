@@ -48,6 +48,7 @@ and to make it easier to find the websites you need.
 
 - **TypeScript**
 - **React**
+- **Vite**
 
 ### Backend
 
@@ -68,6 +69,7 @@ and to make it easier to find the websites you need.
 
 ```
 .
+├── .gitignore
 ├── README.md
 ├── alembic.ini
 ├── backend
@@ -81,29 +83,25 @@ and to make it easier to find the websites you need.
 │   │   │   └── user.py
 │   │   ├── repositories
 │   │   │   ├── article.py
-│   │   │   ├── article_search.py
 │   │   │   ├── article_tag.py
 │   │   │   ├── deleted_article.py
 │   │   │   └── tag.py
 │   │   └── services
 │   │       ├── article.py
-│   │       ├── article_search.py
 │   │       ├── article_tag.py
 │   │       ├── deleted_article.py
 │   │       └── tag.py
 │   ├── routers
 │   │   ├── article.py
-│   │   ├── article_search.py
 │   │   ├── article_tag.py
 │   │   ├── deleted_article.py
 │   │   └── tag.py
 │   └── schemas
 │       ├── article.py
-│       └── article_tag.py
+│       ├── article_tag.py
+│       └── tag.py
 ├── docs
 │   ├── ER diagram.drawio.png
 │   └── design.md
-├── frontend
 └── main.py
-
 ```

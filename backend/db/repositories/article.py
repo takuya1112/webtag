@@ -17,8 +17,8 @@ class ArticleRepository:
             ArticleSort.CREATED_DESC: desc(Article.created_at),
             ArticleSort.UPDATED_ASC: asc(Article.updated_at),
             ArticleSort.UPDATED_DESC: desc(Article.updated_at),
-            ArticleSort.TITLE_ASC: asc(Article.title_lower),
-            ArticleSort.TITLE_DESC: desc(Article.title_lower),
+            ArticleSort.TITLE_ASC: asc(Article.title),
+            ArticleSort.TITLE_DESC: desc(Article.title),
         }
         order_by = sort_config[sort]
         return (

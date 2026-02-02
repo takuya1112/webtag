@@ -26,6 +26,7 @@ TODO
 | --------- | ---------- | ------- |
 | Language  | TypeScript | 5.9.3   |
 | Framework | React      | 19.2.0  |
+| Build     | Vite       | 7.2.4   |
 
 ### Backend
 
@@ -52,24 +53,22 @@ TODO
 
 ### article Table
 
-| Column      | Type                     | Constraints                         | Description         |
-| ----------- | ------------------------ | ----------------------------------- | ------------------- |
-| id          | INTEGER 　               | PK                                  | Article id          |
-| title       | VARCHAR(300)             | NOT NULL                            | Article title       |
-| title_lower | VARCHAR(300)             | NOT NULL                            | Article title lower |
-| url         | VARCHAR(2083)            | NOT NULL                            | Article URL         |
-| created_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time       |
-| updated_at  | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time   |
-| is_deleted  | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag    |
-| deleted_at  | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time       |
+| Column     | Type                     | Constraints                         | Description       |
+| ---------- | ------------------------ | ----------------------------------- | ----------------- |
+| id         | INTEGER 　               | PK                                  | Article id        |
+| title      | VARCHAR(300)             | NOT NULL                            | Article title     |
+| url        | VARCHAR(2083)            | NOT NULL                            | Article URL       |
+| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time     |
+| updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time |
+| is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag  |
+| deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time     |
 
 ### tag Table
 
-| Column     | Type         | Constraints | Description    |
-| ---------- | ------------ | ----------- | -------------- |
-| id         | INTEGER      | PK          | Tag id         |
-| name       | VARCHAR(300) | NOT NULL    | Tag name       |
-| name_lower | VARCHAR(300) | NOT NULL    | Tag name lower |
+| Column | Type         | Constraints | Description |
+| ------ | ------------ | ----------- | ----------- |
+| id     | INTEGER      | PK          | Tag id      |
+| name   | VARCHAR(300) | NOT NULL    | Tag name    |
 
 ### article_tag Table
 
@@ -88,8 +87,8 @@ TODO
 | /articles/{id}                       | GET    | None          | ArticleResponse       | 200/404     | Get article                      | X   |
 | /articles                            | GET    | None          | list[ArticleResponse] | 200         | Get all articles                 |     |
 | /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article                   | X   |
-| /articles/deleted/{id}               | POST   | None          | ArticleResponse       | 200/404     | Restore deleted article          | X   |
-| /articles/deleted                    | POST   | None          | RestoreAllResponse    | 200         | Restore all deleted articles     | X   |
+| /articles/deleted/{id}/restore       | POST   | None          | ArticleResponse       | 200/404     | Restore deleted article          | X   |
+| /articles/deleted/restore            | POST   | None          | RestoreAllResponse    | 200         | Restore all deleted articles     | X   |
 | /articles/deleted/{id}               | DELETE | None          | None                  | 204/404     | Hard delete article              | X   |
 | /articles/deleted                    | DELETE | None          | None                  | 204         | Hard delete all articles         | X   |
 | /articles/deleted/{id}               | GET    | None          | ArticleResponse       | 200/404     | Get deleted article              | X   |

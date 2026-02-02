@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from ..models import Tag
 
 
@@ -13,7 +14,7 @@ class TagRepository:
         return (
             self.session
             .query(Tag)
-            .order_by(Tag.name_lower.asc())
+            .order_by(func.lower(Tag.name).asc())
             .all() 
         ) 
 

@@ -18,13 +18,13 @@ class ArticleService:
             )
         return article
 
-    def create(self, article: ArticleCreate) -> Article:
-        new_article = Article(
-            title=article.title, 
-            url=str(article.url)
+    def create(self, create_data: ArticleCreate) -> Article:
+        article = Article(
+            title=create_data.title, 
+            url=str(create_data.url)
         )
-        self.repo.add(new_article)
-        return new_article
+        self.repo.add(article)
+        return article
 
     def soft_delete(self, article_id: int) -> None:
         article = self.get_article_or_raise(article_id)

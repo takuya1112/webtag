@@ -14,14 +14,14 @@ def get_deleted_article_service(
         ) -> DeletedArticleService:
     return DeletedArticleService(session)
 
-@router.post("/{article_id}", response_model=ArticleResponse)
+@router.post("/{article_id}/restore", response_model=ArticleResponse)
 def restore(
     article_id: int,
     service: DeletedArticleService = Depends(get_deleted_article_service)
 ):
     return service.restore(article_id)
 
-@router.post("/", response_model=RestoreAllResponse)
+@router.post("/restore", response_model=RestoreAllResponse)
 def restore_all(
     service: DeletedArticleService = Depends(get_deleted_article_service)
 ):

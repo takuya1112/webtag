@@ -8,6 +8,8 @@ class TagBase(BaseModel):
     def validate_name(cls, value :str) -> str:
         if not value.strip():
             raise ValueError("name must be filled")
+        if len(value) > 300:
+            raise ValueError("name within 300 chars")
         return value.strip()
 
 class TagCreate(TagBase):

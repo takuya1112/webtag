@@ -20,6 +20,13 @@ TODO
 
 ## 4. Tech Stack
 
+### Frontend
+
+| Component | Technology | Version |
+| --------- | ---------- | ------- |
+| Language  | TypeScript | 5.9.3   |
+| Framework | React      | 19.2.0  |
+
 ### Backend
 
 | Component | Technology | Version |

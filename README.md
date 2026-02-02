@@ -44,6 +44,11 @@ and to make it easier to find the websites you need.
 
 ## 4. Tech Stack
 
+### Frontend
+
+- **TypeScript**
+- **React**
+
 ### Backend
 
 - **Python**

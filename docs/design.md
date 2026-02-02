@@ -7,9 +7,8 @@ TODO
 
 2. dogstring や README 等の書き物を完成させる
 
-5. None.strip() エラー問題
 
-6. ?sort= 機能の追加
+3. ?sort= 機能の追加
 
 -->
 
@@ -81,7 +80,7 @@ TODO
 | /articles                            | DELETE | None          | None                  | 204         | Soft delete all articles         | X   |
 | /articles/{id}                       | GET    | None          | ArticleResponse       | 200/404     | Get article                      | X   |
 | /articles                            | GET    | None          | list[ArticleResponse] | 200         | Get all articles                 |     |
-| /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article                   |     |
+| /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article                   | X   |
 | /articles/deleted/{id}               | POST   | None          | ArticleResponse       | 200/404     | Restore deleted article          | X   |
 | /articles/deleted                    | POST   | None          | RestoreAllResponse    | 200         | Restore all deleted articles     | X   |
 | /articles/deleted/{id}               | DELETE | None          | None                  | 204/404     | Hard delete article              | X   |

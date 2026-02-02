@@ -1,7 +1,7 @@
 from sqlalchemy import func, desc, asc
 from sqlalchemy.orm import Session
 from ..models import Article
-from ...schemas.article import ArticleSort
+from ...schemas.article import ArticleSort, ArticleUpdate
 
 
 class ArticleRepository:
@@ -45,13 +45,9 @@ class ArticleRepository:
                 synchronize_session=False
             )
 
-    def update(
-            self, 
-            *,
-            article: Article,  
-            title: str | None = None, 
-            url: str | None = None
-        ) -> None:
-        article.title = title
-        article.url = url
+    def update(self, *, article: Article, update_data: ArticleUpdate) -> None:
+        if "title" in update_data.model_fields_set:
+            article.title = update_data.title
+        if "url" in update_data.model_fields_set:
+            article.url = str(update_data.url)
         self.session.flush()

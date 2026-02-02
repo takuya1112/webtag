@@ -1,20 +1,36 @@
-from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator
+from typing import Annotated
+from pydantic import BaseModel, ConfigDict, HttpUrl, AfterValidator, model_validator
 from enum import Enum
 
+def validate_title_required(title: str) -> str:
+    if not title.strip():
+        raise ValueError("title must be filled")
+    if len(title) > 300:
+        raise ValueError("title within 300 chars")
+    return title.strip()
+
+def validate_title_optional(title: str | None) -> str | None:
+    if title is None:
+        return None
+    else:
+        return validate_title_required(title)
+
+ValidateTitleRequired = Annotated[str, AfterValidator(validate_title_required)]
+ValidateTitleOptional = Annotated[str | None, AfterValidator(validate_title_optional)]
+
 class ArticleCreate(BaseModel):
-    title: str
+    title: ValidateTitleRequired
     url: HttpUrl
 
-    @field_validator("title")
-    @classmethod
-    def validate_title(cls, value :str) -> str:
-        if not value.strip():
-            raise ValueError("title must be filled")
-        return value.strip()
-
 class ArticleUpdate(BaseModel):
-    title: str | None = None
+    title: ValidateTitleOptional = None
     url: HttpUrl | None = None
+
+    @model_validator(mode="after")
+    def validate_article_update(self):
+        if self.title is None and self.url is None:
+            raise ValueError("title or url must be filled")
+        return self
 
 class ArticleResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)

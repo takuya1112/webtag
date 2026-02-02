@@ -56,10 +56,10 @@ def get_all(
 @router.patch("/{article_id}", response_model=ArticleResponse)
 def patch(
     article_id: int, 
-    article: ArticleUpdate,
+    update_data: ArticleUpdate,
     service: ArticleService = Depends(get_article_service)
 ):
     return service.update(
         article_id=article_id,
-        article=article
+        update_data=update_data
     )

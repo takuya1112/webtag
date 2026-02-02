@@ -36,15 +36,10 @@ class ArticleService:
     def read_all(self, sort: ArticleSort) -> list[Article]:        
         return self.repo.get_all(sort)
     
-    def update(self, article_id: int, article: ArticleUpdate) -> Article:
-        ###TODO Put を patch　にしたい 
-        title = article.title
-        url = article.url
-
+    def update(self, *, article_id: int, update_data: ArticleUpdate) -> Article:
         article = self.get_article_or_raise(article_id)
         self.repo.update(
             article=article, 
-            title=title,
-            url=url
+            update_data=update_data
         )
         return article

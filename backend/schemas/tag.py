@@ -8,7 +8,7 @@ class TagBase(BaseModel):
     def validate_name(cls, value :str) -> str:
         if not value.strip():
             raise ValueError("name must be filled")
-        return value.strip()    
+        return value.strip()
 
 class TagCreate(TagBase):
     pass

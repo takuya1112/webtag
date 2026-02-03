@@ -17,6 +17,20 @@ class TagRepository:
             .order_by(func.lower(Tag.name).asc())
             .all() 
         ) 
+    
+    def search(self, keywords: list[str]) -> list[Tag]:
+        conditions = [
+            func.lower(Tag.name).like(f"%{keyword}%") 
+            for keyword in keywords
+        ]
+
+        return (
+            self.session
+            .query(Tag)
+            .filter(*conditions)
+            .order_by(func.lower(Tag.name).asc())
+            .all()
+        )
 
     def add(self, tag: Tag) -> None:
         self.session.add(tag)

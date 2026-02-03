@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import TagService
@@ -44,9 +44,10 @@ def get(
 
 @router.get("/", response_model=list[TagResponse])
 def get_all(
+    q: list[str] = Query(default=[]),
     service: TagService = Depends(get_tag_service)
 ):
-    return service.read_all()
+    return service.read_all(q)
 
 @router.patch("/{tag_id}", response_model=TagResponse)
 def update(

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from ..db.database import get_session
 from ..db.services import ArticleService
@@ -48,10 +48,11 @@ def get(
 
 @router.get("/", response_model=list[ArticleResponse])
 def get_all(
+    q: list[str] = Query(default=[]),
     sort: ArticleSort = ArticleSort.CREATED_DESC,
     service: ArticleService = Depends(get_article_service)
 ):  
-    return service.read_all(sort)
+    return service.read_all(sort=sort, keywords=q)
 
 @router.patch("/{article_id}", response_model=ArticleResponse)
 def patch(

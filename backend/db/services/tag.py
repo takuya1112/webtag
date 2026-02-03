@@ -30,8 +30,13 @@ class TagService:
     def hard_delete_all(self) -> None:
         self.repo.hard_delete_all()
 
-    def read_all(self) -> list[Tag]:
-        return self.repo.get_all()
+    def read_all(self, keywords: list[str]) -> list[Tag]:
+        keywords_lower = [keyword.lower().strip() for keyword in keywords]
+        keywords_lower = list(set(keywords_lower))
+
+        if not keywords_lower:
+            return self.repo.get_all()
+        return self.repo.search(keywords_lower)
 
     def update(self, tag_id: int, new_name: str) -> Tag:
         tag = self.get_tag_or_raise(tag_id)

@@ -17,30 +17,30 @@ and to make it easier to find the websites you need.
 - Create article
 - Soft delete article
 - Soft delete all articles
-- View article
-- List all articles
+- Get article
+- Get all articles
 - Update article
-- Search articles
 
 ### Tag Management
 
 - Create tag
 - Hard delete tag
 - Hard delete all tags
-- View tag
-- List all tags
+- Get tag
+- Get all tags
 - Update tag
-- Attach tag to article
-- Remove tag from article
+- Attach tag to the article
+- Remove tag from the article
+- Get tags attached to the article
 
 ### Deleted Article Management
 
-- View deleted article
-- List all deleted articles
-- Hard delete deleted article
-- Hard delete all deleted articles
 - Restore deleted article
 - Restore all deleted articles
+- Hard delete deleted article
+- Hard delete all deleted articles
+- Get deleted article
+- Get all deleted articles
 
 ## 4. Tech Stack
 

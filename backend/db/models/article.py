@@ -1,6 +1,6 @@
 from sqlalchemy import (
     Column, Integer, String, Boolean, DateTime, Index,
-    true, false, text, func
+    text, func
 ) 
 from sqlalchemy.orm import relationship
 from ..database import Base
@@ -41,12 +41,22 @@ class Article(Base):
         Index(
             "idx_article_title_lower",
             func.lower(title),
-            postgresql_where=(is_deleted.is_(false())),
+            postgresql_where=(is_deleted.is_(False)),
         ),
         Index(
-            "idx_deleted_article",
-            id,
-            postgresql_where=(is_deleted.is_(true())),
+            "idx_article_created_at",
+            created_at,
+            postgresql_where=(is_deleted.is_(False)),
+        ),
+        Index(
+            "idx_article_updated_at",
+            updated_at,
+            postgresql_where=(is_deleted.is_(False)),
+        ),
+        Index(
+            "idx_article_deleted_at",
+            deleted_at,
+            postgresql_where=(is_deleted.is_(True)),
         ),
     )
 

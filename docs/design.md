@@ -89,10 +89,10 @@ TODO
 | /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article                   | X   |
 | /articles/deleted/{id}/restore       | POST   | None          | ArticleResponse       | 200/404     | Restore deleted article          | X   |
 | /articles/deleted/restore            | POST   | None          | RestoreAllResponse    | 200         | Restore all deleted articles     | X   |
-| /articles/deleted/{id}               | DELETE | None          | None                  | 204/404     | Hard delete article              | X   |
-| /articles/deleted                    | DELETE | None          | None                  | 204         | Hard delete all articles         | X   |
+| /articles/deleted/{id}               | DELETE | None          | None                  | 204/404     | Hard delete deleted article      | X   |
+| /articles/deleted                    | DELETE | None          | None                  | 204         | Hard delete all deleted articles | X   |
 | /articles/deleted/{id}               | GET    | None          | ArticleResponse       | 200/404     | Get deleted article              | X   |
-| /articles/deleted                    | GET    | None          | list[ArticleResponse] | 200         | Get all deleted articles         |     |
+| /articles/deleted                    | GET    | None          | list[ArticleResponse] | 200         | Get all deleted articles         | X   |
 | /tags                                | POST   | TagCreate     | TagResponse           | 201/422     | Create tag                       | X   |
 | /tags/{id}                           | DELETE | None          | None                  | 204/404     | Hard delete tag                  | X   |
 | /tags                                | DELETE | None          | None                  | 204         | Hard delete all tags             | X   |

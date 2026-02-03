@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, func, Index
+from sqlalchemy import Column, Integer, String, Index, func 
 from sqlalchemy.orm import relationship
 from ..database import Base
 
@@ -20,7 +20,7 @@ class Tag(Base):
     __table_args__ = (
         Index(
             "idx_tag_name_lower",
-            func.lower(name)
+            func.lower(name),
         ),
     )
 

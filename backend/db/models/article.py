@@ -1,9 +1,20 @@
 from sqlalchemy import (
     Column, Integer, String, Boolean, DateTime, Index,
-    text, func
+    ForeignKey, text, func
 ) 
 from sqlalchemy.orm import relationship
 from ..database import Base
+
+# | Column     | Type                     | Constraints                         | Description       |
+# | ---------- | ------------------------ | ----------------------------------- | ----------------- |
+# | id         | INTEGER 　               | PK                                  | Article id        |
+# | title      | VARCHAR(300)             | NOT NULL                            | Article title     |
+# | url        | VARCHAR(2083)            | NOT NULL                            | Article URL       |
+# | created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time     |
+# | updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time |
+# | is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag  |
+# | deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time     |
+# | user_id    | INTEGER                  | FK, NOT NULL                        | user.id           |
 
 
 class Article(Base):
@@ -21,6 +32,7 @@ class Article(Base):
 
     __tablename__ = 'article'
     id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     title = Column(String(300), nullable=False)
     url = Column(String(2083), nullable=False)
     created_at = Column(
@@ -37,30 +49,35 @@ class Article(Base):
     is_deleted = Column(Boolean, server_default=text("false"), nullable=False)
     deleted_at = Column(DateTime(timezone=True))
 
+    tags = relationship("Tag", secondary="article_tag", back_populates="articles")
+    users = relationship("User", back_populates="articles")
+
     __table_args__ = (
         Index(
-            "idx_article_title_lower",
+            "ix_article_user_title_lower",
+            user_id,
             func.lower(title),
             postgresql_where=(is_deleted.is_(False)),
         ),
         Index(
-            "idx_article_created_at",
+            "ix_article_user_created_at",
+            user_id,
             created_at,
             postgresql_where=(is_deleted.is_(False)),
         ),
         Index(
-            "idx_article_updated_at",
+            "ix_article_user_updated_at",
+            user_id,
             updated_at,
             postgresql_where=(is_deleted.is_(False)),
         ),
         Index(
-            "idx_article_deleted_at",
+            "ix_article_user_deleted_at",
+            user_id,
             deleted_at,
             postgresql_where=(is_deleted.is_(True)),
         ),
     )
-
-    tags = relationship("Tag", secondary="article_tag", back_populates="articles")
-
+    
     def __repr__(self) -> str:
         return f"<Article(id = {self.id}, title = {self.title}, url = {self.url})>"

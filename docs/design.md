@@ -2,9 +2,7 @@
 
 <!--
 TODO
-１. article searchの計算量問題
-***必要ならデータ構造の変更***
-
+１. article search や tag searchの計算量問題や検索方法の改善
 2. dogstring や README 等の書き物を完成させる
 -->
 
@@ -47,11 +45,29 @@ TODO
 
 ## 5. Database Schema
 
+### user Table
+
+| Column        | Type                     | Constraints                         | Description          |
+| ------------- | ------------------------ | ----------------------------------- | -------------------- |
+| id            | INTEGER                  | PK                                  | User id              |
+| name          | VARCHAR(300)             | NOT NULL                            | User name            |
+| email         | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
+| password_hash | VARCHAR(300)             | NOT NULL                            | Hashed user password |
+| created_at    | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
+| updated_at    | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
+| is_active     | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
+
+**Referenced by:**
+
+- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+
 ### article Table
 
 | Column     | Type                     | Constraints                         | Description       |
 | ---------- | ------------------------ | ----------------------------------- | ----------------- |
 | id         | INTEGER 　               | PK                                  | Article id        |
+| user_id    | INTEGER                  | FK, NOT NULL                        | user.id           |
 | title      | VARCHAR(300)             | NOT NULL                            | Article title     |
 | url        | VARCHAR(2083)            | NOT NULL                            | Article URL       |
 | created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time     |
@@ -59,12 +75,56 @@ TODO
 | is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag  |
 | deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time     |
 
+**Foreign-key constraints:**
+
+- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+
+**Referenced by:**
+
+- FOREIGN KEY (article_id) REFERENCES article(id) ON DELETE CASCADE
+
+**Indexes:**
+
+```sql
+CREATE INDEX ix_article_user_title_lower
+ON article(user_id, LOWER(title))
+WHERE is_deleted = FALSE;
+
+CREATE INDEX ix_article_user_created_at
+ON article(user_id, created_at)
+WHERE is_deleted = FALSE;
+
+CREATE INDEX ix_article_user_updated_at
+ON article(user_id, updated_at)
+WHERE is_deleted = FALSE;
+
+CREATE INDEX ix_article_user_deleted_at
+ON article(user_id, deleted_at)
+WHERE is_deleted = TRUE;
+```
+
 ### tag Table
 
-| Column | Type         | Constraints | Description |
-| ------ | ------------ | ----------- | ----------- |
-| id     | INTEGER      | PK          | Tag id      |
-| name   | VARCHAR(300) | NOT NULL    | Tag name    |
+| Column  | Type         | Constraints  | Description |
+| ------- | ------------ | ------------ | ----------- |
+| id      | INTEGER      | PK           | Tag id      |
+| user_id | INTEGER      | FK, NOT NULL | user.id     |
+| name    | VARCHAR(300) | NOT NULL     | Tag name    |
+
+**Foreign-key constraints:**
+
+- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+
+**Referenced by:**
+
+- FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+
+**Indexes:**
+
+```sql
+CREATE INDEX ix_tag_user_name_lower
+ON article(user_id, LOWER(name))
+```
 
 ### article_tag Table
 
@@ -73,9 +133,14 @@ TODO
 | article_id | INTEGER | PK, FK      | article.id  |
 | tag_id     | INTEGER | PK, FK      | tag.id      |
 
+**Foreign-key constraints:**
+
+- FOREIGN KEY (article_id) REFERENCES article(id) ON DELETE CASCADE
+- FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+
 ## 6. ER Diagram
 
-![ER_Diagram](./ER_diagram.drawio.png)
+![ER_Diagram](./assets/ER_diagram.drawio.png)
 
 ## 7. API Design
 
@@ -107,10 +172,10 @@ TODO
 
 ### ArticleCreate
 
-```json
+```typescript
 {
-    "title": string,
-    "url": HttpUrl
+  title: string;
+  url: string;
 }
 ```
 

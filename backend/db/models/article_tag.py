@@ -2,6 +2,12 @@ from sqlalchemy import Column, Integer, ForeignKey
 from ..database import Base
 
 
+# | Column     | Type    | Constraints | Description |
+# | ---------- | ------- | ----------- | ----------- |
+# | article_id | INTEGER | PK, FK      | article.id  |
+# | tag_id     | INTEGER | PK, FK      | tag.id      |
+
+
 class ArticleTag(Base):
     """ArticleTag の情報を管理するモデル
 

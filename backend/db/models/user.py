@@ -3,22 +3,11 @@ from sqlalchemy import (
     text, func 
 )
 from sqlalchemy.orm import relationship
-from ..database import Base
-
-
-# | Column        | Type                     | Constraints                         | Description          |
-# | ------------- | ------------------------ | ----------------------------------- | -------------------- |
-# | id            | INTEGER                  | PK                                  | User id              |
-# | name          | VARCHAR(300)             | NOT NULL                            | User name            |
-# | email         | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
-# | password_hash | VARCHAR(300)             | NOT NULL                            | Hashed user password |
-# | created_at    | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
-# | updated_at    | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
-# | is_active     | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
+from ..core import Base
 
 
 class User(Base):
-    """Tag Model
+    """User Model
 
     Attributes:
         id: The Primary Key of the user.
@@ -35,13 +24,13 @@ class User(Base):
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False
-        )
+    )
     updated_at = Column(
         DateTime(timezone=True), 
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False
-        )
+    )
     is_active = Column(Boolean, server_default=text("false"), nullable=False)
 
     articles = relationship("Article", back_populates="users")

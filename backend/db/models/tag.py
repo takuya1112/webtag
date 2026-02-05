@@ -2,14 +2,8 @@ from sqlalchemy import (
     Column, Integer, String, Index, ForeignKey, func 
 ) 
 from sqlalchemy.orm import relationship
-from ..database import Base
+from ..core import Base
 
-
-# | Column  | Type         | Constraints  | Description |
-# | ------- | ------------ | ------------ | ----------- |
-# | id      | INTEGER      | PK           | Tag id      |
-# | name    | VARCHAR(300) | NOT NULL     | Tag name    |
-# | user_id | INTEGER      | FK, NOT NULL | user.id     |
 
 class Tag(Base):
     """Tag Model

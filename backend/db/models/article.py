@@ -3,18 +3,7 @@ from sqlalchemy import (
     ForeignKey, text, func
 ) 
 from sqlalchemy.orm import relationship
-from ..database import Base
-
-# | Column     | Type                     | Constraints                         | Description       |
-# | ---------- | ------------------------ | ----------------------------------- | ----------------- |
-# | id         | INTEGER 　               | PK                                  | Article id        |
-# | title      | VARCHAR(300)             | NOT NULL                            | Article title     |
-# | url        | VARCHAR(2083)            | NOT NULL                            | Article URL       |
-# | created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time     |
-# | updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time |
-# | is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag  |
-# | deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time     |
-# | user_id    | INTEGER                  | FK, NOT NULL                        | user.id           |
+from ..core import Base
 
 
 class Article(Base):
@@ -39,13 +28,13 @@ class Article(Base):
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False
-        )
+    )
     updated_at = Column(
         DateTime(timezone=True), 
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False
-        )
+    )
     is_deleted = Column(Boolean, server_default=text("false"), nullable=False)
     deleted_at = Column(DateTime(timezone=True))
 

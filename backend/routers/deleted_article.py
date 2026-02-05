@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..db.database import get_session
+from ..db.core import get_session
 from ..db.services import DeletedArticleService
 from ..schemas.article import ArticleResponse, RestoreAllResponse
 

@@ -1,11 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from ..database import Base
-
-
-# | Column     | Type    | Constraints | Description |
-# | ---------- | ------- | ----------- | ----------- |
-# | article_id | INTEGER | PK, FK      | article.id  |
-# | tag_id     | INTEGER | PK, FK      | tag.id      |
+from ..core import Base
 
 
 class ArticleTag(Base):

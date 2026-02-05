@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..db.database import get_session
+from ..db.core import get_session
 from ..db.services import ArticleTagService
 from ..schemas.article_tag import ArticleTagResponse
 from ..schemas.tag import TagResponse

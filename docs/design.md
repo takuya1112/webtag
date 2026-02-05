@@ -3,7 +3,7 @@
 <!--
 TODO
 １. article search や tag searchの計算量問題や検索方法の改善
-2. dogstring や README 等の書き物を完成させる
+2. バックエンドのdogstring や README 等の書き物を完成させる
 -->
 
 ## 1. Context
@@ -59,8 +59,8 @@ TODO
 
 **Referenced by:**
 
-- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+- FOREIGN KEY article(user_id) REFERENCES user(id) ON DELETE CASCADE
+- FOREIGN KEY tag(user_id) REFERENCES user(id) ON DELETE CASCADE
 
 ### article Table
 
@@ -77,11 +77,11 @@ TODO
 
 **Foreign-key constraints:**
 
-- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+- FOREIGN KEY article(user_id) REFERENCES user(id) ON DELETE CASCADE
 
 **Referenced by:**
 
-- FOREIGN KEY (article_id) REFERENCES article(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(article_id) REFERENCES article(id) ON DELETE CASCADE
 
 **Indexes:**
 
@@ -113,11 +113,11 @@ WHERE is_deleted = TRUE;
 
 **Foreign-key constraints:**
 
-- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+- FOREIGN KEY tag(user_id) REFERENCES user(id) ON DELETE CASCADE
 
 **Referenced by:**
 
-- FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(tag_id) REFERENCES tag(id) ON DELETE CASCADE
 
 **Indexes:**
 
@@ -135,8 +135,8 @@ ON article(user_id, LOWER(name))
 
 **Foreign-key constraints:**
 
-- FOREIGN KEY (article_id) REFERENCES article(id) ON DELETE CASCADE
-- FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(article_id) REFERENCES article(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(tag_id) REFERENCES tag(id) ON DELETE CASCADE
 
 ## 6. ER Diagram
 
@@ -144,105 +144,210 @@ ON article(user_id, LOWER(name))
 
 ## 7. API Design
 
-| Endpoint                             | Method | Request Body  | Response Body         | Status Code | Description                      |
-| ------------------------------------ | ------ | ------------- | --------------------- | ----------- | -------------------------------- |
-| /articles                            | POST   | ArticleCreate | ArticleResponse       | 201/422     | Create article                   |
-| /articles/{id}                       | DELETE | None          | None                  | 204/404     | Soft delete article              |
-| /articles                            | DELETE | None          | None                  | 204         | Soft delete all articles         |
-| /articles/{id}                       | GET    | None          | ArticleResponse       | 200/404     | Get article                      |
-| /articles                            | GET    | None          | list[ArticleResponse] | 200         | Get all articles                 |
-| /articles/{id}                       | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article                   |
-| /articles/deleted/{id}/restore       | POST   | None          | ArticleResponse       | 200/404     | Restore deleted article          |
-| /articles/deleted/restore            | POST   | None          | RestoreAllResponse    | 200         | Restore all deleted articles     |
-| /articles/deleted/{id}               | DELETE | None          | None                  | 204/404     | Hard delete deleted article      |
-| /articles/deleted                    | DELETE | None          | None                  | 204         | Hard delete all deleted articles |
-| /articles/deleted/{id}               | GET    | None          | ArticleResponse       | 200/404     | Get deleted article              |
-| /articles/deleted                    | GET    | None          | list[ArticleResponse] | 200         | Get all deleted articles         |
-| /tags                                | POST   | TagCreate     | TagResponse           | 201/422     | Create tag                       |
-| /tags/{id}                           | DELETE | None          | None                  | 204/404     | Hard delete tag                  |
-| /tags                                | DELETE | None          | None                  | 204         | Hard delete all tags             |
-| /tags/{id}                           | GET    | None          | TagResponse           | 200/404     | Get tag                          |
-| /tags                                | GET    | None          | list[TagResponse]     | 200         | Get all tags                     |
-| /tags/{id}                           | PATCH  | TagUpdate     | TagResponse           | 200/400/404 | Update tag                       |
-| /articles/{article_id}/tags/{tag_id} | POST   | None          | ArticleTagResponse    | 201/404/409 | Attach tag to the article        |
-| /articles/{article_id}/tags/{tag_id} | DELETE | None          | None                  | 204/404     | Remove tag from the article      |
-| /articles/{article_id}/tags          | GET    | None          | list[TagResponse]     | 200/404     | Get tags attached to the article |
+### Users
+
+| Endpoint | Method | Request Body | Response Body | Status Code | Description |
+| -------- | ------ | ------------ | ------------- | ----------- | ----------- |
+| /users   | POST   | UserCreate   | UserResponse  | 201/409/422 | Create user |
+
+### Articles
+
+| Endpoint       | Method | Request Body  | Response Body         | Status Code | Description              |
+| -------------- | ------ | ------------- | --------------------- | ----------- | ------------------------ |
+| /articles      | POST   | ArticleCreate | ArticleResponse       | 201/422     | Create article           |
+| /articles/{id} | GET    | None          | ArticleResponse       | 200/404     | Get article              |
+| /articles      | GET    | None          | list[ArticleResponse] | 200         | Get all articles         |
+| /articles/{id} | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article           |
+| /articles/{id} | DELETE | None          | None                  | 204/404     | Soft delete article      |
+| /articles      | DELETE | None          | None                  | 204         | Soft delete all articles |
+
+### Deleted Articles
+
+| Endpoint                       | Method | Request Body | Response Body         | Status Code | Description                      |
+| ------------------------------ | ------ | ------------ | --------------------- | ----------- | -------------------------------- |
+| /articles/deleted/{id}/restore | POST   | None         | ArticleResponse       | 200/404     | Restore deleted article          |
+| /articles/deleted/restore      | POST   | None         | RestoreAllResponse    | 200         | Restore all deleted articles     |
+| /articles/deleted/{id}         | GET    | None         | ArticleResponse       | 200/404     | Get deleted article              |
+| /articles/deleted              | GET    | None         | list[ArticleResponse] | 200         | Get all deleted articles         |
+| /articles/deleted/{id}         | DELETE | None         | None                  | 204/404     | Hard delete deleted article      |
+| /articles/deleted              | DELETE | None         | None                  | 204         | Hard delete all deleted articles |
+
+### Tags
+
+| Endpoint   | Method | Request Body | Response Body     | Status Code | Description          |
+| ---------- | ------ | ------------ | ----------------- | ----------- | -------------------- |
+| /tags      | POST   | TagCreate    | TagResponse       | 201/422     | Create tag           |
+| /tags/{id} | GET    | None         | TagResponse       | 200/404     | Get tag              |
+| /tags      | GET    | None         | list[TagResponse] | 200         | Get all tags         |
+| /tags/{id} | PATCH  | TagUpdate    | TagResponse       | 200/400/404 | Update tag           |
+| /tags/{id} | DELETE | None         | None              | 204/404     | Hard delete tag      |
+| /tags      | DELETE | None         | None              | 204         | Hard delete all tags |
+
+### ArticleTags
+
+| Endpoint                             | Method | Request Body | Response Body      | Status Code | Description                      |
+| ------------------------------------ | ------ | ------------ | ------------------ | ----------- | -------------------------------- |
+| /articles/{article_id}/tags/{tag_id} | POST   | None         | ArticleTagResponse | 201/404/409 | Attach tag to the article        |
+| /articles/{article_id}/tags          | GET    | None         | list[TagResponse]  | 200/404     | Get tags attached to the article |
+| /articles/{article_id}/tags/{tag_id} | DELETE | None         | None               | 204/404     | Remove tag from the article      |
 
 ## 8. API Request/Response Schemas
 
-### ArticleCreate
+### Request Schemas
 
-```typescript
-{
-  title: string;
-  url: string;
-}
-```
+#### ArticleCreate
 
-### ArticleUpdate
+**Fields:**
 
-```json
-{
-    "title": string | None = None,
-    "url": HttpUrl | None = None
-}
-```
+| Field | Type         | Required | Constraints    | Description   |
+| ----- | ------------ | -------- | -------------- | ------------- |
+| title | string       | Yes      | max 300 chars  | Article title |
+| url   | string (URL) | Yes      | max 2083 chars | Article URL   |
 
-### TagCreate
+**Example:**
 
 ```json
 {
-    "name": string
+  "title": "title",
+  "url": "https://example.com"
 }
 ```
 
-### TagUpdate
+#### ArticleUpdate
+
+**Fields:**
+
+| Field | Type         | Required | Constraints    | Description   |
+| ----- | ------------ | -------- | -------------- | ------------- |
+| title | string       | No       | max 300 chars  | Article title |
+| url   | string (URL) | No       | max 2083 chars | Article URL   |
+
+**Example:**
 
 ```json
 {
-    "name": string
+  "title": "new title",
+  "url": "https://example.com"
 }
 ```
 
-<hr/>
+#### TagCreate
 
-### ArticleResponse
+**Fields:**
+
+| Field | Type   | Required | Constraints   | Description |
+| ----- | ------ | -------- | ------------- | ----------- |
+| name  | string | Yes      | max 300 chars | Tag name    |
+
+**Example:**
 
 ```json
 {
-    "id": integer,
-    "title": string,
-    "url": string
+  "name": "tag"
 }
 ```
 
-### TagResponse
+#### TagUpdate
+
+**Fields:**
+
+| Field | Type   | Required | Constraints   | Description |
+| ----- | ------ | -------- | ------------- | ----------- |
+| name  | string | Yes      | max 300 chars | Tag name    |
+
+**Example:**
 
 ```json
 {
-    "id": integer,
-    "name": string
+  "name": "new tag"
 }
 ```
 
-### ArticleTagResponse
+### Response Schemas
+
+#### ArticleResponse
+
+**Fields:**
+
+| Field | Type         | Description   |
+| ----- | ------------ | ------------- |
+| id    | integer      | Article id    |
+| title | string       | Article title |
+| url   | string (URL) | Article URL   |
+
+**Example:**
 
 ```json
 {
-    "article_id": integer,
-    "tag_id": integer
+  "id": 1,
+  "title": "title",
+  "url": "https://example.com"
 }
 ```
 
-### RestoreAllResponse
+#### TagResponse
+
+**Fields:**
+
+| Field | Type    | Description |
+| ----- | ------- | ----------- |
+| id    | integer | Tag id      |
+| name  | string  | Tag name    |
+
+**Example:**
 
 ```json
 {
-    "restored_count": integer
+  "id": 1,
+  "name": "tag"
 }
 ```
 
-### Error Responses
+#### ArticleTagResponse
+
+**Fields:**
+
+| Field      | Type    | Description |
+| ---------- | ------- | ----------- |
+| article_id | integer | Article id  |
+| tag_id     | integer | tag id      |
+
+**Example:**
+
+```json
+{
+  "article_id": 1,
+  "tag_id": 2
+}
+```
+
+#### RestoreAllResponse
+
+**Fields:**
+
+| Field          | Type    | Description    |
+| -------------- | ------- | -------------- |
+| restored_count | integer | restored count |
+
+**Example:**
+
+```json
+{
+  "restored_count": 2
+}
+```
+
+### Status Codes
+
+| Status Code | Meaning |
+| ----------- | ------- |
+| 200         |         |
+| 201         |         |
+| 204         |         |
+| 400         |         |
+| 404         |         |
+| 409         |         |
+| 422         |         |
 
 - 400: Invalid request
 - 404: Resource not found

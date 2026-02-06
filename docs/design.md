@@ -140,7 +140,7 @@ ON article(user_id, LOWER(name))
 
 ## 6. ER Diagram
 
-![ER_Diagram](./assets/ER_diagram.drawio.png)
+![ER_Diagram](./assets/ER%20diagram.drawio.png)
 
 ## 7. API Design
 

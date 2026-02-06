@@ -19,9 +19,9 @@ class Article(Base):
         deleted_at: The timestamp when the article was soft-deleted
     """
 
-    __tablename__ = 'article'
+    __tablename__ = 'articles'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     title = Column(String(300), nullable=False)
     url = Column(String(2083), nullable=False)
     created_at = Column(

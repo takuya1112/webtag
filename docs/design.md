@@ -45,7 +45,7 @@ TODO
 
 ## 5. Database Schema
 
-### user Table
+### users Table
 
 | Column        | Type                     | Constraints                         | Description          |
 | ------------- | ------------------------ | ----------------------------------- | -------------------- |
@@ -59,10 +59,10 @@ TODO
 
 **Referenced by:**
 
-- FOREIGN KEY article(user_id) REFERENCES user(id) ON DELETE CASCADE
-- FOREIGN KEY tag(user_id) REFERENCES user(id) ON DELETE CASCADE
+- FOREIGN KEY articles(user_id) REFERENCES users(id) ON DELETE CASCADE
+- FOREIGN KEY tags(user_id) REFERENCES users(id) ON DELETE CASCADE
 
-### article Table
+### articles Table
 
 | Column     | Type                     | Constraints                         | Description       |
 | ---------- | ------------------------ | ----------------------------------- | ----------------- |
@@ -77,11 +77,11 @@ TODO
 
 **Foreign-key constraints:**
 
-- FOREIGN KEY article(user_id) REFERENCES user(id) ON DELETE CASCADE
+- FOREIGN KEY articles(user_id) REFERENCES users(id) ON DELETE CASCADE
 
 **Referenced by:**
 
-- FOREIGN KEY article_tag(article_id) REFERENCES article(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(article_id) REFERENCES articles(id) ON DELETE CASCADE
 
 **Indexes:**
 
@@ -103,7 +103,7 @@ ON article(user_id, deleted_at)
 WHERE is_deleted = TRUE;
 ```
 
-### tag Table
+### tags Table
 
 | Column  | Type         | Constraints  | Description |
 | ------- | ------------ | ------------ | ----------- |
@@ -113,11 +113,11 @@ WHERE is_deleted = TRUE;
 
 **Foreign-key constraints:**
 
-- FOREIGN KEY tag(user_id) REFERENCES user(id) ON DELETE CASCADE
+- FOREIGN KEY tags(user_id) REFERENCES users(id) ON DELETE CASCADE
 
 **Referenced by:**
 
-- FOREIGN KEY article_tag(tag_id) REFERENCES tag(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(tag_id) REFERENCES tags(id) ON DELETE CASCADE
 
 **Indexes:**
 
@@ -135,8 +135,8 @@ ON article(user_id, LOWER(name))
 
 **Foreign-key constraints:**
 
-- FOREIGN KEY article_tag(article_id) REFERENCES article(id) ON DELETE CASCADE
-- FOREIGN KEY article_tag(tag_id) REFERENCES tag(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(article_id) REFERENCES articles(id) ON DELETE CASCADE
+- FOREIGN KEY article_tag(tag_id) REFERENCES tags(id) ON DELETE CASCADE
 
 ## 6. ER Diagram
 
@@ -183,7 +183,7 @@ ON article(user_id, LOWER(name))
 | /tags/{id} | DELETE | None         | None              | 204/404     | Hard delete tag      |
 | /tags      | DELETE | None         | None              | 204         | Hard delete all tags |
 
-### ArticleTags
+### ArticleTag
 
 | Endpoint                             | Method | Request Body | Response Body      | Status Code | Description                      |
 | ------------------------------------ | ------ | ------------ | ------------------ | ----------- | -------------------------------- |

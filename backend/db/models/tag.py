@@ -13,9 +13,9 @@ class Tag(Base):
         name: The name of the tag.
     """
 
-    __tablename__ = 'tag'
+    __tablename__ = 'tags'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     name = Column(String(300), nullable=False)
 
     articles = relationship("Article", secondary="article_tag", back_populates="tags") 

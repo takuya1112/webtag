@@ -11,8 +11,8 @@ class ArticleTag(Base):
     """
     
     __tablename__ = 'article_tag'
-    article_id = Column(Integer, ForeignKey('article.id', ondelete="CASCADE"), primary_key=True)
-    tag_id = Column(Integer, ForeignKey('tag.id', ondelete="CASCADE"), primary_key=True)
+    article_id = Column(Integer, ForeignKey('articles.id', ondelete="CASCADE"), primary_key=True)
+    tag_id = Column(Integer, ForeignKey('tags.id', ondelete="CASCADE"), primary_key=True)
 
     def __repr__(self) -> str:
         return f"<ArticleTag(article_id = {self.article_id}, tag_id = {self.tag_id})>"

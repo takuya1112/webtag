@@ -1,8 +1,10 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Index,
+    Column, BigInteger, String, Boolean, DateTime, Index,
     ForeignKey, text, func
 ) 
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
+from uuid import uuid4
 from ..core import Base
 
 
@@ -20,8 +22,9 @@ class Article(Base):
     """
 
     __tablename__ = 'articles'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
+    user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     title = Column(String(300), nullable=False)
     url = Column(String(2083), nullable=False)
     created_at = Column(
@@ -67,6 +70,3 @@ class Article(Base):
             postgresql_where=(is_deleted.is_(True)),
         ),
     )
-    
-    def __repr__(self) -> str:
-        return f"<Article(id = {self.id}, title = {self.title}, url = {self.url})>"

@@ -1,8 +1,10 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, 
+    Column, BigInteger, String, Boolean, DateTime, 
     text, func 
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
+from uuid import uuid4
 from ..core import Base
 
 
@@ -16,9 +18,10 @@ class User(Base):
     """
 
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
     name = Column(String(300), nullable=False)
-    email = Column(String(300), nullable=False, unique=True)
+    email = Column(String(300), unique=True, nullable=False)
     password_hash = Column(String(300), nullable=False)
     created_at = Column(
         DateTime(timezone=True),
@@ -32,9 +35,7 @@ class User(Base):
         nullable=False
     )
     is_active = Column(Boolean, server_default=text("false"), nullable=False)
+    deactivated_at = Column(DateTime(timezone=True))
 
     articles = relationship("Article", back_populates="users")
     tags = relationship("Tag", back_populates="users")
-
-    def __repr__(self) -> str:
-        return f"<User(id = {self.id}, name = {self.name})>"

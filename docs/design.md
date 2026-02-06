@@ -47,15 +47,17 @@ TODO
 
 ### users Table
 
-| Column        | Type                     | Constraints                         | Description          |
-| ------------- | ------------------------ | ----------------------------------- | -------------------- |
-| id            | INTEGER                  | PK                                  | User id              |
-| name          | VARCHAR(300)             | NOT NULL                            | User name            |
-| email         | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
-| password_hash | VARCHAR(300)             | NOT NULL                            | Hashed user password |
-| created_at    | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
-| updated_at    | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
-| is_active     | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
+| Column         | Type                     | Constraints                         | Description          |
+| -------------- | ------------------------ | ----------------------------------- | -------------------- |
+| id             | BIGINT                   | PK                                  | User id              |
+| public_id      | UUID                     | NOT NULL, UNIQUE                    | User display id      |
+| name           | VARCHAR(300)             | NOT NULL                            | User name            |
+| email          | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
+| password_hash  | VARCHAR(300)             | NOT NULL                            | Hashed user password |
+| created_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
+| updated_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
+| is_active      | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
+| deactivated_at | TIMESTAMP WITH TIME ZONE | NULL                                | deactivated time     |
 
 **Referenced by:**
 
@@ -64,16 +66,17 @@ TODO
 
 ### articles Table
 
-| Column     | Type                     | Constraints                         | Description       |
-| ---------- | ------------------------ | ----------------------------------- | ----------------- |
-| id         | INTEGER 　               | PK                                  | Article id        |
-| user_id    | INTEGER                  | FK, NOT NULL                        | user.id           |
-| title      | VARCHAR(300)             | NOT NULL                            | Article title     |
-| url        | VARCHAR(2083)            | NOT NULL                            | Article URL       |
-| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time     |
-| updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time |
-| is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag  |
-| deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time     |
+| Column     | Type                     | Constraints                         | Description        |
+| ---------- | ------------------------ | ----------------------------------- | ------------------ |
+| id         | BIGINT 　                | PK                                  | Article id         |
+| public_id  | UUID                     | NOT NULL, UNIQUE                    | Article display id |
+| user_id    | BIGINT                   | FK                                  | user.id            |
+| title      | VARCHAR(300)             | NOT NULL                            | Article title      |
+| url        | VARCHAR(2083)            | NOT NULL                            | Article URL        |
+| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time      |
+| updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time  |
+| is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag   |
+| deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time      |
 
 **Foreign-key constraints:**
 
@@ -105,11 +108,12 @@ WHERE is_deleted = TRUE;
 
 ### tags Table
 
-| Column  | Type         | Constraints  | Description |
-| ------- | ------------ | ------------ | ----------- |
-| id      | INTEGER      | PK           | Tag id      |
-| user_id | INTEGER      | FK, NOT NULL | user.id     |
-| name    | VARCHAR(300) | NOT NULL     | Tag name    |
+| Column    | Type         | Constraints      | Description    |
+| --------- | ------------ | ---------------- | -------------- |
+| id        | BIGINT       | PK               | Tag id         |
+| public_id | UUID         | NOT NULL, UNIQUE | Tag display id |
+| user_id   | BIGINT       | FK               | user.id        |
+| name      | VARCHAR(300) | NOT NULL         | Tag name       |
 
 **Foreign-key constraints:**
 
@@ -123,15 +127,15 @@ WHERE is_deleted = TRUE;
 
 ```sql
 CREATE INDEX ix_tag_user_name_lower
-ON article(user_id, LOWER(name))
+ON tags(user_id, LOWER(name))
 ```
 
 ### article_tag Table
 
-| Column     | Type    | Constraints | Description |
-| ---------- | ------- | ----------- | ----------- |
-| article_id | INTEGER | PK, FK      | article.id  |
-| tag_id     | INTEGER | PK, FK      | tag.id      |
+| Column     | Type   | Constraints | Description |
+| ---------- | ------ | ----------- | ----------- |
+| article_id | BIGINT | PK, FK      | article.id  |
+| tag_id     | BIGINT | PK, FK      | tag.id      |
 
 **Foreign-key constraints:**
 
@@ -152,36 +156,36 @@ ON article(user_id, LOWER(name))
 
 ### Articles
 
-| Endpoint       | Method | Request Body  | Response Body         | Status Code | Description              |
-| -------------- | ------ | ------------- | --------------------- | ----------- | ------------------------ |
-| /articles      | POST   | ArticleCreate | ArticleResponse       | 201/422     | Create article           |
-| /articles/{id} | GET    | None          | ArticleResponse       | 200/404     | Get article              |
-| /articles      | GET    | None          | list[ArticleResponse] | 200         | Get all articles         |
-| /articles/{id} | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article           |
-| /articles/{id} | DELETE | None          | None                  | 204/404     | Soft delete article      |
-| /articles      | DELETE | None          | None                  | 204         | Soft delete all articles |
+| Endpoint              | Method | Request Body  | Response Body         | Status Code | Description              |
+| --------------------- | ------ | ------------- | --------------------- | ----------- | ------------------------ |
+| /articles             | POST   | ArticleCreate | ArticleResponse       | 201/422     | Create article           |
+| /articles/{public_id} | GET    | None          | ArticleResponse       | 200/404     | Get article              |
+| /articles             | GET    | None          | list[ArticleResponse] | 200         | Get all articles         |
+| /articles/{public_id} | PATCH  | ArticleUpdate | ArticleResponse       | 200/400/404 | Update article           |
+| /articles/{public_id} | DELETE | None          | None                  | 204/404     | Soft delete article      |
+| /articles             | DELETE | None          | None                  | 204         | Soft delete all articles |
 
 ### Deleted Articles
 
-| Endpoint                       | Method | Request Body | Response Body         | Status Code | Description                      |
-| ------------------------------ | ------ | ------------ | --------------------- | ----------- | -------------------------------- |
-| /articles/deleted/{id}/restore | POST   | None         | ArticleResponse       | 200/404     | Restore deleted article          |
-| /articles/deleted/restore      | POST   | None         | RestoreAllResponse    | 200         | Restore all deleted articles     |
-| /articles/deleted/{id}         | GET    | None         | ArticleResponse       | 200/404     | Get deleted article              |
-| /articles/deleted              | GET    | None         | list[ArticleResponse] | 200         | Get all deleted articles         |
-| /articles/deleted/{id}         | DELETE | None         | None                  | 204/404     | Hard delete deleted article      |
-| /articles/deleted              | DELETE | None         | None                  | 204         | Hard delete all deleted articles |
+| Endpoint                              | Method | Request Body | Response Body         | Status Code | Description                      |
+| ------------------------------------- | ------ | ------------ | --------------------- | ----------- | -------------------------------- |
+| /articles/deleted/{public_id}/restore | POST   | None         | ArticleResponse       | 200/404     | Restore deleted article          |
+| /articles/deleted/restore             | POST   | None         | RestoreAllResponse    | 200         | Restore all deleted articles     |
+| /articles/deleted/{public_id}         | GET    | None         | ArticleResponse       | 200/404     | Get deleted article              |
+| /articles/deleted                     | GET    | None         | list[ArticleResponse] | 200         | Get all deleted articles         |
+| /articles/deleted/{public_id}         | DELETE | None         | None                  | 204/404     | Hard delete deleted article      |
+| /articles/deleted                     | DELETE | None         | None                  | 204         | Hard delete all deleted articles |
 
 ### Tags
 
-| Endpoint   | Method | Request Body | Response Body     | Status Code | Description          |
-| ---------- | ------ | ------------ | ----------------- | ----------- | -------------------- |
-| /tags      | POST   | TagCreate    | TagResponse       | 201/422     | Create tag           |
-| /tags/{id} | GET    | None         | TagResponse       | 200/404     | Get tag              |
-| /tags      | GET    | None         | list[TagResponse] | 200         | Get all tags         |
-| /tags/{id} | PATCH  | TagUpdate    | TagResponse       | 200/400/404 | Update tag           |
-| /tags/{id} | DELETE | None         | None              | 204/404     | Hard delete tag      |
-| /tags      | DELETE | None         | None              | 204         | Hard delete all tags |
+| Endpoint          | Method | Request Body | Response Body     | Status Code | Description          |
+| ----------------- | ------ | ------------ | ----------------- | ----------- | -------------------- |
+| /tags             | POST   | TagCreate    | TagResponse       | 201/422     | Create tag           |
+| /tags/{public_id} | GET    | None         | TagResponse       | 200/404     | Get tag              |
+| /tags             | GET    | None         | list[TagResponse] | 200         | Get all tags         |
+| /tags/{public_id} | PATCH  | TagUpdate    | TagResponse       | 200/400/404 | Update tag           |
+| /tags/{public_id} | DELETE | None         | None              | 204/404     | Hard delete tag      |
+| /tags             | DELETE | None         | None              | 204         | Hard delete all tags |
 
 ### ArticleTag
 

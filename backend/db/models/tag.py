@@ -1,7 +1,9 @@
 from sqlalchemy import (
-    Column, Integer, String, Index, ForeignKey, func 
+    Column, BigInteger, String, Index, ForeignKey, func 
 ) 
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
+from uuid import uuid4
 from ..core import Base
 
 
@@ -14,8 +16,9 @@ class Tag(Base):
     """
 
     __tablename__ = 'tags'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
+    user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     name = Column(String(300), nullable=False)
 
     articles = relationship("Article", secondary="article_tag", back_populates="tags") 
@@ -28,7 +31,3 @@ class Tag(Base):
             func.lower(name),
         ),
     )
-
-    def __repr__(self) -> str:
-        return f"<Tag(id = {self.id}, name = {self.name})>"
-    

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, BigInteger, ForeignKey
 from ..core import Base
 
 
@@ -11,9 +11,5 @@ class ArticleTag(Base):
     """
     
     __tablename__ = 'article_tag'
-    article_id = Column(Integer, ForeignKey('articles.id', ondelete="CASCADE"), primary_key=True)
-    tag_id = Column(Integer, ForeignKey('tags.id', ondelete="CASCADE"), primary_key=True)
-
-    def __repr__(self) -> str:
-        return f"<ArticleTag(article_id = {self.article_id}, tag_id = {self.tag_id})>"
-    
+    article_id = Column(BigInteger, ForeignKey('articles.id', ondelete="CASCADE"), primary_key=True)
+    tag_id = Column(BigInteger, ForeignKey('tags.id', ondelete="CASCADE"), primary_key=True)

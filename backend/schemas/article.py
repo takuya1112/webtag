@@ -1,3 +1,4 @@
+from typing_extensions import Self
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, HttpUrl, AfterValidator, model_validator
 from enum import Enum
@@ -27,7 +28,7 @@ class ArticleUpdate(BaseModel):
     url: HttpUrl | None = None
 
     @model_validator(mode="after")
-    def validate_article_update(self):
+    def validate_article_update(self) -> Self:
         if self.title is None and self.url is None:
             raise ValueError("title or url must be filled")
         return self

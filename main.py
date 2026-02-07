@@ -11,19 +11,25 @@
 # from backend.routers import *
 
 # app = FastAPI()
-# app.include_router(deleted_article.router)
+# app.include_router(user.router)
 
+from sqlalchemy.orm import Session
+from backend.db.core.database import SessionLocal 
+from backend.db.models import User
+from uuid import uuid4
 
-import bcrypt
-pw = b'!!eC87!$7^oZ6L'
-s = bcrypt.gensalt()
-h = bcrypt.hashpw(pw, s) # Hash password
-entered_pw = b'!!eC87!$7^oZ6L'
+session: Session = SessionLocal()
 
-print(s)
-print(h)
+users = [
+    User(
+        public_id=uuid4(),
+        name=f"user_{i}",
+        email=f"user_@example.com",
+        password_hash="dummy"
+    )
+    for i in range(2)
+]
 
-if bcrypt.checkpw(entered_pw, h):
-    print("Password match!")
-else:
-    print("Incorrect password.")
+session.add_all(users)
+session.commit()
+session.close()

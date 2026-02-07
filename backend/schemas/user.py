@@ -1,5 +1,6 @@
 from typing_extensions import Self
 from pydantic import BaseModel, ConfigDict, model_validator
+from uuid import UUID
 
 class UserCreate(BaseModel):
     name: str
@@ -15,3 +16,9 @@ class UserCreate(BaseModel):
             raise ValueError("Passwords do not match")
         return self
     
+class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    public_id: UUID
+    name: str
+    email: str

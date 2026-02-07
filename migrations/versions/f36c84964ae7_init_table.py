@@ -1,8 +1,8 @@
-"""table init
+"""init table
 
-Revision ID: 34062267eae9
+Revision ID: f36c84964ae7
 Revises: 
-Create Date: 2026-02-06 19:29:18.267170
+Create Date: 2026-02-07 12:02:06.157207
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '34062267eae9'
+revision: str = 'f36c84964ae7'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -38,7 +38,7 @@ def upgrade() -> None:
     op.create_table('articles',
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('public_id', sa.UUID(), nullable=False),
-    sa.Column('user_id', sa.BigInteger(), nullable=True),
+    sa.Column('user_id', sa.BigInteger(), nullable=False),
     sa.Column('title', sa.String(length=300), nullable=False),
     sa.Column('url', sa.String(length=2083), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -54,9 +54,9 @@ def upgrade() -> None:
     op.create_index('ix_article_user_title_lower', 'articles', ['user_id', sa.literal_column('lower(title)')], unique=False, postgresql_where=sa.text('is_deleted IS false'))
     op.create_index('ix_article_user_updated_at', 'articles', ['user_id', 'updated_at'], unique=False, postgresql_where=sa.text('is_deleted IS false'))
     op.create_table('tags',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('public_id', sa.UUID(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.BigInteger(), nullable=False),
     sa.Column('name', sa.String(length=300), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
@@ -64,8 +64,8 @@ def upgrade() -> None:
     )
     op.create_index('ix_tag_user_name_lower', 'tags', ['user_id', sa.literal_column('lower(name)')], unique=False)
     op.create_table('article_tag',
-    sa.Column('article_id', sa.Integer(), nullable=False),
-    sa.Column('tag_id', sa.Integer(), nullable=False),
+    sa.Column('article_id', sa.BigInteger(), nullable=False),
+    sa.Column('tag_id', sa.BigInteger(), nullable=False),
     sa.ForeignKeyConstraint(['article_id'], ['articles.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['tag_id'], ['tags.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('article_id', 'tag_id')

@@ -22,7 +22,7 @@ class Tag(Base):
     name = Column(String(300), nullable=False)
 
     articles = relationship("Article", secondary="article_tag", back_populates="tags") 
-    users = relationship("User", back_populates="tags")
+    user = relationship("User", back_populates="tags")
 
     __table_args__ = (
         Index(

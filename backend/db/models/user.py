@@ -37,5 +37,5 @@ class User(Base):
     is_active = Column(Boolean, server_default=text("false"), nullable=False)
     deactivated_at = Column(DateTime(timezone=True))
 
-    articles = relationship("Article", back_populates="users")
-    tags = relationship("Tag", back_populates="users")
+    articles = relationship("Article", back_populates="user")
+    tags = relationship("Tag", back_populates="user")

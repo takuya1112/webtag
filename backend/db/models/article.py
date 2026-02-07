@@ -42,7 +42,7 @@ class Article(Base):
     deleted_at = Column(DateTime(timezone=True))
 
     tags = relationship("Tag", secondary="article_tag", back_populates="articles")
-    users = relationship("User", back_populates="articles")
+    user = relationship("User", back_populates="articles")
 
     __table_args__ = (
         Index(

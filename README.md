@@ -71,56 +71,71 @@ and to make it easier to find the websites you need.
 .
 ├── .gitignore
 ├── README.md
-├── alembic.ini
 ├── backend
+│   ├── README.md
+│   ├── alembic.ini
+│   ├── main.py
+│   ├── api
+│   │   ├── dependencies.py
+│   │   └── routers
+│   │       ├── article.py
+│   │       ├── article_tag.py
+│   │       ├── deleted_article.py
+│   │       ├── tag.py
+│   │       └── user.py
 │   ├── db
-│   │   ├── config.py
-│   │   ├── database.py
 │   │   ├── models
 │   │   │   ├── article.py
 │   │   │   ├── article_tag.py
 │   │   │   ├── tag.py
 │   │   │   └── user.py
-│   │   ├── repositories
-│   │   │   ├── article.py
-│   │   │   ├── article_tag.py
-│   │   │   ├── deleted_article.py
-│   │   │   └── tag.py
-│   │   └── services
-│   │       ├── article.py
-│   │       ├── article_tag.py
-│   │       ├── deleted_article.py
-│   │       └── tag.py
-│   ├── routers
+│   │   └── session.py
+│   |── services
+│   |   ├── article.py
+│   |   ├── article_tag.py
+│   |   ├── deleted_article.py
+│   |   ├── tag.py
+│   |   └── user.py
+│   ├── repositories
 │   │   ├── article.py
 │   │   ├── article_tag.py
 │   │   ├── deleted_article.py
-│   │   └── tag.py
+│   │   ├── tag.py
+│   │   └── user.py
+│   ├── core
+│   │   ├── config.py
+│   │   ├── constants.py
+│   │   ├── exceptions.py
+│   │   ├── logging.py
+│   │   ├── security.py
+│   │   └── validators.py
 │   └── schemas
 │       ├── article.py
 │       ├── article_tag.py
-│       └── tag.py
+│       ├── fields.py
+│       ├── tag.py
+│       └── user.py
 ├── docs
-│   ├── ER diagram.drawio.png
+│   ├── assets
+│   │   └── ER diagram.drawio.png
 │   └── design.md
-├── frontend
-│   ├── README.md
-│   ├── eslint.config.js
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── public
-│   │   └── vite.svg
-│   ├── src
-│   │   ├── App.css
-│   │   ├── App.tsx
-│   │   ├── assets
-│   │   │   └── react.svg
-│   │   ├── index.css
-│   │   └── main.tsx
-│   ├── tsconfig.app.json
-│   ├── tsconfig.json
-│   ├── tsconfig.node.json
-│   └── vite.config.ts
-└── main.py
+└── frontend
+    ├── README.md
+    ├── eslint.config.js
+    ├── index.html
+    ├── package-lock.json
+    ├── package.json
+    ├── public
+    │   └── vite.svg
+    ├── src
+    │   ├── App.css
+    │   ├── App.tsx
+    │   ├── assets
+    │   │   └── react.svg
+    │   ├── index.css
+    │   └── main.tsx
+    ├── tsconfig.app.json
+    ├── tsconfig.json
+    ├── tsconfig.node.json
+    └── vite.config.ts
 ```

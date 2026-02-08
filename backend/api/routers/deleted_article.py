@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from ..dependencies import DeletedArticleServiceDep
-from ...schemas.article import ArticleResponse, RestoreAllResponse
+from schemas.article import ArticleResponse, RestoreAllResponse
 
 router = APIRouter(
     prefix="/articles/deleted",

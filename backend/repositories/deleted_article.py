@@ -1,6 +1,6 @@
 from sqlalchemy import func, text
 from sqlalchemy.orm import Session
-from ..models import Article
+from db.models import Article
 
 
 class DeletedArticleRepository:

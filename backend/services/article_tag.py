@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
-from ..models import ArticleTag, Tag
-from ..repositories import ArticleTagRepository
-from ..services import ArticleService, TagService
+from db.models import ArticleTag, Tag
+from repositories import ArticleTagRepository
+from .article import ArticleService
+from .tag import TagService
 from fastapi import HTTPException, status
 
 

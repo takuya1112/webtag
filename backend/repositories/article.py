@@ -1,7 +1,7 @@
 from sqlalchemy import func, desc, asc, or_
 from sqlalchemy.orm import Session
-from ..models import Article, Tag
-from ...schemas.article import ArticleSort, ArticleUpdate
+from db.models import Article, Tag
+from schemas.article import ArticleSort, ArticleUpdate
 
 
 class ArticleRepository:

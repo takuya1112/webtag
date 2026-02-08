@@ -51,9 +51,9 @@ TODO
 | -------------- | ------------------------ | ----------------------------------- | -------------------- |
 | id             | BIGINT                   | PK                                  | User id              |
 | public_id      | UUID                     | NOT NULL, UNIQUE                    | User display id      |
-| name           | VARCHAR(300)             | NOT NULL                            | User name            |
-| email          | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
-| password_hash  | VARCHAR(300)             | NOT NULL                            | Hashed user password |
+| name           | VARCHAR(30)              | NOT NULL                            | User name            |
+| email          | VARCHAR(255)             | NOT NULL, UNIQUE                    | User email           |
+| password_hash  | VARCHAR(255)             | NOT NULL                            | Hashed user password |
 | created_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
 | updated_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
 | is_active      | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
@@ -71,7 +71,7 @@ TODO
 | id         | BIGINT 　                | PK                                  | Article id         |
 | public_id  | UUID                     | NOT NULL, UNIQUE                    | Article display id |
 | user_id    | BIGINT                   | FK                                  | user.id            |
-| title      | VARCHAR(300)             | NOT NULL                            | Article title      |
+| title      | VARCHAR(255)             | NOT NULL                            | Article title      |
 | url        | VARCHAR(2083)            | NOT NULL                            | Article URL        |
 | created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time      |
 | updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time  |
@@ -108,12 +108,12 @@ WHERE is_deleted = TRUE;
 
 ### tags Table
 
-| Column    | Type         | Constraints      | Description    |
-| --------- | ------------ | ---------------- | -------------- |
-| id        | BIGINT       | PK               | Tag id         |
-| public_id | UUID         | NOT NULL, UNIQUE | Tag display id |
-| user_id   | BIGINT       | FK               | user.id        |
-| name      | VARCHAR(300) | NOT NULL         | Tag name       |
+| Column    | Type        | Constraints      | Description    |
+| --------- | ----------- | ---------------- | -------------- |
+| id        | BIGINT      | PK               | Tag id         |
+| public_id | UUID        | NOT NULL, UNIQUE | Tag display id |
+| user_id   | BIGINT      | FK               | user.id        |
+| name      | VARCHAR(30) | NOT NULL         | Tag name       |
 
 **Foreign-key constraints:**
 
@@ -198,6 +198,17 @@ ON tags(user_id, LOWER(name))
 ## 8. API Request/Response Schemas
 
 ### Request Schemas
+
+#### UserCreate
+
+**Fields:**
+
+| Field           | Type   | Required | Constraints           | Description           |
+| --------------- | ------ | -------- | --------------------- | --------------------- |
+| name            | string | Yes      | min 1, max 30 chars   | User name             |
+| email           | string | Yes      | max 255 chars, Unique | User email            |
+| password        | string | Yes      | min 8, max 72         | User password (plain) |
+| password_repeat | string | Yes      | same as password      | repeat password       |
 
 #### ArticleCreate
 

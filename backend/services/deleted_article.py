@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from ..models import Article
-from ..repositories import DeletedArticleRepository
+from db.models import Article
+from repositories import DeletedArticleRepository
 from fastapi import HTTPException, status
 
 

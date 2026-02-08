@@ -10,4 +10,4 @@ __all__ = [
     "deleted_article",
     "tag",
     "article_tag"
-    ]
+]

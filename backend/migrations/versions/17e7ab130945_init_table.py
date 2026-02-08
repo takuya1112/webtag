@@ -1,8 +1,8 @@
 """init table
 
-Revision ID: f36c84964ae7
+Revision ID: 17e7ab130945
 Revises: 
-Create Date: 2026-02-07 12:02:06.157207
+Create Date: 2026-02-08 13:39:55.165997
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f36c84964ae7'
+revision: str = '17e7ab130945'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,9 +24,9 @@ def upgrade() -> None:
     op.create_table('users',
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('public_id', sa.UUID(), nullable=False),
-    sa.Column('name', sa.String(length=300), nullable=False),
-    sa.Column('email', sa.String(length=300), nullable=False),
-    sa.Column('password_hash', sa.String(length=300), nullable=False),
+    sa.Column('name', sa.String(length=30), nullable=False),
+    sa.Column('email', sa.String(length=255), nullable=False),
+    sa.Column('password_hash', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('is_active', sa.Boolean(), server_default=sa.text('false'), nullable=False),
@@ -39,7 +39,7 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('public_id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=False),
-    sa.Column('title', sa.String(length=300), nullable=False),
+    sa.Column('title', sa.String(length=255), nullable=False),
     sa.Column('url', sa.String(length=2083), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -57,7 +57,7 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('public_id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=False),
-    sa.Column('name', sa.String(length=300), nullable=False),
+    sa.Column('name', sa.String(length=30), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('public_id')

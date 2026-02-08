@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from ..dependencies import ArticleTagServiceDep
-from ...schemas import ArticleTagResponse, TagResponse
+from schemas import ArticleTagResponse, TagResponse
 
 
 router = APIRouter(

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, BigInteger, ForeignKey
-from ..core import Base
+from ..session import Base
 
 
 class ArticleTag(Base):

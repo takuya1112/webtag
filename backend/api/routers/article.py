@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 from ..dependencies import ArticleServiceDep
-from ...schemas.article import (
+from schemas.article import (
     ArticleCreate, 
     ArticleResponse, 
     ArticleSort, 

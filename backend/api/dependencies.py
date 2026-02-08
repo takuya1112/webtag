@@ -1,8 +1,8 @@
 from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from ..db.core import get_session
-from ..db.services import (
+from db import get_session
+from services import (
     UserService, ArticleService, DeletedArticleService,
     TagService, ArticleTagService,
 )

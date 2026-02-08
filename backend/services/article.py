@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from ..models import Article
-from ..repositories import ArticleRepository
+from db.models import Article
+from repositories import ArticleRepository
 from fastapi import HTTPException, status
-from ...schemas.article import ArticleCreate, ArticleUpdate, ArticleSort
+from schemas.article import ArticleCreate, ArticleUpdate, ArticleSort
 
 
 class ArticleService:

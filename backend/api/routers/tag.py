@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 from ..dependencies import TagServiceDep
-from ...schemas.tag import TagCreate, TagUpdate, TagResponse
+from schemas.tag import TagCreate, TagUpdate, TagResponse
 
 
 router = APIRouter(

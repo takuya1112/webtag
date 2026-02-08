@@ -1,12 +1,13 @@
 from typing_extensions import Self
 from pydantic import BaseModel, ConfigDict, model_validator
 from uuid import UUID
+from .fields import ValidateName, ValidateEmail, ValidatePassword
 
 class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str
-    password_repeat: str
+    name: ValidateName
+    email: ValidateEmail
+    password: ValidatePassword
+    password_repeat: ValidatePassword
 
     model_config = ConfigDict(extra="forbid")
 

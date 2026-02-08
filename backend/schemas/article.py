@@ -1,23 +1,7 @@
 from typing_extensions import Self
-from typing import Annotated
-from pydantic import BaseModel, ConfigDict, HttpUrl, AfterValidator, model_validator
+from pydantic import BaseModel, ConfigDict, HttpUrl, model_validator
 from enum import Enum
-
-def validate_title_required(title: str) -> str:
-    if not title.strip():
-        raise ValueError("title must be filled")
-    if len(title) > 300:
-        raise ValueError("title within 300 chars")
-    return title.strip()
-
-def validate_title_optional(title: str | None) -> str | None:
-    if title is None:
-        return None
-    else:
-        return validate_title_required(title)
-
-ValidateTitleRequired = Annotated[str, AfterValidator(validate_title_required)]
-ValidateTitleOptional = Annotated[str | None, AfterValidator(validate_title_optional)]
+from .fields import ValidateTitleRequired, ValidateTitleOptional
 
 class ArticleCreate(BaseModel):
     title: ValidateTitleRequired

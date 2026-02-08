@@ -8,8 +8,8 @@
         
 
 from fastapi import FastAPI
-from backend.api.routers import *
-from backend.config import setup_logging
+from api.routers import *
+from core import setup_logging
 
 setup_logging()
 

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from ..models import Tag
-from ..repositories import TagRepository
+from db.models import Tag
+from repositories import TagRepository
 from fastapi import HTTPException, status
-from ...schemas.tag import TagCreate
+from schemas.tag import TagCreate
 
 
 class TagService:

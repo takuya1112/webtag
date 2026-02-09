@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
 from db.models import User
 from repositories import UserRepository
-from schemas import UserCreate
+from schemas.user import UserCreate
 from core import (
     hash_password, get_logger,
     EmailAlreadyExistsError, UnexpectedError,

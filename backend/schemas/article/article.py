@@ -1,15 +1,18 @@
 from typing_extensions import Self
-from pydantic import BaseModel, ConfigDict, HttpUrl, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 from enum import Enum
-from .fields import ValidateTitleRequired, ValidateTitleOptional
+from .fields import (
+    ValidateTitleRequired, ValidateTitleOptional,
+    ValidateUrlRequired, ValidateUrlOptional,
+)
 
 class ArticleCreate(BaseModel):
     title: ValidateTitleRequired
-    url: HttpUrl
+    url: ValidateUrlRequired
 
 class ArticleUpdate(BaseModel):
     title: ValidateTitleOptional = None
-    url: HttpUrl | None = None
+    url: ValidateUrlOptional = None
 
     @model_validator(mode="after")
     def validate_article_update(self) -> Self:

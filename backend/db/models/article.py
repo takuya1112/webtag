@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from ..session import Base
+from core.constants import ArticleConfig
 
 
 class Article(Base):
@@ -25,8 +26,8 @@ class Article(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
     user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    title = Column(String(255), nullable=False)
-    url = Column(String(2083), nullable=False)
+    title = Column(String(ArticleConfig.DB_TITLE_LENGTH_MAX), nullable=False)
+    url = Column(String(ArticleConfig.DB_URL_LENGTH_MAX), nullable=False)
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),

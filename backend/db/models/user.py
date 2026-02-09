@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from ..session import Base
+from core.constants import UserConfig
 
 
 class User(Base):
@@ -20,9 +21,9 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
-    name = Column(String(30), nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
+    name = Column(String(UserConfig.DB_NAME_LENGTH_MAX), nullable=False)
+    email = Column(String(UserConfig.DB_EMAIL_LENGTH_MAX), unique=True, nullable=False)
+    password_hash = Column(String(UserConfig.DB_PASSWORD_LENGTH_MAX), nullable=False)
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),

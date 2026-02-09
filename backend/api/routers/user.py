@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from ..dependencies import UserServiceDep
-from schemas import UserCreate, UserResponse
+from schemas.user import UserCreate, UserResponse
 from core.exceptions import EmailAlreadyExistsError
 
 router = APIRouter(

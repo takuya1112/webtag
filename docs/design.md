@@ -51,9 +51,9 @@ TODO
 | -------------- | ------------------------ | ----------------------------------- | -------------------- |
 | id             | BIGINT                   | PK                                  | User id              |
 | public_id      | UUID                     | NOT NULL, UNIQUE                    | User display id      |
-| name           | VARCHAR(30)              | NOT NULL                            | User name            |
-| email          | VARCHAR(255)             | NOT NULL, UNIQUE                    | User email           |
-| password_hash  | VARCHAR(255)             | NOT NULL                            | Hashed user password |
+| name           | VARCHAR(100)             | NOT NULL                            | User name            |
+| email          | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
+| password_hash  | VARCHAR(500)             | NOT NULL                            | Hashed user password |
 | created_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
 | updated_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
 | is_active      | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
@@ -71,8 +71,8 @@ TODO
 | id         | BIGINT 　                | PK                                  | Article id         |
 | public_id  | UUID                     | NOT NULL, UNIQUE                    | Article display id |
 | user_id    | BIGINT                   | FK                                  | user.id            |
-| title      | VARCHAR(255)             | NOT NULL                            | Article title      |
-| url        | VARCHAR(2083)            | NOT NULL                            | Article URL        |
+| title      | VARCHAR(500)             | NOT NULL                            | Article title      |
+| url        | VARCHAR(2500)            | NOT NULL                            | Article URL        |
 | created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time      |
 | updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time  |
 | is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag   |
@@ -108,12 +108,12 @@ WHERE is_deleted = TRUE;
 
 ### tags Table
 
-| Column    | Type        | Constraints      | Description    |
-| --------- | ----------- | ---------------- | -------------- |
-| id        | BIGINT      | PK               | Tag id         |
-| public_id | UUID        | NOT NULL, UNIQUE | Tag display id |
-| user_id   | BIGINT      | FK               | user.id        |
-| name      | VARCHAR(30) | NOT NULL         | Tag name       |
+| Column    | Type         | Constraints      | Description    |
+| --------- | ------------ | ---------------- | -------------- |
+| id        | BIGINT       | PK               | Tag id         |
+| public_id | UUID         | NOT NULL, UNIQUE | Tag display id |
+| user_id   | BIGINT       | FK               | user.id        |
+| name      | VARCHAR(100) | NOT NULL         | Tag name       |
 
 **Foreign-key constraints:**
 
@@ -205,19 +205,19 @@ ON tags(user_id, LOWER(name))
 
 | Field           | Type   | Required | Constraints           | Description           |
 | --------------- | ------ | -------- | --------------------- | --------------------- |
-| name            | string | Yes      | min 1, max 30 chars   | User name             |
-| email           | string | Yes      | max 255 chars, Unique | User email            |
-| password        | string | Yes      | min 8, max 72         | User password (plain) |
+| name            | string | Yes      | min 1, max 50 chars   | User name             |
+| email           | string | Yes      | max 254 chars, Unique | User email            |
+| password        | string | Yes      | min 8, max 128        | User password (plain) |
 | password_repeat | string | Yes      | same as password      | repeat password       |
 
 #### ArticleCreate
 
 **Fields:**
 
-| Field | Type         | Required | Constraints    | Description   |
-| ----- | ------------ | -------- | -------------- | ------------- |
-| title | string       | Yes      | max 300 chars  | Article title |
-| url   | string (URL) | Yes      | max 2083 chars | Article URL   |
+| Field | Type         | Required | Constraints          | Description   |
+| ----- | ------------ | -------- | -------------------- | ------------- |
+| title | string       | Yes      | min 1, max 255 chars | Article title |
+| url   | string (URL) | Yes      | max 2083 chars       | Article URL   |
 
 **Example:**
 

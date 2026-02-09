@@ -1,8 +1,5 @@
-import os
-from dotenv import load_dotenv
 from urllib.parse import quote_plus
-
-load_dotenv()
+from decouple import config
 
 class Settings:
     """
@@ -17,11 +14,15 @@ class Settings:
         settings = Settings()
         settings.database_url
     """
-    DB_USER = os.getenv('DB_USER')
-    DB_PASSWORD = quote_plus(os.getenv('DB_PASSWORD'))
-    DB_HOST = os.getenv('DB_HOST')
-    DB_PORT = os.getenv('DB_PORT')
-    DB_NAME = os.getenv('DB_NAME')
+    DB_USER = config("DB_USER")
+    DB_PASSWORD = quote_plus(config("DB_PASSWORD"))
+    DB_HOST = config("DB_HOST")
+    DB_PORT = config("DB_PORT")
+    DB_NAME = config("DB_NAME")
+
+    JWT_SECRET = config("JWT_SECRET")
+    JWT_ALGORITHM = config("JWT_ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
 
     @property
     def database_url(self):

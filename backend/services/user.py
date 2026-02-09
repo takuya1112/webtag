@@ -4,9 +4,12 @@ from psycopg2.errors import UniqueViolation
 from db.models import User
 from repositories import UserRepository
 from schemas.user import UserCreate
+from schemas.auth import LoginRequest
 from core import (
     hash_password, get_logger,
+    verify_and_update_password,
     EmailAlreadyExistsError, UnexpectedError,
+    EmailPasswordWrongError,
 ) 
 
 
@@ -37,3 +40,20 @@ class UserService:
                     raise EmailAlreadyExistsError()
             logger.error(f"Unexpected error happened: {e.orig}")
             raise UnexpectedError(f"Failed to create user") from e
+    
+    def authenticate(self, data: LoginRequest) -> User:
+        user = self.repo.get_by_email(data.email)
+        if not user:
+            raise EmailPasswordWrongError()
+        verified, new_hash = verify_and_update_password(
+            password=data.password,
+            hashed_password=user.password_hash,
+        )
+
+        if not verified:
+            raise EmailPasswordWrongError()
+        
+        if new_hash:
+            self.repo.update_hash(user, new_hash)
+
+        return user

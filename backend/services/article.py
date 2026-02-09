@@ -18,8 +18,9 @@ class ArticleService:
             )
         return article
 
-    def create(self, create_data: ArticleCreate) -> Article:
+    def create(self, create_data: ArticleCreate, user_id) -> Article:
         article = Article(
+            user_id=user_id,
             title=create_data.title,
             url=str(create_data.url)
         )

@@ -1,3 +1,3 @@
-from . import article, article_tag, tag, user
+from . import user, article, tag, article_tag, auth
 
-__all__ = [article, article_tag, tag, user]
+__all__ = ["user", "article", "tag", "article_tag", "auth"]

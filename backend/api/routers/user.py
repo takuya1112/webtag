@@ -8,8 +8,8 @@ router = APIRouter(
     tags=["User"],
 )
 
-@router.post("/", response_model=UserResponse, status_code=201)
-def post(
+@router.post("/signup", response_model=UserResponse, status_code=201)
+def signup(
     service: UserServiceDep,
     create_data: UserCreate,
 ):

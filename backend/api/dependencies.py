@@ -1,7 +1,10 @@
 from typing import Annotated
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
+from db.models import User
 from db import get_session
+from core.security import decode_access_token
 from services import (
     UserService, ArticleService, DeletedArticleService,
     TagService, ArticleTagService,
@@ -40,3 +43,31 @@ def get_article_tag_service(session: SessionDep) -> ArticleTagService:
     return ArticleTagService(session)
 
 ArticleTagServiceDep = Annotated[ArticleTagService, Depends(get_article_tag_service)] 
+
+security = HTTPBearer()
+
+def get_current_user( 
+    service: UserServiceDep,
+    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],  
+) -> User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    payload = decode_access_token(credentials.credentials)
+    if payload is None:
+        raise credentials_exception
+    
+    public_id = payload.get("sub")
+    if public_id is None:
+        raise credentials_exception
+    
+    user = service.repo.get_by_public_id(public_id)
+    if user is None:
+        raise credentials_exception
+    
+    return user
+
+CurrentUserDep = Annotated[User, Depends(get_current_user)]

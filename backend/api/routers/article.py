@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Query
-from ..dependencies import ArticleServiceDep
+from ..dependencies import (
+   ArticleServiceDep, CurrentUserDep,
+) 
 from schemas.article import (
     ArticleCreate, 
     ArticleResponse, 
@@ -17,8 +19,9 @@ router = APIRouter(
 def post(
     service: ArticleServiceDep,
     create_data: ArticleCreate,
+    current_user: CurrentUserDep,
 ):
-    return service.create(create_data)
+    return service.create(create_data, current_user.id)
 
 @router.delete("/{article_id}", status_code=204)
 def soft_delete(

@@ -10,6 +10,14 @@ class ArticleTag(Base):
         tag_id: tag.id (Primary Key, Foreign Key)
     """
     
-    __tablename__ = 'article_tag'
-    article_id = Column(BigInteger, ForeignKey('articles.id', ondelete="CASCADE"), primary_key=True)
-    tag_id = Column(BigInteger, ForeignKey('tags.id', ondelete="CASCADE"), primary_key=True)
+    __tablename__ = "article_tag"
+    article_id = Column(
+        BigInteger, 
+        ForeignKey('articles.id', ondelete="CASCADE"), 
+        primary_key=True,
+    )
+    tag_id = Column(
+        BigInteger, 
+        ForeignKey('tags.id', ondelete="CASCADE"), 
+        primary_key=True,
+    )

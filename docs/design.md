@@ -50,32 +50,32 @@ TODO
 | Column         | Type                     | Constraints                         | Description          |
 | -------------- | ------------------------ | ----------------------------------- | -------------------- |
 | id             | BIGINT                   | PK                                  | User id              |
-| public_id      | UUID                     | NOT NULL, UNIQUE                    | User display id      |
+| public_id      | UUID                     | UNIQUE, NOT NULL                    | User display id      |
 | name           | VARCHAR(100)             | NOT NULL                            | User name            |
-| email          | VARCHAR(300)             | NOT NULL, UNIQUE                    | User email           |
+| email          | VARCHAR(300)             | UNIQUE, NOT NULL                    | User email           |
 | password_hash  | VARCHAR(500)             | NOT NULL                            | Hashed user password |
-| created_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time        |
-| updated_at     | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time    |
-| is_active      | BOOLEAN                  | NOT NULL, DEFAULT TRUE              | Account active flag  |
+| created_at     | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time        |
+| updated_at     | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Last updated time    |
+| is_active      | BOOLEAN                  | DEFAULT FALSE, NOT NULL             | Account active flag  |
 | deactivated_at | TIMESTAMP WITH TIME ZONE | NULL                                | deactivated time     |
 
 **Referenced by:**
 
 - FOREIGN KEY articles(user_id) REFERENCES users(id) ON DELETE CASCADE
 - FOREIGN KEY tags(user_id) REFERENCES users(id) ON DELETE CASCADE
+- FOREIGN KEY refresh_tokens(user_id) REFERENCES users(id) ON DELETE CASCADE
 
 ### articles Table
 
 | Column     | Type                     | Constraints                         | Description        |
 | ---------- | ------------------------ | ----------------------------------- | ------------------ |
 | id         | BIGINT 　                | PK                                  | Article id         |
-| public_id  | UUID                     | NOT NULL, UNIQUE                    | Article display id |
-| user_id    | BIGINT                   | FK                                  | user.id            |
+| public_id  | UUID                     | UNIQUE, NOT NULL                    | Article display id |
+| user_id    | BIGINT                   | FK, NOT NULL                        | users.id           |
 | title      | VARCHAR(500)             | NOT NULL                            | Article title      |
 | url        | VARCHAR(2500)            | NOT NULL                            | Article URL        |
-| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Creation time      |
-| updated_at | TIMESTAMP WITH TIME ZONE | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Last updated time  |
-| is_deleted | BOOLEAN                  | NOT NULL, DEFAULT FALSE             | Soft delete flag   |
+| created_at | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time      |
+| is_deleted | BOOLEAN                  | DEFAULT FALSE, NOT NULL             | Soft delete flag   |
 | deleted_at | TIMESTAMP WITH TIME ZONE | NULL                                | Deletion time      |
 
 **Foreign-key constraints:**
@@ -90,19 +90,19 @@ TODO
 
 ```sql
 CREATE INDEX ix_article_user_title_lower
-ON article(user_id, LOWER(title))
+ON articles(user_id, LOWER(title))
 WHERE is_deleted = FALSE;
 
 CREATE INDEX ix_article_user_created_at
-ON article(user_id, created_at)
+ON articles(user_id, created_at)
 WHERE is_deleted = FALSE;
 
 CREATE INDEX ix_article_user_updated_at
-ON article(user_id, updated_at)
+ON articles(user_id, updated_at)
 WHERE is_deleted = FALSE;
 
 CREATE INDEX ix_article_user_deleted_at
-ON article(user_id, deleted_at)
+ON articles(user_id, deleted_at)
 WHERE is_deleted = TRUE;
 ```
 
@@ -111,8 +111,8 @@ WHERE is_deleted = TRUE;
 | Column    | Type         | Constraints      | Description    |
 | --------- | ------------ | ---------------- | -------------- |
 | id        | BIGINT       | PK               | Tag id         |
-| public_id | UUID         | NOT NULL, UNIQUE | Tag display id |
-| user_id   | BIGINT       | FK               | user.id        |
+| public_id | UUID         | UNIQUE, NOT NULL | Tag display id |
+| user_id   | BIGINT       | FK, NOT NULL     | users.id       |
 | name      | VARCHAR(100) | NOT NULL         | Tag name       |
 
 **Foreign-key constraints:**
@@ -134,13 +134,44 @@ ON tags(user_id, LOWER(name))
 
 | Column     | Type   | Constraints | Description |
 | ---------- | ------ | ----------- | ----------- |
-| article_id | BIGINT | PK, FK      | article.id  |
-| tag_id     | BIGINT | PK, FK      | tag.id      |
+| article_id | BIGINT | PK, FK      | articles.id |
+| tag_id     | BIGINT | PK, FK      | tags.id     |
 
 **Foreign-key constraints:**
 
 - FOREIGN KEY article_tag(article_id) REFERENCES articles(id) ON DELETE CASCADE
 - FOREIGN KEY article_tag(tag_id) REFERENCES tags(id) ON DELETE CASCADE
+
+### refresh_tokens Table
+
+| Column     | Type                     | Constraints                         | Description      |
+| ---------- | ------------------------ | ----------------------------------- | ---------------- |
+| id         | BIGINT                   | PK                                  | Refresh token id |
+| user_id    | BIGINT                   | FK, NOT NULL                        | users.id         |
+| token_hash | VARCHAR(300)             | UNIQUE, NOT NULL                    | Hashed token     |
+| created_at | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time    |
+| expires_at | TIMESTAMP WITH TIME ZONE | NOT NULL                            | Expiration time  |
+| revoked_at | TIMESTAMP WITH TIME ZONE | NULL                                | Revoked time     |
+
+**Foreign-key constraints:**
+
+- FOREIGN KEY refresh_tokens(user_id) REFERENCES users(id) ON DELETE CASCADE
+
+**Indexes:**
+
+```sql
+CREATE INDEX ix_refresh_tokens_user_active
+ON refresh_tokens(user_id)
+WHERE revoked_at IS NULL;
+
+CREATE INDEX ix_refresh_tokens_expires
+ON refresh_tokens(expires_at)
+WHERE revoked_at IS NULL
+
+CREATE INDEX ix_refresh_tokens_cleanup
+ON refresh_tokens(expires_at)
+WHERE revoked_at IS NOT NULL
+```
 
 ## 6. ER Diagram
 

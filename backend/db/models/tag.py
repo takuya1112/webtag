@@ -16,13 +16,26 @@ class Tag(Base):
         name: The name of the tag.
     """
 
-    __tablename__ = 'tags'
+    __tablename__ = "tags"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
-    user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    public_id = Column(
+        UUID(as_uuid=True), 
+        default=uuid4, 
+        unique=True, 
+        nullable=False,
+    )
+    user_id = Column(
+        BigInteger, 
+        ForeignKey("users.id", ondelete="CASCADE"), 
+        nullable=False,
+    )
     name = Column(String(TagConfig.DB_NAME_LENGTH_MAX), nullable=False)
 
-    articles = relationship("Article", secondary="article_tag", back_populates="tags") 
+    articles = relationship(
+        "Article", 
+        secondary="article_tag", 
+        back_populates="tags",
+    ) 
     user = relationship("User", back_populates="tags")
 
     __table_args__ = (

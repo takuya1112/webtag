@@ -22,10 +22,19 @@ class Article(Base):
         deleted_at: The timestamp when the article was soft-deleted
     """
 
-    __tablename__ = 'articles'
+    __tablename__ = "articles"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    public_id = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
-    user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    public_id = Column(
+        UUID(as_uuid=True), 
+        default=uuid4, 
+        unique=True, 
+        nullable=False,
+    )
+    user_id = Column(
+        BigInteger, 
+        ForeignKey("users.id", ondelete="CASCADE"), 
+        nullable=False,
+    )
     title = Column(String(ArticleConfig.DB_TITLE_LENGTH_MAX), nullable=False)
     url = Column(String(ArticleConfig.DB_URL_LENGTH_MAX), nullable=False)
     created_at = Column(
@@ -37,12 +46,16 @@ class Article(Base):
         DateTime(timezone=True), 
         server_default=func.now(),
         onupdate=func.now(),
-        nullable=False
+        nullable=False,
     )
     is_deleted = Column(Boolean, server_default=text("false"), nullable=False)
-    deleted_at = Column(DateTime(timezone=True))
+    deleted_at = Column(DateTime(timezone=True), nullable=True)
 
-    tags = relationship("Tag", secondary="article_tag", back_populates="articles")
+    tags = relationship(
+        "Tag", 
+        secondary="article_tag", 
+        back_populates="articles",
+    )
     user = relationship("User", back_populates="articles")
 
     __table_args__ = (

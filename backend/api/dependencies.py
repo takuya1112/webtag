@@ -30,7 +30,10 @@ ArticleServiceDep = Annotated[ArticleService, Depends(get_article_service)]
 def get_deleted_article_service(session: SessionDep) -> DeletedArticleService:
     return DeletedArticleService(session)
 
-DeletedArticleServiceDep = Annotated[DeletedArticleService, Depends(get_deleted_article_service)]
+DeletedArticleServiceDep = Annotated[
+    DeletedArticleService, 
+    Depends(get_deleted_article_service),
+]
 
 
 def get_tag_service(session: SessionDep) -> TagService:
@@ -42,7 +45,10 @@ TagServiceDep = Annotated[TagService, Depends(get_tag_service)]
 def get_article_tag_service(session: SessionDep) -> ArticleTagService:
     return ArticleTagService(session)
 
-ArticleTagServiceDep = Annotated[ArticleTagService, Depends(get_article_tag_service)] 
+ArticleTagServiceDep = Annotated[
+    ArticleTagService, 
+    Depends(get_article_tag_service),
+] 
 
 security = HTTPBearer()
 

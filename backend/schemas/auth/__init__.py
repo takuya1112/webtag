@@ -1,3 +1,3 @@
-from .auth import Token, LoginRequest
+from .auth import Token, LoginRequest, TokenPayload
 
-__all__ = ["Token", "LoginRequest"]
+__all__ = ["Token", "LoginRequest", "TokenPayload"]

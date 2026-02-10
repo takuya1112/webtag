@@ -47,17 +47,17 @@ TODO
 
 ### users Table
 
-| Column         | Type                     | Constraints                         | Description          |
-| -------------- | ------------------------ | ----------------------------------- | -------------------- |
-| id             | BIGINT                   | PK                                  | User id              |
-| public_id      | UUID                     | UNIQUE, NOT NULL                    | User display id      |
-| name           | VARCHAR(100)             | NOT NULL                            | User name            |
-| email          | VARCHAR(300)             | UNIQUE, NOT NULL                    | User email           |
-| password_hash  | VARCHAR(500)             | NOT NULL                            | Hashed user password |
-| created_at     | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time        |
-| updated_at     | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Last updated time    |
-| is_active      | BOOLEAN                  | DEFAULT FALSE, NOT NULL             | Account active flag  |
-| deactivated_at | TIMESTAMP WITH TIME ZONE | NULL                                | deactivated time     |
+| Column          | Type                     | Constraints                         | Description          |
+| --------------- | ------------------------ | ----------------------------------- | -------------------- |
+| id              | BIGINT                   | PK                                  | User id              |
+| public_id       | UUID                     | UNIQUE, NOT NULL                    | User display id      |
+| name            | VARCHAR(100)             | NOT NULL                            | User name            |
+| email           | VARCHAR(300)             | UNIQUE, NOT NULL                    | User email           |
+| Hashed_password | VARCHAR(500)             | NOT NULL                            | Hashed user password |
+| created_at      | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time        |
+| updated_at      | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Last updated time    |
+| is_active       | BOOLEAN                  | DEFAULT FALSE, NOT NULL             | Account active flag  |
+| deactivated_at  | TIMESTAMP WITH TIME ZONE | NULL                                | deactivated time     |
 
 **Referenced by:**
 
@@ -144,14 +144,14 @@ ON tags(user_id, LOWER(name))
 
 ### refresh_tokens Table
 
-| Column     | Type                     | Constraints                         | Description      |
-| ---------- | ------------------------ | ----------------------------------- | ---------------- |
-| id         | BIGINT                   | PK                                  | Refresh token id |
-| user_id    | BIGINT                   | FK, NOT NULL                        | users.id         |
-| token_hash | VARCHAR(300)             | UNIQUE, NOT NULL                    | Hashed token     |
-| created_at | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time    |
-| expires_at | TIMESTAMP WITH TIME ZONE | NOT NULL                            | Expiration time  |
-| revoked_at | TIMESTAMP WITH TIME ZONE | NULL                                | Revoked time     |
+| Column       | Type                     | Constraints                         | Description      |
+| ------------ | ------------------------ | ----------------------------------- | ---------------- |
+| id           | BIGINT                   | PK                                  | Refresh token id |
+| user_id      | BIGINT                   | FK, NOT NULL                        | users.id         |
+| hashed_token | VARCHAR(300)             | UNIQUE, NOT NULL                    | Hashed token     |
+| created_at   | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP, NOT NULL | Creation time    |
+| expires_at   | TIMESTAMP WITH TIME ZONE | NOT NULL                            | Expiration time  |
+| revoked_at   | TIMESTAMP WITH TIME ZONE | NULL                                | Revoked time     |
 
 **Foreign-key constraints:**
 

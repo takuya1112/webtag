@@ -24,13 +24,13 @@ def upgrade() -> None:
     op.create_table('refresh_tokens',
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=False),
-    sa.Column('token_hash', sa.String(length=300), nullable=False),
+    sa.Column('hashed_token', sa.String(length=300), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('expires_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('revoked_at', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('token_hash')
+    sa.UniqueConstraint('hashed_token')
     )
     op.create_index('ix_refresh_tokens_cleanup', 'refresh_tokens', ['expires_at'], unique=False, postgresql_where=sa.text('revoked_at IS NOT NULL'))
     op.create_index('ix_refresh_tokens_expires', 'refresh_tokens', ['expires_at'], unique=False, postgresql_where=sa.text('revoked_at IS NULL'))

@@ -15,9 +15,9 @@ app.include_router(article_tag.router)
 app.include_router(deleted_article.router)
 app.include_router(auth.router)
 
-# user@example.com
-# stringst
 # {
-#   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNDdhZjIyZC0zYzdlLTQ4NzUtOGIxOS0wNjljNDUzNDA1MjYiLCJleHAiOjE3NzA2NTMxMjB9.4Z305xs6kuvXJAAmv0wGYIpYo_PlYx-FzgWaz2_QOlI",
-#   "token_type": "bearer"
+#   "name": "string",
+#   "email": "user@example.com",
+#   "password": "stringst",
+#   "password_repeat": "stringst"
 # }

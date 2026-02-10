@@ -4,5 +4,8 @@ class EmailAlreadyExistsError(Exception):
 class EmailPasswordWrongError(Exception):
     pass
 
+class TokenNotExistError(Exception):
+    pass
+
 class UnexpectedError(Exception):
     pass

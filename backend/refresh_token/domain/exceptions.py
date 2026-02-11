@@ -1,0 +1,2 @@
+class TokenAlreadyRevoked(Exception):
+    pass

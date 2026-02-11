@@ -1,11 +1,12 @@
+from datetime import datetime, timezone
+
+from core import TokenNotExistError, get_logger
+from db.models import RefreshToken
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
-from datetime import datetime, timezone
-from db.models import RefreshToken
-from core import get_logger, TokenNotExistError
-
 
 logger = get_logger(__name__)
+
 
 class RefreshTokenRepository:
     def __init__(self, session: Session):
@@ -13,21 +14,22 @@ class RefreshTokenRepository:
 
     def get_by_token(self, hashed_token: str) -> RefreshToken | None:
         return (
-            self.session
-            .query(RefreshToken)
+            self.session.query(RefreshToken)
             .filter(RefreshToken.hashed_token == hashed_token)
             .one_or_none()
         )
-    
+
     def get_by_token_or_raise(self, hashed_token: str) -> RefreshToken:
         refresh_token = (
-            self.session
-            .query(RefreshToken)
-            .filter(and_(
-                RefreshToken.hashed_token == hashed_token,
-                RefreshToken.revoked_at.is_(None),
-                RefreshToken.expires_at > datetime.now(timezone.utc)
-            )).one_or_none()
+            self.session.query(RefreshToken)
+            .filter(
+                and_(
+                    RefreshToken.hashed_token == hashed_token,
+                    RefreshToken.revoked_at.is_(None),
+                    RefreshToken.expires_at > datetime.now(timezone.utc),
+                )
+            )
+            .one_or_none()
         )
         if not refresh_token:
             logger.warning("Refresh token not exist")

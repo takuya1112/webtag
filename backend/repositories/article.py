@@ -1,7 +1,7 @@
-from sqlalchemy import func, desc, asc, or_
-from sqlalchemy.orm import Session
 from db.models import Article, Tag
 from schemas.article import ArticleSort, ArticleUpdate
+from sqlalchemy import asc, desc, func, or_
+from sqlalchemy.orm import Session
 
 
 class ArticleRepository:
@@ -19,7 +19,7 @@ class ArticleRepository:
 
     def get(self, article_id: int) -> Article | None:
         return self.session.get(Article, article_id)
-    
+
     def get_all(self, sort: ArticleSort) -> list[Article]:
         order_by = self.SORT_CONFIG[sort]
         return (
@@ -28,7 +28,7 @@ class ArticleRepository:
             .order_by(order_by)
             .all()
         )
-    
+
     def search(self, sort: ArticleSort, keywords: list[str]) -> list[Article]:
         order_by = self.SORT_CONFIG[sort]
         articles = (
@@ -38,7 +38,10 @@ class ArticleRepository:
             .filter(
                 or_(
                     func.lower(Tag.name).in_(keywords),
-                    *[func.lower(Article.title).like(f"%{keyword}%") for keyword in keywords]
+                    *[
+                        func.lower(Article.title).like(f"%{keyword}%")
+                        for keyword in keywords
+                    ],
                 )
             )
             .order_by(order_by)
@@ -54,7 +57,6 @@ class ArticleRepository:
 
         return unique_articles
 
-    
     def add(self, article: Article) -> None:
         self.session.add(article)
         self.session.flush()
@@ -65,12 +67,10 @@ class ArticleRepository:
 
     def soft_delete_all(self) -> None:
         now = func.now()
-        self.session.query(Article)\
-            .filter(Article.is_deleted.is_(False))\
-            .update(
-                {Article.is_deleted: True, Article.deleted_at: now}, 
-                synchronize_session=False
-            )
+        self.session.query(Article).filter(Article.is_deleted.is_(False)).update(
+            {Article.is_deleted: True, Article.deleted_at: now},
+            synchronize_session=False,
+        )
 
     def update(self, *, article: Article, update_data: ArticleUpdate) -> None:
         if "title" in update_data.model_fields_set:

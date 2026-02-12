@@ -1,24 +1,23 @@
 from core.config import settings
+from core.session import Base
 from sqlalchemy import (
     BigInteger,
     Column,
     DateTime,
     ForeignKey,
-    Index,
     String,
     func,
 )
 from sqlalchemy.orm import relationship
 
-from ...core.session import Base
 
-
-class RefreshToken(Base):
+class RefreshTokenModel(Base):
     __tablename__ = "refresh_tokens"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(
         BigInteger,
         ForeignKey("users.id", ondelete="CASCADE"),
+        index=True,
         nullable=False,
     )
     hashed_token = Column(
@@ -31,25 +30,7 @@ class RefreshToken(Base):
         server_default=func.now(),
         nullable=False,
     )
-    expires_at = Column(DateTime(timezone=True), nullable=False)
+    expires_at = Column(DateTime(timezone=True), index=True, nullable=False)
     revoked_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User", back_populates="refresh_tokens")
-
-    __table_args__ = (
-        Index(
-            "ix_refresh_tokens_user_active",
-            user_id,
-            postgresql_where=(revoked_at.is_(None)),
-        ),
-        Index(
-            "ix_refresh_tokens_expires",
-            expires_at,
-            postgresql_where=(revoked_at.is_(None)),
-        ),
-        Index(
-            "ix_refresh_tokens_cleanup",
-            expires_at,
-            postgresql_where=(revoked_at.isnot(None)),
-        ),
-    )

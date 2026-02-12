@@ -1,12 +1,20 @@
-from sqlalchemy import (
-    Column, BigInteger, String, Boolean, DateTime, Index,
-    ForeignKey, text, func
-) 
-from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
-from ..session import Base
+
 from core.constants import ArticleConfig
+from core.session import Base
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    String,
+    func,
+    text,
+)
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 
 class Article(Base):
@@ -25,25 +33,23 @@ class Article(Base):
     __tablename__ = "articles"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     public_id = Column(
-        UUID(as_uuid=True), 
-        default=uuid4, 
-        unique=True, 
+        UUID(as_uuid=True),
+        default=uuid4,
+        unique=True,
         nullable=False,
     )
     user_id = Column(
-        BigInteger, 
-        ForeignKey("users.id", ondelete="CASCADE"), 
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
     )
     title = Column(String(ArticleConfig.DB_TITLE_LENGTH_MAX), nullable=False)
     url = Column(String(ArticleConfig.DB_URL_LENGTH_MAX), nullable=False)
     created_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     updated_at = Column(
-        DateTime(timezone=True), 
+        DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False,
@@ -52,8 +58,8 @@ class Article(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     tags = relationship(
-        "Tag", 
-        secondary="article_tag", 
+        "Tag",
+        secondary="article_tag",
         back_populates="articles",
     )
     user = relationship("User", back_populates="articles")

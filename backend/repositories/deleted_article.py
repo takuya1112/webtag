@@ -1,6 +1,6 @@
+from db.models import Article
 from sqlalchemy import func, text
 from sqlalchemy.orm import Session
-from db.models import Article
 
 
 class DeletedArticleRepository:
@@ -12,9 +12,10 @@ class DeletedArticleRepository:
     def delete_outdated_articles(self) -> None:
         self.session.query(Article).filter(
             Article.is_deleted.is_(True),
-            Article.deleted_at < func.now() - text(f"INTERVAL '{self.DELETE_INTERVAL} days'")
+            Article.deleted_at
+            < func.now() - text(f"INTERVAL '{self.DELETE_INTERVAL} days'"),
         ).delete(synchronize_session=False)
-    
+
     def get(self, article_id: int) -> Article | None:
         return self.session.get(Article, article_id)
 
@@ -24,27 +25,23 @@ class DeletedArticleRepository:
             .filter(Article.is_deleted.is_(True))
             .order_by(Article.deleted_at.desc())
             .all()
-        ) 
-    
+        )
+
     def restore(self, article: Article) -> None:
         article.is_deleted = False
         article.deleted_at = None
 
     def restore_all(self) -> int:
         count = (
-            self.session
-            .query(Article)
+            self.session.query(Article)
             .filter(Article.is_deleted.is_(True))
             .update(
-                {
-                    Article.is_deleted: False, 
-                    Article.deleted_at: None
-                }, 
-                synchronize_session=False
+                {Article.is_deleted: False, Article.deleted_at: None},
+                synchronize_session=False,
             )
         )
-        return count    
-    
+        return count
+
     def hard_delete(self, article: Article) -> None:
         self.session.delete(article)
 

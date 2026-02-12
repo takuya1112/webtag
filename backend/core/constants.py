@@ -18,11 +18,9 @@ class ArticleConfig:
     DB_TITLE_LENGTH_MAX = 500
     DB_URL_LENGTH_MAX = 2500
 
+
 class TagConfig:
     NAME_LENGTH_MIN = 1
     NAME_LENGTH_MAX = 50
 
     DB_NAME_LENGTH_MAX = 100
-
-class RefreshTokenConfig:
-    DB_TOKEN_LENGTH_MAX = 300

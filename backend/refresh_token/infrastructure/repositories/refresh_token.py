@@ -31,9 +31,28 @@ class SQLAlchemyRefreshTokenRepository:
         )
 
     def save(self, token: RefreshTokenEntity) -> None:
-        model = self._to_model(token)
-        self.session.merge(model)
+        exists = (
+            self.session.query(RefreshTokenModel)
+            .filter(RefreshTokenModel.hashed_token == token.hashed_token.value)
+            .one_or_none()
+        )
+        if exists:
+            self.update(token)
+        else:
+            self.add(token)
         logger.info("token saved successfully")
+
+    def add(self, token: RefreshTokenEntity) -> None:
+        model = self._to_model(token)
+        self.session.add(model)
+
+    def update(
+        self,
+        refresh_token: RefreshTokenModel,
+        token: RefreshTokenEntity,
+    ) -> None:
+        refresh_token.expires_at = token.expires_at.value
+        refresh_token.revoked_at = token.revoked_at.value if token.revoked_at else None
 
     def find_by_user_id(self, user_id: UserId) -> list[RefreshTokenEntity]:
         models = (

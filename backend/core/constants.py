@@ -24,3 +24,9 @@ class TagConfig:
     NAME_LENGTH_MAX = 50
 
     DB_NAME_LENGTH_MAX = 100
+
+
+class RefreshTokenConfig:
+    REFRESH_TOKEN_LENGTH_MAX = 100
+
+    DB_REFRESH_TOKEN_LENGTH_MAX = 300

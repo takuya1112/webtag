@@ -1,7 +1,7 @@
 import secrets
 from abc import ABC, abstractmethod
 
-from ..constants import RefreshTokenConfig
+from ..config import settings
 
 
 class TokenGenerator(ABC):
@@ -12,4 +12,4 @@ class TokenGenerator(ABC):
 
 class SecureTokenGenerator(TokenGenerator):
     def generate(self) -> str:
-        return secrets.token_urlsafe(RefreshTokenConfig.REFRESH_TOKEN_LENGTH_MAX)
+        return secrets.token_urlsafe(settings.REFRESH_TOKEN_LENGTH_MAX)

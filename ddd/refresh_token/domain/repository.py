@@ -7,11 +7,22 @@ from .value_objects import HashedToken, UserId
 class RefreshTokenRepository(Protocol):
     """Refresh token repository interface"""
 
-    def save(self, token: RefreshTokenEntity) -> None:
-        """Persist a refresh token
+    def add(self, token: RefreshTokenEntity) -> None:
+        """Add a refresh token
 
         Args:
-            token (RefreshTokenEntity): The refresh token to persist
+            token (RefreshTokenEntity): The refresh token to add
+        """
+        ...
+
+    def update(self, token: RefreshTokenEntity) -> None:
+        """Update a refresh token
+
+        Args:
+            token (RefreshTokenEntity): The refresh token to update
+
+        Raises:
+            TokenNotFoundError: if none found
         """
         ...
 
@@ -19,7 +30,7 @@ class RefreshTokenRepository(Protocol):
         """Find all refresh tokens by user id
 
         Args:
-            user_id (UserId): user id
+            user_id (UserId): user id to find
 
         Returns:
             list[RefreshTokenEntity]: Return empty list, if none found
@@ -33,29 +44,47 @@ class RefreshTokenRepository(Protocol):
         """Find a refresh token by hashed token
 
         Args:
-            hashed_token (HashedToken): hashed token
+            hashed_token (HashedToken): hashed token to find
 
         Returns:
             RefreshTokenEntity | None: Return None, if none found
         """
         ...
 
-    def delete_all_by_user_id(self, user_id: UserId) -> None:
+    def delete_all_by_user_id(self, user_id: UserId) -> int:
         """Delete all refresh tokens by user id
 
         Args:
             user_id (UserId): user id
+
+        Returns:
+            int: delete count
         """
         ...
 
-    def delete_by_hashed_token(self, hashed_token: HashedToken) -> None:
+    def delete_by_hashed_token(self, hashed_token: HashedToken) -> int:
         """Delete refresh token by hashed token
 
         Args:
             hashed_token (HashedToken): hashed token to delete
+
+        Returns:
+            int: delete count
         """
         ...
 
-    def delete_expired_tokens(self) -> None:
-        """Deletes all expired refresh tokens"""
+    def delete_expired_tokens(self) -> int:
+        """Deletes all expired refresh tokens
+
+        Returns:
+            int: delete count
+        """
+        ...
+
+    def delete_old_revoked_tokens(self) -> int:
+        """Deletes all old revoked tokens
+
+        Returns:
+            int: delete count
+        """
         ...

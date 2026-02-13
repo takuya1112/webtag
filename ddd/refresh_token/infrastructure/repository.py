@@ -3,9 +3,9 @@ from datetime import datetime, timedelta, timezone
 from core.logging import get_logger
 from sqlalchemy.orm import Session
 
-from ...domain.entities import RefreshTokenEntity
-from ...domain.value_objects import HashedToken, TokenTimestamp, UserId
-from ..models import RefreshTokenModel
+from ..domain import RefreshTokenEntity
+from ..domain.value_objects import HashedToken, TokenTimestamp, UserId
+from .model import RefreshTokenModel
 
 logger = get_logger(__name__)
 

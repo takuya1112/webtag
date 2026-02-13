@@ -1,5 +1,5 @@
-from core.config import settings
-from core.session import Base
+from core.constants import RefreshTokenConfig
+from shared.infrastructure.base import Base
 from sqlalchemy import (
     BigInteger,
     Column,
@@ -21,7 +21,7 @@ class RefreshTokenModel(Base):
         nullable=False,
     )
     hashed_token = Column(
-        String(settings.DB_REFRESH_TOKEN_LENGTH_MAX),
+        String(RefreshTokenConfig.DB_REFRESH_TOKEN_LENGTH_MAX),
         unique=True,
         nullable=False,
     )

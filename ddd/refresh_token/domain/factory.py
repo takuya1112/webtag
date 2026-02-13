@@ -3,8 +3,8 @@ from datetime import datetime, timedelta, timezone
 from core.config import settings
 from core.security import TokenGenerator, TokenHasher
 
-from ..entities import RefreshTokenEntity
-from ..value_objects import HashedToken, TokenTimestamp, UserId
+from .entity import RefreshTokenEntity
+from .value_objects import HashedToken, TokenTimestamp, UserId
 
 
 class RefreshTokenFactory:

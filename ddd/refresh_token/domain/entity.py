@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from ..exceptions import TokenAlreadyRevoked
-from ..value_objects import HashedToken, TokenTimestamp, UserId
+from .value_objects import HashedToken, TokenTimestamp, UserId
 
 
 @dataclass

@@ -1,4 +1,4 @@
-from refresh_token.infrastructure.repositories import SQLAlchemyRefreshTokenRepository
+from refresh_token.infrastructure.repository import SQLAlchemyRefreshTokenRepository
 
 
 class UnitOfWork:

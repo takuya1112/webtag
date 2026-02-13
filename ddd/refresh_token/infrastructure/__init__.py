@@ -1,3 +1,4 @@
-from . import models, repositories
+from .model import RefreshTokenModel
+from .repository import SQLAlchemyRefreshTokenRepository
 
-__all__ = ["models", "repositories"]
+__all__ = ["RefreshTokenModel", "SQLAlchemyRefreshTokenRepository"]

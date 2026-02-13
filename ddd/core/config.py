@@ -25,13 +25,13 @@ class Settings:
 
     JWT_SECRET = config("JWT_SECRET")
     JWT_ALGORITHM = config("JWT_ALGORITHM")
+    TOKEN_HASH_SECRET = config("TOKEN_HASH_SECRET")
 
     ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
     REFRESH_TOKEN_EXPIRE_DAYS = config("REFRESH_TOKEN_EXPIRE_DAYS", cast=int)
-
-    REFRESH_TOKEN_LENGTH_MAX = config("REFRESH_TOKEN_LENGTH_MAX", cast=int)
-    DB_REFRESH_TOKEN_LENGTH_MAX = config("DB_REFRESH_TOKEN_LENGTH_MAX", cast=int)
-    TOKEN_HASH_SECRET = config("TOKEN_HASH_SECRET")
+    REVOKED_REFRESH_TOKEN_EXPIRE_DAYS = config(
+        "REVOKED_REFRESH_TOKEN_EXPIRE_DAYS", cast=int
+    )
 
     @property
     def database_url(self):

@@ -1,44 +1,35 @@
-from urllib.parse import quote_plus
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import URL
 
-from decouple import config
 
-
-class Settings:
-    """
-    .env ファイルから読み込んだ環境変数に従って
-    SQLAlchemy 用の PostgresSQL 接続URLを作成する
-
-    Note:
-        @property を使用することでsettings.database_urlのように
-        メソッドを属性のように扱えるため可読性の向上を図った
-
-    Example:
-        settings = Settings()
-        settings.database_url
-    """
-
-    DB_USER = config("DB_USER")
-    DB_PASSWORD = quote_plus(config("DB_PASSWORD"))
-    DB_HOST = config("DB_HOST")
-    DB_PORT = config("DB_PORT")
-    DB_NAME = config("DB_NAME")
-
-    JWT_SECRET = config("JWT_SECRET")
-    JWT_ALGORITHM = config("JWT_ALGORITHM")
-    TOKEN_HASH_SECRET = config("TOKEN_HASH_SECRET")
-
-    ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
-    REFRESH_TOKEN_EXPIRE_DAYS = config("REFRESH_TOKEN_EXPIRE_DAYS", cast=int)
-    REVOKED_REFRESH_TOKEN_EXPIRE_DAYS = config(
-        "REVOKED_REFRESH_TOKEN_EXPIRE_DAYS", cast=int
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
     )
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_HOST: str
+    POSTGRES_PORT: int
+    POSTGRES_DB: str
+
+    JWT_SECRET: str
+    JWT_ALGORITHM: str
+    TOKEN_HASH_SECRET: str
+
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_DAYS: int
+    REVOKED_REFRESH_TOKEN_EXPIRE_DAYS: int
 
     @property
-    def database_url(self):
-        return (
-            f"postgresql+psycopg2://"
-            f"{self.DB_USER}:{self.DB_PASSWORD}@"
-            f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    def database_url(self) -> URL:
+        return URL.create(
+            drivername="postgresql+psycopg2",
+            username=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_HOST,
+            port=self.POSTGRES_PORT,
+            database=self.POSTGRES_DB,
         )
 
 

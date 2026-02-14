@@ -1,14 +1,1 @@
-# Backend
-backend/.env
-backend/log
-
-# Python virtual environment
-.venv/
-venv
-
-# vscode
 .vscode
-
-# python
-*.pyc
-__pycache__/

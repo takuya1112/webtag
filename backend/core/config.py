@@ -32,5 +32,16 @@ class Settings(BaseSettings):
             database=self.POSTGRES_DB,
         )
 
+    @property
+    def async_database_url(self) -> URL:
+        return URL.create(
+            drivername="postgresql+asyncpg",
+            username=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_HOST,
+            port=self.POSTGRES_PORT,
+            database=self.POSTGRES_DB,
+        )
+
 
 settings = Settings()

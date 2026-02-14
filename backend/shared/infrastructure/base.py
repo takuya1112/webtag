@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+from typing import Generator
+
 from core.config import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -14,5 +17,7 @@ SessionLocal = sessionmaker(
 )
 
 
-def get_uow():
-    return UnitOfWork(SessionLocal)
+@contextmanager
+def get_uow_dependency() -> Generator:
+    with UnitOfWork(SessionLocal) as uow:
+        yield uow

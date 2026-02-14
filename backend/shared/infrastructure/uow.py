@@ -1,14 +1,19 @@
-from refresh_token.infrastructure.repository import SQLAlchemyRefreshTokenRepository
+from typing import Dict, Type, TypeVar
+
+from sqlalchemy.orm import Session, sessionmaker
+
+T = TypeVar("T")
 
 
 class UnitOfWork:
-    def __init__(self, session_factory):
+    def __init__(self, session_factory: sessionmaker):
         self.session_factory = session_factory
-        self.session = None
+        self.session: Session | None = None
+        self._repository: Dict[Type, object] = {}
 
-    def __enter__(self):
+    def __enter__(self) -> "UnitOfWork":
         self.session = self.session_factory()
-        self.refresh_token = SQLAlchemyRefreshTokenRepository(self.session)
+        self._repository.clear()
         return self
 
     def __exit__(self, exc_type, exc, tb):
@@ -16,6 +21,15 @@ class UnitOfWork:
             if exc_type is not None:
                 self.session.rollback()
             else:
-                self.session.commit()
+                try:
+                    self.session.commit()
+                except Exception:
+                    self.session.rollback()
+                    raise
         finally:
             self.session.close()
+
+    def get_repo(self, repository_type: Type[T]) -> T:
+        if repository_type not in self._repository:
+            self._repository[repository_type] = repository_type(self.session)
+        return self._repository[repository_type]

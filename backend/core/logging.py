@@ -1,12 +1,13 @@
 import logging
-from logging.handlers import RotatingFileHandler
 import sys
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 PROJECT_LOGGER_NAME = "webtag"
 
+
 def setup_logging():
-    log_dir = Path("log")
+    log_dir = Path("logs")
     log_dir.mkdir(exist_ok=True)
 
     logger = logging.getLogger(PROJECT_LOGGER_NAME)
@@ -15,8 +16,8 @@ def setup_logging():
     logger.propagate = False
 
     formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - (%(filename)s:%(lineno)d) '
-        '- [%(levelname)s] - %(message)s',
+        "%(asctime)s - %(name)s - (%(filename)s:%(lineno)d) "
+        "- [%(levelname)s] - %(message)s",
     )
 
     console_handler = logging.StreamHandler(sys.stdout)
@@ -26,7 +27,7 @@ def setup_logging():
 
     debug_handler = RotatingFileHandler(
         log_dir / "debug.log",
-        maxBytes=10_000_000, 
+        maxBytes=10_000_000,
         backupCount=5,
     )
     debug_handler.setLevel(logging.DEBUG)

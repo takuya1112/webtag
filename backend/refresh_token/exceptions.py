@@ -12,3 +12,7 @@ class TokenAlreadyRevoked(Exception):
 
 class ExpiredTokenError(Exception):
     pass
+
+
+class TokenStolenError(Exception):
+    pass

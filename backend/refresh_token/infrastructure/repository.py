@@ -180,7 +180,9 @@ class SQLAlchemyRefreshTokenRepository:
             user_id=UserId(model.user_id),
             hashed_token=HashedToken(model.hashed_token),
             expires_at=TokenTimestamp(model.expires_at),
-            revoked_at=TokenTimestamp(model.revoked_at) if model.revoked_at else None,
+            revoked_at=TokenTimestamp(model.revoked_at)
+            if model.revoked_at
+            else None,
         )
 
     def _to_model(self, entity: RefreshTokenEntity) -> RefreshTokenModel:

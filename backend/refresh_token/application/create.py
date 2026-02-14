@@ -19,10 +19,5 @@ class CreateRefreshToken:
     def execute(self, user_id: int) -> str:
         entity, raw_token = self.factory.create(UserId(user_id))
         self.repository.add(entity)
-        logger.info(
-            "create and add refresh token",
-            extra={
-                "event": "create and add new refresh token",
-            },
-        )
+        logger.info("entity is added: user_id=%s", entity.user_id.value)
         return raw_token

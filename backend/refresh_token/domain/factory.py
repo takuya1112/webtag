@@ -10,15 +10,15 @@ from .value_objects import HashedToken, TokenTimestamp, UserId
 class RefreshTokenFactory:
     def __init__(
         self,
-        token_generator: TokenGenerator,
-        token_hasher: TokenHasher,
+        generator: TokenGenerator,
+        hasher: TokenHasher,
     ) -> None:
-        self.token_generator = token_generator
-        self.token_hasher = token_hasher
+        self.generator = generator
+        self.hasher = hasher
 
     def create(self, user_id: UserId) -> tuple[RefreshTokenEntity, str]:
-        raw_token = self.token_generator.generate()
-        hashed_token = self.token_hasher.hash(raw_token)
+        raw_token = self.generator.generate()
+        hashed_token = self.hasher.hash(raw_token)
 
         expires_at = datetime.now(timezone.utc) + timedelta(
             days=settings.REFRESH_TOKEN_EXPIRE_DAYS

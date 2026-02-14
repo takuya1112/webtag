@@ -14,16 +14,16 @@ logger = get_logger(__name__)
 class RefreshAccessToken:
     def __init__(
         self,
-        factory: RefreshTokenFactory,
         repository: RefreshTokenRepository,
-        token_hasher: TokenHasher,
+        factory: RefreshTokenFactory,
+        hasher: TokenHasher,
     ):
-        self.factory = factory
         self.repository = repository
-        self.token_hasher = token_hasher
+        self.factory = factory
+        self.hasher = hasher
 
     def execute(self, refresh_token: str) -> str:
-        hashed_token = HashedToken(self.token_hasher.hash(refresh_token))
+        hashed_token = HashedToken(self.hasher.hash(refresh_token))
         entity = self.repository.find_by_hashed_token(hashed_token)
 
         if not entity:
@@ -36,7 +36,9 @@ class RefreshAccessToken:
             raise TokenStolenError("Token already revoked")
 
         if entity.is_expired(datetime.now(timezone.utc)):
-            logger.warning("Token already expired: user_id=%s", entity.user_id.value)
+            logger.warning(
+                "Token already expired: user_id=%s", entity.user_id.value
+            )
             raise ExpiredTokenError("Token already expired")
 
         entity.revoke(datetime.now(timezone.utc))
@@ -44,5 +46,7 @@ class RefreshAccessToken:
 
         new_entity, raw_token = self.factory.create(entity.user_id)
         self.repository.add(new_entity)
-        logger.debug("Token rotated successfully: user_id=%s", entity.user_id.value)
+        logger.debug(
+            "Token rotated successfully: user_id=%s", entity.user_id.value
+        )
         return raw_token

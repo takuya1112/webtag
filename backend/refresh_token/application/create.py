@@ -10,11 +10,11 @@ logger = get_logger(__name__)
 class CreateRefreshToken:
     def __init__(
         self,
-        factory: RefreshTokenFactory,
         repository: RefreshTokenRepository,
+        factory: RefreshTokenFactory,
     ):
-        self.factory = factory
         self.repository = repository
+        self.factory = factory
 
     def execute(self, user_id: int) -> str:
         entity, raw_token = self.factory.create(UserId(user_id))

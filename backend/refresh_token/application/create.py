@@ -1,4 +1,5 @@
 from core.logging import get_logger
+from shared.application.retry import retry
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
@@ -16,6 +17,7 @@ class CreateRefreshToken:
         self.repository = repository
         self.factory = factory
 
+    @retry()
     def execute(self, user_id: int) -> str:
         entity, raw_token = self.factory.create(UserId(user_id))
         self.repository.add(entity)

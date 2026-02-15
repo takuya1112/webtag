@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from core.logging import get_logger
 from core.security import TokenHasher
+from shared.application.retry import retry
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
@@ -22,6 +23,7 @@ class RefreshAccessToken:
         self.factory = factory
         self.hasher = hasher
 
+    @retry()
     def execute(self, refresh_token: str) -> str:
         hashed_token = HashedToken(self.hasher.hash(refresh_token))
         entity = self.repository.find_by_hashed_token(hashed_token)

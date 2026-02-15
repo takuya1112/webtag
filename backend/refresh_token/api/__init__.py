@@ -12,7 +12,7 @@ from .dependencies import (
 from .endpoints import refresh
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-router.include_in_schema(refresh.router)
+router.include_router(refresh.router)
 
 __all__ = [
     "CreateRefreshTokenDep",

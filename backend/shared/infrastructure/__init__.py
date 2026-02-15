@@ -1,9 +1,12 @@
-from .base import Base, engine, get_uow_dependency
-from .uow import UnitOfWork
+from .base import Base
+from .engine import engine
+from .session import SessionLocal
+from .uow import UnitOfWork, get_uow_dependency
 
 __all__ = [
     "Base",
     "engine",
+    "SessionLocal",
     "get_uow_dependency",
     "UnitOfWork",
 ]

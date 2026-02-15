@@ -1,6 +1,9 @@
-from typing import Dict, Type, TypeVar
+from contextlib import contextmanager
+from typing import Dict, Generator, Type, TypeVar
 
 from sqlalchemy.orm import Session, sessionmaker
+
+from .session import SessionLocal
 
 T = TypeVar("T")
 
@@ -33,3 +36,9 @@ class UnitOfWork:
         if repository_type not in self._repository:
             self._repository[repository_type] = repository_type(self.session)
         return self._repository[repository_type]
+
+
+@contextmanager
+def get_uow_dependency() -> Generator[UnitOfWork, None, None]:
+    with UnitOfWork(SessionLocal) as uow:
+        yield uow

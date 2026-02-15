@@ -1,3 +1,5 @@
+from fastapi import APIRouter
+
 from .dependencies import (
     CreateRefreshTokenDep,
     FactoryDep,
@@ -7,6 +9,10 @@ from .dependencies import (
     UOWDep,
     ValidateRefreshTokenDep,
 )
+from .endpoints import refresh
+
+router = APIRouter(prefix="/auth", tags=["auth"])
+router.include_in_schema(refresh.router)
 
 __all__ = [
     "CreateRefreshTokenDep",
@@ -16,4 +22,5 @@ __all__ = [
     "RefreshAccessTokenDep",
     "UOWDep",
     "ValidateRefreshTokenDep",
+    "router",
 ]

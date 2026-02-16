@@ -1,9 +1,9 @@
 from core.logging import get_logger
 from shared.application.retry import retry
+from shared.domain.value_objects import UserId
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
-from ..domain.value_objects import UserId
 
 logger = get_logger(__name__)
 

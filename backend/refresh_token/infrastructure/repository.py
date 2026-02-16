@@ -2,10 +2,11 @@ from datetime import datetime, timedelta, timezone
 
 from core.config import settings
 from core.logging import get_logger
+from shared.domain.value_objects import AwareDatetime, UserId
 from sqlalchemy.orm import Session
 
 from ..domain import RefreshTokenEntity
-from ..domain.value_objects import HashedToken, TokenTimestamp, UserId
+from ..domain.value_objects import HashedToken
 from ..exceptions import TokenNotFoundError
 from .model import RefreshTokenModel
 
@@ -179,8 +180,8 @@ class SQLAlchemyRefreshTokenRepository:
         return RefreshTokenEntity(
             user_id=UserId(model.user_id),
             hashed_token=HashedToken(model.hashed_token),
-            expires_at=TokenTimestamp(model.expires_at),
-            revoked_at=TokenTimestamp(model.revoked_at)
+            expires_at=AwareDatetime(model.expires_at),
+            revoked_at=AwareDatetime(model.revoked_at)
             if model.revoked_at
             else None,
         )

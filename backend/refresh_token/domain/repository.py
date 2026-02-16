@@ -1,7 +1,9 @@
 from typing import Protocol
 
+from shared.domain.value_objects import UserId
+
 from .entity import RefreshTokenEntity
-from .value_objects import HashedToken, UserId
+from .value_objects import HashedToken
 
 
 class RefreshTokenRepository(Protocol):

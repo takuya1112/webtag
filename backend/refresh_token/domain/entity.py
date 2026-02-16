@@ -1,16 +1,18 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from shared.domain.value_objects import AwareDatetime, UserId
+
 from ..exceptions import TokenAlreadyRevoked
-from .value_objects import HashedToken, TokenTimestamp, UserId
+from .value_objects import HashedToken
 
 
 @dataclass
 class RefreshTokenEntity:
     user_id: UserId
     hashed_token: HashedToken
-    expires_at: TokenTimestamp
-    revoked_at: TokenTimestamp | None = None
+    expires_at: AwareDatetime
+    revoked_at: AwareDatetime | None = None
 
     def is_valid(self, current_time: datetime) -> bool:
         return not self.is_expired(current_time) and not self.is_revoked()
@@ -24,4 +26,4 @@ class RefreshTokenEntity:
     def revoke(self, current_time: datetime) -> None:
         if self.is_revoked():
             raise TokenAlreadyRevoked()
-        self.revoked_at = TokenTimestamp(current_time)
+        self.revoked_at = AwareDatetime(current_time)

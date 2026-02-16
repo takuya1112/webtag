@@ -2,9 +2,10 @@ from datetime import datetime, timedelta, timezone
 
 from core.config import settings
 from core.security import TokenGenerator, TokenHasher
+from shared.domain.value_objects import AwareDatetime, UserId
 
 from .entity import RefreshTokenEntity
-from .value_objects import HashedToken, TokenTimestamp, UserId
+from .value_objects import HashedToken
 
 
 class RefreshTokenFactory:
@@ -27,7 +28,7 @@ class RefreshTokenFactory:
         entity = RefreshTokenEntity(
             user_id=user_id,
             hashed_token=HashedToken(hashed_token),
-            expires_at=TokenTimestamp(expires_at),
+            expires_at=AwareDatetime(expires_at),
         )
 
         return entity, raw_token

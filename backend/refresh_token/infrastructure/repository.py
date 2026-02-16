@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from core.config import settings
 from core.logging import get_logger
@@ -121,7 +121,7 @@ class SQLAlchemyRefreshTokenRepository:
         Returns:
             int: delete count
         """
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         delete_count = (
             self.session.query(RefreshTokenModel)
             .filter(RefreshTokenModel.expires_at <= now)
@@ -136,7 +136,7 @@ class SQLAlchemyRefreshTokenRepository:
         Returns:
             int: delete count
         """
-        cutoff = datetime.now(timezone.utc) - timedelta(
+        cutoff = datetime.now(UTC) - timedelta(
             days=settings.REVOKED_REFRESH_TOKEN_EXPIRE_DAYS
         )
         delete_count = (

@@ -1,5 +1,6 @@
 from . import security
 from .base import Base
+from .clock import SystemClock
 from .engine import engine
 from .session import SessionLocal
 from .uow import UnitOfWork, get_uow_dependency
@@ -7,8 +8,9 @@ from .uow import UnitOfWork, get_uow_dependency
 __all__ = [
     "security",
     "Base",
+    "SystemClock",
     "engine",
     "SessionLocal",
-    "get_uow_dependency",
     "UnitOfWork",
+    "get_uow_dependency",
 ]

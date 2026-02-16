@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from core.logging import get_logger
 from shared.application.retry import retry
@@ -37,13 +37,13 @@ class RefreshAccessToken:
             self.repository.delete_all_by_user_id(entity.user_id)
             raise TokenStolenError("Token already revoked")
 
-        if entity.is_expired(datetime.now(timezone.utc)):
+        if entity.is_expired(datetime.now(UTC)):
             logger.warning(
                 "Token already expired: user_id=%s", entity.user_id.value
             )
             raise ExpiredTokenError("Token already expired")
 
-        entity.revoke(datetime.now(timezone.utc))
+        entity.revoke(datetime.now(UTC))
         self.repository.update(entity)
 
         new_entity, raw_token = self.factory.create(entity.user_id)

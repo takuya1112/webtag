@@ -1,27 +1,15 @@
 from core.constants import UserConfig
 from shared.infrastructure.base import Base
-from sqlalchemy import (
-    BigInteger,
-    Column,
-    DateTime,
-    String,
-)
+from sqlalchemy import Column, DateTime, Index, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 
 class UserModel(Base):
-    """User Model
-
-    Attributes:
-        id: The Primary Key of the user.
-        name: The name of the user.
-        email:
-    """
+    """User Model"""
 
     __tablename__ = "users"
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    public_id = Column(UUID(as_uuid=True), unique=True, nullable=False)
+    id = Column(UUID(as_uuid=True), primary_key=True)
     name = Column(String(UserConfig.DB_NAME_LENGTH_MAX), nullable=False)
     email = Column(
         String(UserConfig.DB_EMAIL_LENGTH_MAX),
@@ -37,17 +25,25 @@ class UserModel(Base):
     deactivated_at = Column(DateTime(timezone=True), nullable=True)
 
     articles = relationship(
-        "Article",
+        "ArticleModel",
         back_populates="user",
         cascade="all, delete-orphan",
     )
     tags = relationship(
-        "Tag",
+        "TagModel",
         back_populates="user",
         cascade="all, delete-orphan",
     )
     refresh_tokens = relationship(
-        "RefreshToken",
+        "RefreshTokenModel",
         back_populates="user",
         cascade="all, delete-orphan",
+    )
+
+    __table_args__ = (
+        Index(
+            "ix_users_active",
+            id,
+            postgresql_where=(deactivated_at.is_(None)),
+        ),
     )

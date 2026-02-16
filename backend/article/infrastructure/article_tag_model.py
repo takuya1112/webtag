@@ -1,23 +1,17 @@
 from shared.infrastructure.base import Base
-from sqlalchemy import BigInteger, Column, ForeignKey
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class ArticleTagModel(Base):
-    """ArticleTag の情報を管理するモデル
-
-    Attributes:
-        article_id: article.id (Primary Key, Foreign Key)
-        tag_id: tag.id (Primary Key, Foreign Key)
-    """
-
     __tablename__ = "article_tag"
     article_id = Column(
-        BigInteger,
+        UUID(as_uuid=True),
         ForeignKey("articles.id", ondelete="CASCADE"),
         primary_key=True,
     )
     tag_id = Column(
-        BigInteger,
+        UUID(as_uuid=True),
         ForeignKey("tags.id", ondelete="CASCADE"),
         primary_key=True,
     )

@@ -1,41 +1,29 @@
-from uuid import uuid4
-
 from core.constants import TagConfig
 from shared.infrastructure.base import Base
-from sqlalchemy import BigInteger, Column, ForeignKey, Index, String, func
+from sqlalchemy import Column, ForeignKey, Index, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 
 class TagModel(Base):
-    """Tag Model
-
-    Attributes:
-        id: The Primary Key of the article.
-        name: The name of the tag.
-    """
+    """Tag Model"""
 
     __tablename__ = "tags"
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    public_id = Column(
-        UUID(as_uuid=True),
-        default=uuid4,
-        unique=True,
-        nullable=False,
-    )
+    id = Column(UUID(as_uuid=True), primary_key=True)
     user_id = Column(
-        BigInteger,
+        UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
+        index=True,
         nullable=False,
     )
     name = Column(String(TagConfig.DB_NAME_LENGTH_MAX), nullable=False)
 
+    user = relationship("UserModel", back_populates="tags")
     articles = relationship(
-        "Article",
+        "ArticleModel",
         secondary="article_tag",
         back_populates="tags",
     )
-    user = relationship("User", back_populates="tags")
 
     __table_args__ = (
         Index(

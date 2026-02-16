@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from core.config import settings
 from shared.domain.security import TokenGenerator, TokenHasher
@@ -9,11 +9,7 @@ from .value_objects import HashedToken
 
 
 class RefreshTokenFactory:
-    def __init__(
-        self,
-        generator: TokenGenerator,
-        hasher: TokenHasher,
-    ) -> None:
+    def __init__(self, generator: TokenGenerator, hasher: TokenHasher) -> None:
         self.generator = generator
         self.hasher = hasher
 
@@ -21,7 +17,7 @@ class RefreshTokenFactory:
         raw_token = self.generator.generate()
         hashed_token = self.hasher.hash(raw_token)
 
-        expires_at = datetime.now(timezone.utc) + timedelta(
+        expires_at = datetime.now(UTC) + timedelta(
             days=settings.REFRESH_TOKEN_EXPIRE_DAYS
         )
 

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from core.logging import get_logger
 from shared.domain.security import TokenHasher
@@ -38,7 +38,7 @@ class ValidateRefreshToken:
             )
             raise TokenAlreadyRevoked("Token already revoked")
 
-        if entity.is_expired(datetime.now(timezone.utc)):
+        if entity.is_expired(datetime.now(UTC)):
             logger.warning(
                 "Token already expired: user_id=%s", entity.user_id.value
             )

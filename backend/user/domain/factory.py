@@ -1,23 +1,25 @@
-from datetime import datetime, timezone
-from uuid import uuid4
-
-from shared.domain.value_objects import AwareDatetime, PublicId
+from shared.domain.clock import Clock
+from shared.domain.security import IdGenerator
 
 from .entity import UserEntity
 from .value_objects import Email, HashedPassword, UserName
 
 
 class UserFactory:
+    def __init__(self, generator: IdGenerator, clock: Clock) -> None:
+        self.generator = generator
+        self.clock = clock
+
     def create(
         self,
         name: UserName,
         email: Email,
         password_hash: HashedPassword,
     ) -> UserEntity:
-        public_id = PublicId(uuid4())
-        now = AwareDatetime(datetime.now(timezone.utc))
+        id = self.generator.generate()
+        now = self.clock.now()
         return UserEntity(
-            public_id=public_id,
+            id=id,
             name=name,
             email=email,
             password_hash=password_hash,

@@ -7,8 +7,8 @@ logger = get_logger(__name__)
 
 
 @dataclass(frozen=True)
-class PublicId:
-    """Public id value objects
+class AppUuid:
+    """AppUuid value objects
 
     Raises:
         ValueError: if not UUID objects
@@ -24,4 +24,4 @@ class PublicId:
         return str(self.value)
 
     def __repr__(self) -> str:
-        return f"PublicId('{self.value}')"
+        return f"AppUuid('{self.value}')"

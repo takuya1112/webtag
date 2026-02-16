@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 from core.config import settings
-from core.security import TokenGenerator, TokenHasher
+from shared.domain.security import TokenGenerator, TokenHasher
 from shared.domain.value_objects import AwareDatetime, UserId
 
 from .entity import RefreshTokenEntity

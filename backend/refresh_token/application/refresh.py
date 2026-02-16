@@ -1,8 +1,8 @@
 from datetime import datetime, timezone
 
 from core.logging import get_logger
-from core.security import TokenHasher
 from shared.application.retry import retry
+from shared.domain.security import TokenHasher
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository

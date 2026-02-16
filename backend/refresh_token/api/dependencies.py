@@ -1,7 +1,7 @@
 from typing import Annotated
 
-from core.security import HMACHasher, SecureTokenGenerator
 from fastapi import Depends
+from shared.infrastructure.security import HMACHasher, SecureTokenGenerator
 from shared.infrastructure.uow import UnitOfWork, get_uow_dependency
 
 from ..application import (

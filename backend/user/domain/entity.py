@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from shared.domain.value_objects import AwareDatetime, PublicId, UserId
+from shared.domain.value_objects import AwareDatetime, PublicId
 
 from ..exceptions import UserAlreadyActive, UserAlreadyInactive
 from .value_objects import Email, HashedPassword, UserName
@@ -8,7 +8,6 @@ from .value_objects import Email, HashedPassword, UserName
 
 @dataclass
 class UserEntity:
-    id: UserId | None = None
     public_id: PublicId
     name: UserName
     email: Email

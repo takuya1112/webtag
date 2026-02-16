@@ -1,18 +1,9 @@
 import hashlib
 import hmac
-from abc import ABC, abstractmethod
 
-from ..config import settings
+from core.config import settings
 
-
-class TokenHasher(ABC):
-    @abstractmethod
-    def hash(self, token: str) -> str:
-        pass
-
-    @abstractmethod
-    def verify(self, token: str, hashed_token: str) -> bool:
-        pass
+from ...domain.security import TokenHasher
 
 
 class HMACHasher(TokenHasher):

@@ -37,7 +37,7 @@ class SQLAlchemyRefreshTokenRepository:
         Raises:
             TokenNotFoundError: if none found
         """
-        model = self._get_model_by_hashed_token(token.token_hash)
+        model = self._get_model_by_hashed_token_or_raise(token.token_hash)
         model.expires_at = token.expires_at.value
         model.revoked_at = token.revoked_at.value if token.revoked_at else None
         logger.info("Token updated successfully")
@@ -151,7 +151,7 @@ class SQLAlchemyRefreshTokenRepository:
         logger.info("Deleted %s old revoked tokens", delete_count)
         return delete_count
 
-    def _get_model_by_hashed_token(
+    def _get_model_by_hashed_token_or_raise(
         self,
         token_hash: HashedToken,
     ) -> RefreshTokenModel:

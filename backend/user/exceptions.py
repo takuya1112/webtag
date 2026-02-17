@@ -4,3 +4,7 @@ class UserAlreadyInactive(Exception):
 
 class UserAlreadyActive(Exception):
     pass
+
+
+class UserNotFoundError(Exception):
+    pass

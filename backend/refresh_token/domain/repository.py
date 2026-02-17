@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from user.domain.value_objects import UserId
 
@@ -6,6 +6,7 @@ from .entity import RefreshTokenEntity
 from .value_objects import HashedToken
 
 
+@runtime_checkable
 class RefreshTokenRepository(Protocol):
     """Refresh token repository interface"""
 

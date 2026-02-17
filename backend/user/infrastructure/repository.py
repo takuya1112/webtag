@@ -53,7 +53,7 @@ class SQLAlchemyUserRepository:
         Returns:
             UserEntity | None: Return none, if none found
         """
-        model = self.session.get(UserModel, user_id.value)
+        model = self._find_model_by_id(user_id)
         if model:
             logger.debug("User found by user id: %s", str(user_id.value))
         else:
@@ -77,6 +77,17 @@ class SQLAlchemyUserRepository:
             logger.debug("User not found by email")
         return self._to_entity(model) if model else None
 
+    def _find_model_by_id(self, user_id: UserId) -> UserModel | None:
+        """Find a user model by user id
+
+        Args:
+            user_id (UserId): The user id to find
+
+        Returns:
+            UserModel: Return none, if none found
+        """
+        return self.session.get(UserModel, user_id.value)
+
     def _get_model_by_id_or_raise(
         self,
         user_id: UserId,
@@ -84,7 +95,7 @@ class SQLAlchemyUserRepository:
         """Get a user model by user id
 
         Args:
-            user_id (UserId): user id to find
+            user_id (UserId): The user id to find
 
         Raises:
             UserNotFoundError: if none found
@@ -92,7 +103,7 @@ class SQLAlchemyUserRepository:
         Returns:
             UserModel: SQLAlchemy model
         """
-        model = self.session.get(UserModel, user_id.value)
+        model = self._find_model_by_id(user_id)
         if model is None:
             logger.warning("User not found by user id: %s", str(user_id.value))
             raise UserNotFoundError("User not found")

@@ -1,5 +1,6 @@
 from core.logging import get_logger
 from shared.domain.value_objects.aware_datetime import AwareDatetime
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..domain.entity import UserEntity
@@ -22,7 +23,7 @@ class SQLAlchemyUserRepository:
         """
         model = self._to_model(user)
         self.session.add(model)
-        logger.info("User added")
+        logger.info("User added: %s", str(user.id.value))
 
     def update(self, user: UserEntity) -> None:
         """Update a user
@@ -41,6 +42,7 @@ class SQLAlchemyUserRepository:
         model.deactivated_at = (
             user.deactivated_at.value if user.deactivated_at else None
         )
+        logger.info("User updated %s", str(user.id.value))
 
     def find_by_id(self, user_id: UserId) -> UserEntity | None:
         """Find a user by user id
@@ -67,11 +69,8 @@ class SQLAlchemyUserRepository:
         Returns:
             UserEntity | None: Return none, if none found
         """
-        model = (
-            self.session.query(UserModel)
-            .filter(UserModel.email == email.value)
-            .one_or_none()
-        )
+        stmt = select(UserModel).where(UserModel.email == email.value)
+        model = self.session.execute(stmt).scalar_one_or_none()
         if model:
             logger.debug("User found by email")
         else:

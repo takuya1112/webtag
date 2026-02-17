@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends
+from shared.infrastructure.clock import SystemClock
 from shared.infrastructure.security import HMACHasher, SecureTokenGenerator
 from shared.infrastructure.uow import UnitOfWork, get_uow_dependency
 
@@ -21,8 +22,13 @@ def get_token_hasher() -> HMACHasher:
     return HMACHasher()
 
 
+def get_clock_now() -> SystemClock:
+    return SystemClock()
+
+
 GeneratorDep = Annotated[SecureTokenGenerator, Depends(get_token_generator)]
 HasherDep = Annotated[HMACHasher, Depends(get_token_hasher)]
+ClockDep = Annotated[SystemClock, Depends(get_clock_now)]
 UOWDep = Annotated[UnitOfWork, Depends(get_uow_dependency)]
 
 
@@ -33,24 +39,44 @@ def get_refresh_token_factory(generator: GeneratorDep, hasher: HasherDep):
 FactoryDep = Annotated[RefreshTokenFactory, Depends(get_refresh_token_factory)]
 
 
-def get_create_refresh_token(uow: UOWDep, factory: FactoryDep):
+def get_create_refresh_token(
+    uow: UOWDep,
+    factory: FactoryDep,
+    clock: ClockDep,
+):
     repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
-    return CreateRefreshToken(repository=repository, factory=factory)
+    return CreateRefreshToken(
+        repository=repository,
+        factory=factory,
+        clock=clock,
+    )
 
 
-def get_validate_refresh_token(uow: UOWDep, hasher: HasherDep):
+def get_validate_refresh_token(
+    uow: UOWDep,
+    hasher: HasherDep,
+    clock: ClockDep,
+):
     repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
-    return ValidateRefreshToken(repository=repository, hasher=hasher)
+    return ValidateRefreshToken(
+        repository=repository,
+        hasher=hasher,
+        clock=clock,
+    )
 
 
 def get_refresh_access_token(
-    uow: UOWDep, factory: FactoryDep, hasher: HasherDep
+    uow: UOWDep,
+    factory: FactoryDep,
+    hasher: HasherDep,
+    clock: ClockDep,
 ):
     repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
     return RefreshAccessToken(
         repository=repository,
         factory=factory,
         hasher=hasher,
+        clock=clock,
     )
 
 

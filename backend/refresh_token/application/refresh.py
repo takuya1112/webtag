@@ -1,8 +1,8 @@
-from datetime import UTC, datetime
-
 from core.logging import get_logger
 from shared.application.retry import retry
 from shared.domain.security import TokenHasher
+from shared.domain.value_objects import AwareDatetime
+from shared.infrastructure.clock import Clock
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
@@ -18,15 +18,18 @@ class RefreshAccessToken:
         repository: RefreshTokenRepository,
         factory: RefreshTokenFactory,
         hasher: TokenHasher,
+        clock: Clock,
     ):
         self.repository = repository
         self.factory = factory
         self.hasher = hasher
+        self.clock = clock
 
     @retry()
     def execute(self, refresh_token: str) -> str:
-        token_hash = HashedToken(self.hasher.hash(refresh_token))
-        entity = self.repository.find_by_hashed_token(token_hash)
+        token_hash_vo = HashedToken(self.hasher.hash(refresh_token))
+        entity = self.repository.find_by_hashed_token(token_hash_vo)
+        now_vo = AwareDatetime(self.clock.now())
 
         if not entity:
             logger.warning("Token not exist")
@@ -37,14 +40,14 @@ class RefreshAccessToken:
             self.repository.delete_all_by_user_id(entity.user_id)
             raise TokenStolenError("Token already revoked")
 
-        if entity.is_expired(datetime.now(UTC)):
+        if entity.is_expired(now_vo):
             logger.warning(
                 "Token already expired: user_id=%s",
                 entity.user_id.value,
             )
             raise ExpiredTokenError("Token already expired")
 
-        entity.revoke(datetime.now(UTC))
+        entity.revoke(now_vo)
         self.repository.update(entity)
 
         new_entity, raw_token = self.factory.create(entity.user_id)

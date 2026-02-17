@@ -1,6 +1,3 @@
-from datetime import UTC, datetime, timedelta
-
-from core.config import settings
 from shared.domain.security import TokenGenerator, TokenHasher
 from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
@@ -10,22 +7,25 @@ from .value_objects import HashedToken
 
 
 class RefreshTokenFactory:
-    def __init__(self, generator: TokenGenerator, hasher: TokenHasher) -> None:
+    def __init__(
+        self,
+        generator: TokenGenerator,
+        hasher: TokenHasher,
+    ) -> None:
         self.generator = generator
         self.hasher = hasher
 
-    def create(self, user_id: UserId) -> tuple[RefreshTokenEntity, str]:
+    def create(
+        self,
+        user_id: UserId,
+        expires_at: AwareDatetime,
+    ) -> tuple[RefreshTokenEntity, str]:
         raw_token = self.generator.generate()
-        hashed_token = self.hasher.hash(raw_token)
-
-        expires_at = datetime.now(UTC) + timedelta(
-            days=settings.REFRESH_TOKEN_EXPIRE_DAYS
-        )
-
+        hashed_token = HashedToken(self.hasher.hash(raw_token))
         entity = RefreshTokenEntity(
             user_id=user_id,
-            token_hash=HashedToken(hashed_token),
-            expires_at=AwareDatetime(expires_at),
+            token_hash=hashed_token,
+            expires_at=expires_at,
         )
 
         return entity, raw_token

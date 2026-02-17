@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
 
 from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
@@ -15,16 +14,16 @@ class RefreshTokenEntity:
     expires_at: AwareDatetime
     revoked_at: AwareDatetime | None = None
 
-    def is_valid(self, current_time: datetime) -> bool:
-        return not self.is_expired(current_time) and not self.is_revoked()
+    def is_valid(self, now: AwareDatetime) -> bool:
+        return not self.is_expired(now) and not self.is_revoked()
 
-    def is_expired(self, current_time: datetime) -> bool:
-        return self.expires_at <= current_time
+    def is_expired(self, now: AwareDatetime) -> bool:
+        return self.expires_at <= now
 
     def is_revoked(self) -> bool:
         return self.revoked_at is not None
 
-    def revoke(self, current_time: datetime) -> None:
+    def revoke(self, now: AwareDatetime) -> None:
         if self.is_revoked():
             raise TokenAlreadyRevoked()
-        self.revoked_at = AwareDatetime(current_time)
+        self.revoked_at = AwareDatetime(now)

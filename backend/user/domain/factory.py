@@ -1,8 +1,9 @@
 from shared.domain.clock import Clock
 from shared.domain.security import IdGenerator
+from shared.domain.value_objects import AwareDatetime
 
 from .entity import UserEntity
-from .value_objects import Email, HashedPassword, UserName
+from .value_objects import Email, HashedPassword, UserId, UserName
 
 
 class UserFactory:
@@ -16,8 +17,8 @@ class UserFactory:
         email: Email,
         password_hash: HashedPassword,
     ) -> UserEntity:
-        id = self.generator.generate()
-        now = self.clock.now()
+        id = UserId(self.generator.generate())
+        now = AwareDatetime((self.clock.now()))
         return UserEntity(
             id=id,
             name=name,

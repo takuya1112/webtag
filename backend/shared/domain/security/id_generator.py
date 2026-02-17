@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-
-from ..value_objects import AppUuid
+from uuid import UUID
 
 
 class IdGenerator(ABC):
     @abstractmethod
-    def generate(self) -> AppUuid:
+    def generate(self) -> UUID:
         pass

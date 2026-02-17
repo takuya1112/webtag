@@ -24,4 +24,4 @@ class AppUuid:
         return str(self.value)
 
     def __repr__(self) -> str:
-        return f"AppUuid('{self.value}')"
+        return f"{self.__class__.__name__}('{self.value}')"

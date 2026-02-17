@@ -25,8 +25,8 @@ class ValidateRefreshToken:
         self.hasher = hasher
 
     def execute(self, refresh_token: str) -> RefreshTokenEntity:
-        hashed_token = HashedToken(self.hasher.hash(refresh_token))
-        entity = self.repository.find_by_hashed_token(hashed_token)
+        token_hash = HashedToken(self.hasher.hash(refresh_token))
+        entity = self.repository.find_by_hashed_token(token_hash)
 
         if not entity:
             logger.warning("Token not exist")
@@ -34,17 +34,20 @@ class ValidateRefreshToken:
 
         if entity.is_revoked():
             logger.warning(
-                "Token already revoked: user_id=%s", entity.user_id.value
+                "Token already revoked: user_id=%s",
+                entity.user_id.value,
             )
             raise TokenAlreadyRevoked("Token already revoked")
 
         if entity.is_expired(datetime.now(UTC)):
             logger.warning(
-                "Token already expired: user_id=%s", entity.user_id.value
+                "Token already expired: user_id=%s",
+                entity.user_id.value,
             )
             raise ExpiredTokenError("Token already expired")
 
         logger.debug(
-            "Token validated successfully: user_id=%s", entity.user_id.value
+            "Token validated successfully: user_id=%s",
+            entity.user_id.value,
         )
         return entity

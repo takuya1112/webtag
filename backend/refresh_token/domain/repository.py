@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from shared.domain.value_objects import AppUuid
+from user.domain.value_objects import UserId
 
 from .entity import RefreshTokenEntity
 from .value_objects import HashedToken
@@ -28,11 +28,11 @@ class RefreshTokenRepository(Protocol):
         """
         ...
 
-    def find_by_user_id(self, user_id: AppUuid) -> list[RefreshTokenEntity]:
+    def find_by_user_id(self, user_id: UserId) -> list[RefreshTokenEntity]:
         """Find all refresh tokens by user id
 
         Args:
-            user_id (AppUuid): user id to find
+            user_id (UserId): user id to find
 
         Returns:
             list[RefreshTokenEntity]: Return empty list, if none found
@@ -41,34 +41,34 @@ class RefreshTokenRepository(Protocol):
 
     def find_by_hashed_token(
         self,
-        hashed_token: HashedToken,
+        token_hash: HashedToken,
     ) -> RefreshTokenEntity | None:
         """Find a refresh token by hashed token
 
         Args:
-            hashed_token (HashedToken): hashed token to find
+            token_hash (HashedToken): hashed token to find
 
         Returns:
             RefreshTokenEntity | None: Return None, if none found
         """
         ...
 
-    def delete_all_by_user_id(self, user_id: AppUuid) -> int:
+    def delete_all_by_user_id(self, user_id: UserId) -> int:
         """Delete all refresh tokens by user id
 
         Args:
-            user_id (AppUuid): user id
+            user_id (UserId): user id
 
         Returns:
             int: delete count
         """
         ...
 
-    def delete_by_hashed_token(self, hashed_token: HashedToken) -> int:
+    def delete_by_hashed_token(self, token_hash: HashedToken) -> int:
         """Delete refresh token by hashed token
 
         Args:
-            hashed_token (HashedToken): hashed token to delete
+            token_hash (HashedToken): hashed token to delete
 
         Returns:
             int: delete count

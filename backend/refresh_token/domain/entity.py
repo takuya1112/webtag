@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from shared.domain.value_objects import AppUuid, AwareDatetime
+from shared.domain.value_objects import AwareDatetime
+from user.domain.value_objects import UserId
 
 from ..exceptions import TokenAlreadyRevoked
 from .value_objects import HashedToken
@@ -9,8 +10,8 @@ from .value_objects import HashedToken
 
 @dataclass
 class RefreshTokenEntity:
-    user_id: AppUuid
-    hashed_token: HashedToken
+    user_id: UserId
+    token_hash: HashedToken
     expires_at: AwareDatetime
     revoked_at: AwareDatetime | None = None
 

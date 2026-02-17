@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-
-from .value_objects import AwareDatetime
+from datetime import datetime
 
 
 class Clock(ABC):
     @abstractmethod
-    def now(self) -> AwareDatetime:
+    def now(self) -> datetime:
         pass

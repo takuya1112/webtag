@@ -1,32 +1,57 @@
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
+from uuid import UUID
+
 from core.constants import ArticleConfig
 from shared.infrastructure.base import Base
-from sqlalchemy import Column, DateTime, ForeignKey, Index, String, func
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy import DateTime, ForeignKey, Index, String, func
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from tag.infrastructure.model import TagModel
+    from user.infrastructure.model import UserModel
 
 
 class ArticleModel(Base):
     """Article Model"""
 
     __tablename__ = "articles"
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    user_id = Column(
-        UUID(as_uuid=True),
+    id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True),
+        primary_key=True,
+    )
+    user_id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         index=True,
-        nullable=False,
     )
-    title = Column(String(ArticleConfig.DB_TITLE_LENGTH_MAX), nullable=False)
-    url = Column(String(ArticleConfig.DB_URL_LENGTH_MAX), nullable=False)
-    created_at = Column(DateTime(timezone=True), nullable=False)
-    updated_at = Column(DateTime(timezone=True), nullable=False)
-    deleted_at = Column(DateTime(timezone=True), nullable=True)
+    title: Mapped[str] = mapped_column(
+        String(ArticleConfig.DB_TITLE_LENGTH_MAX),
+    )
+    url: Mapped[str] = mapped_column(
+        String(ArticleConfig.DB_URL_LENGTH_MAX),
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+    )
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
 
-    user = relationship("UserModel", back_populates="articles")
-    tags = relationship(
-        "TagModel",
+    user: Mapped[UserModel] = relationship(
+        back_populates="articles",
+    )
+    tags: Mapped[list[TagModel]] = relationship(
         secondary="article_tag",
         back_populates="articles",
+        passive_deletes=True,
     )
 
     __table_args__ = (

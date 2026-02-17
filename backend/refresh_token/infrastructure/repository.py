@@ -2,7 +2,7 @@ from datetime import UTC, datetime, timedelta
 
 from core.config import settings
 from core.logging import get_logger
-from shared.domain.value_objects import AwareDatetime, UserId
+from shared.domain.value_objects import AppUuid, AwareDatetime
 from sqlalchemy.orm import Session
 
 from ..domain import RefreshTokenEntity
@@ -41,11 +41,11 @@ class SQLAlchemyRefreshTokenRepository:
         model.revoked_at = token.revoked_at.value if token.revoked_at else None
         logger.info("Token updated successfully")
 
-    def find_by_user_id(self, user_id: UserId) -> list[RefreshTokenEntity]:
+    def find_by_user_id(self, user_id: AppUuid) -> list[RefreshTokenEntity]:
         """Find all refresh tokens by user id
 
         Args:
-            user_id (UserId): user id to find
+            user_id (AppUuid): user id to find
 
         Returns:
             list[RefreshTokenEntity]: Return empty list, if none found
@@ -72,7 +72,7 @@ class SQLAlchemyRefreshTokenRepository:
         """
         model = (
             self.session.query(RefreshTokenModel)
-            .filter(RefreshTokenModel.hashed_token == hashed_token.value)
+            .filter(RefreshTokenModel.token_hash == hashed_token.value)
             .one_or_none()
         )
         if model:
@@ -81,11 +81,11 @@ class SQLAlchemyRefreshTokenRepository:
             logger.debug("Token not found by hashed token")
         return self._to_entity(model) if model else None
 
-    def delete_all_by_user_id(self, user_id: UserId) -> int:
+    def delete_all_by_user_id(self, user_id: AppUuid) -> int:
         """Delete all refresh tokens by user id
 
         Args:
-            user_id (UserId): user id
+            user_id (AppUuid): user id
 
         Returns:
             int: delete count
@@ -109,7 +109,7 @@ class SQLAlchemyRefreshTokenRepository:
         """
         delete_count = (
             self.session.query(RefreshTokenModel)
-            .filter(RefreshTokenModel.hashed_token == hashed_token.value)
+            .filter(RefreshTokenModel.token_hash == hashed_token.value)
             .delete()
         )
         logger.info("Deleted %s tokens by hashed token", delete_count)
@@ -167,7 +167,7 @@ class SQLAlchemyRefreshTokenRepository:
         """
         model = (
             self.session.query(RefreshTokenModel)
-            .filter(RefreshTokenModel.hashed_token == hashed_token.value)
+            .filter(RefreshTokenModel.token_hash == hashed_token.value)
             .one_or_none()
         )
         if model is None:
@@ -178,8 +178,8 @@ class SQLAlchemyRefreshTokenRepository:
     def _to_entity(self, model: RefreshTokenModel) -> RefreshTokenEntity:
         """SQLAlchemy model -> Domain entity"""
         return RefreshTokenEntity(
-            user_id=UserId(model.user_id),
-            hashed_token=HashedToken(model.hashed_token),
+            user_id=AppUuid(model.user_id),
+            hashed_token=HashedToken(model.token_hash),
             expires_at=AwareDatetime(model.expires_at),
             revoked_at=AwareDatetime(model.revoked_at)
             if model.revoked_at

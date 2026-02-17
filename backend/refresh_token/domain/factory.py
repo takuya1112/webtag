@@ -2,7 +2,7 @@ from datetime import UTC, datetime, timedelta
 
 from core.config import settings
 from shared.domain.security import TokenGenerator, TokenHasher
-from shared.domain.value_objects import AwareDatetime, UserId
+from shared.domain.value_objects import AppUuid, AwareDatetime
 
 from .entity import RefreshTokenEntity
 from .value_objects import HashedToken
@@ -13,7 +13,7 @@ class RefreshTokenFactory:
         self.generator = generator
         self.hasher = hasher
 
-    def create(self, user_id: UserId) -> tuple[RefreshTokenEntity, str]:
+    def create(self, user_id: AppUuid) -> tuple[RefreshTokenEntity, str]:
         raw_token = self.generator.generate()
         hashed_token = self.hasher.hash(raw_token)
 

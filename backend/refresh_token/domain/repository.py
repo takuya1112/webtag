@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from shared.domain.value_objects import UserId
+from shared.domain.value_objects import AppUuid
 
 from .entity import RefreshTokenEntity
 from .value_objects import HashedToken
@@ -28,11 +28,11 @@ class RefreshTokenRepository(Protocol):
         """
         ...
 
-    def find_by_user_id(self, user_id: UserId) -> list[RefreshTokenEntity]:
+    def find_by_user_id(self, user_id: AppUuid) -> list[RefreshTokenEntity]:
         """Find all refresh tokens by user id
 
         Args:
-            user_id (UserId): user id to find
+            user_id (AppUuid): user id to find
 
         Returns:
             list[RefreshTokenEntity]: Return empty list, if none found
@@ -53,11 +53,11 @@ class RefreshTokenRepository(Protocol):
         """
         ...
 
-    def delete_all_by_user_id(self, user_id: UserId) -> int:
+    def delete_all_by_user_id(self, user_id: AppUuid) -> int:
         """Delete all refresh tokens by user id
 
         Args:
-            user_id (UserId): user id
+            user_id (AppUuid): user id
 
         Returns:
             int: delete count

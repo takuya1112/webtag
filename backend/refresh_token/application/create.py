@@ -1,6 +1,6 @@
 from core.logging import get_logger
 from shared.application.retry import retry
-from shared.domain.value_objects import UserId
+from shared.domain.value_objects import AppUuid
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
@@ -19,7 +19,7 @@ class CreateRefreshToken:
 
     @retry()
     def execute(self, user_id: int) -> str:
-        entity, raw_token = self.factory.create(UserId(user_id))
+        entity, raw_token = self.factory.create(AppUuid(user_id))
         self.repository.add(entity)
         logger.info("entity is added: user_id=%s", entity.user_id.value)
         return raw_token

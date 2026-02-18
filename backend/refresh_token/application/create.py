@@ -1,4 +1,5 @@
 from datetime import timedelta
+from uuid import UUID
 
 from core.config import settings
 from core.logging import get_logger
@@ -25,7 +26,7 @@ class CreateRefreshToken:
         self.clock = clock
 
     @retry()
-    def execute(self, user_id: int) -> str:
+    def execute(self, user_id: UUID) -> str:
         user_id_vo = UserId(user_id)
         expires_at_vo = AwareDatetime(
             self.clock.now()

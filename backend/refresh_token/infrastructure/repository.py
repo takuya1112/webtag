@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from user.domain.value_objects import UserId
 
 from ..domain import RefreshTokenEntity
-from ..domain.value_objects import HashedToken
+from ..domain.value_objects import HashedToken, RefreshTokenId
 from ..exceptions import TokenNotFoundError
 from .model import RefreshTokenModel
 
@@ -52,7 +52,7 @@ class SQLAlchemyRefreshTokenRepository:
         stmt = select(RefreshTokenModel).where(
             RefreshTokenModel.user_id == user_id.value
         )
-        models = self.session.execute(stmt).scalars().all()
+        models = self.session.scalars(stmt).all()
         logger.debug("Found %s tokens by user_id", len(models))
         return [self._to_entity(model) for model in models]
 
@@ -149,7 +149,7 @@ class SQLAlchemyRefreshTokenRepository:
         stmt = select(RefreshTokenModel).where(
             RefreshTokenModel.token_hash == token_hash.value
         )
-        return self.session.execute(stmt).scalar_one_or_none()
+        return self.session.scalars(stmt).one_or_none()
 
     def _get_model_by_hashed_token_or_raise(
         self,
@@ -175,9 +175,12 @@ class SQLAlchemyRefreshTokenRepository:
     def _to_entity(self, model: RefreshTokenModel) -> RefreshTokenEntity:
         """SQLAlchemy model -> Domain entity"""
         return RefreshTokenEntity(
+            id=RefreshTokenId(model.id),
             user_id=UserId(model.user_id),
             token_hash=HashedToken(model.token_hash),
+            created_at=AwareDatetime(model.created_at),
             expires_at=AwareDatetime(model.expires_at),
+            used_at=AwareDatetime(model.used_at) if model.used_at else None,
             revoked_at=AwareDatetime(model.revoked_at)
             if model.revoked_at
             else None,
@@ -186,8 +189,11 @@ class SQLAlchemyRefreshTokenRepository:
     def _to_model(self, entity: RefreshTokenEntity) -> RefreshTokenModel:
         """Domain entity -> SQLAlchemy model"""
         return RefreshTokenModel(
+            id=entity.id.value,
             user_id=entity.user_id.value,
             token_hash=entity.token_hash.value,
+            created_at=entity.created_at.value,
             expires_at=entity.expires_at.value,
+            used_at=entity.used_at.value if entity.used_at else None,
             revoked_at=entity.revoked_at.value if entity.revoked_at else None,
         )

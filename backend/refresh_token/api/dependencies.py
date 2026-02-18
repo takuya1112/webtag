@@ -2,7 +2,11 @@ from typing import Annotated
 
 from fastapi import Depends
 from shared.infrastructure.clock import SystemClock
-from shared.infrastructure.security import HMACHasher, SecureTokenGenerator
+from shared.infrastructure.security import (
+    HMACHasher,
+    SecureTokenGenerator,
+    UUIDGv7generator,
+)
 from shared.infrastructure.uow import UnitOfWork, get_uow_dependency
 
 from ..application import (
@@ -22,21 +26,54 @@ def get_token_hasher() -> HMACHasher:
     return HMACHasher()
 
 
+def get_id_generator() -> UUIDGv7generator:
+    return UUIDGv7generator()
+
+
 def get_clock_now() -> SystemClock:
     return SystemClock()
 
 
-GeneratorDep = Annotated[SecureTokenGenerator, Depends(get_token_generator)]
-HasherDep = Annotated[HMACHasher, Depends(get_token_hasher)]
-ClockDep = Annotated[SystemClock, Depends(get_clock_now)]
-UOWDep = Annotated[UnitOfWork, Depends(get_uow_dependency)]
+TokenGeneratorDep = Annotated[
+    SecureTokenGenerator,
+    Depends(get_token_generator),
+]
+HasherDep = Annotated[
+    HMACHasher,
+    Depends(get_token_hasher),
+]
+IdGeneratorDep = Annotated[
+    UUIDGv7generator,
+    Depends(get_id_generator),
+]
+ClockDep = Annotated[
+    SystemClock,
+    Depends(get_clock_now),
+]
+UOWDep = Annotated[
+    UnitOfWork,
+    Depends(get_uow_dependency),
+]
 
 
-def get_refresh_token_factory(generator: GeneratorDep, hasher: HasherDep):
-    return RefreshTokenFactory(generator=generator, hasher=hasher)
+def get_refresh_token_factory(
+    token_generator: TokenGeneratorDep,
+    hasher: HasherDep,
+    id_generator: IdGeneratorDep,
+    clock: ClockDep,
+):
+    return RefreshTokenFactory(
+        token_generator=token_generator,
+        hasher=hasher,
+        id_generator=id_generator,
+        clock=clock,
+    )
 
 
-FactoryDep = Annotated[RefreshTokenFactory, Depends(get_refresh_token_factory)]
+FactoryDep = Annotated[
+    RefreshTokenFactory,
+    Depends(get_refresh_token_factory),
+]
 
 
 def get_create_refresh_token(
@@ -52,6 +89,12 @@ def get_create_refresh_token(
     )
 
 
+CreateRefreshTokenDep = Annotated[
+    CreateRefreshToken,
+    Depends(get_create_refresh_token),
+]
+
+
 def get_validate_refresh_token(
     uow: UOWDep,
     hasher: HasherDep,
@@ -65,8 +108,15 @@ def get_validate_refresh_token(
     )
 
 
+ValidateRefreshTokenDep = Annotated[
+    ValidateRefreshToken,
+    Depends(get_validate_refresh_token),
+]
+
+
 def get_refresh_access_token(
     uow: UOWDep,
+    validator: ValidateRefreshTokenDep,
     factory: FactoryDep,
     hasher: HasherDep,
     clock: ClockDep,
@@ -74,21 +124,12 @@ def get_refresh_access_token(
     repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
     return RefreshAccessToken(
         repository=repository,
+        validator=validator,
         factory=factory,
         hasher=hasher,
         clock=clock,
     )
 
-
-CreateRefreshTokenDep = Annotated[
-    CreateRefreshToken,
-    Depends(get_create_refresh_token),
-]
-
-ValidateRefreshTokenDep = Annotated[
-    ValidateRefreshToken,
-    Depends(get_validate_refresh_token),
-]
 
 RefreshAccessTokenDep = Annotated[
     RefreshAccessToken,

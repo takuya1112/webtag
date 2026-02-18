@@ -1,11 +1,5 @@
 # WebTag Design Doc
 
-<!--
-TODO
-１. article search や tag searchの計算量問題や検索方法の改善
-2. バックエンドのdogstring や README 等の書き物を完成させる
--->
-
 ## 1. Context
 
 ## 2. Goals

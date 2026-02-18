@@ -70,7 +70,7 @@ class SQLAlchemyUserRepository:
             UserEntity | None: Return none, if none found
         """
         stmt = select(UserModel).where(UserModel.email == email.value)
-        model = self.session.execute(stmt).scalar_one_or_none()
+        model = self.session.scalars(stmt).one_or_none()
         if model:
             logger.debug("User found by email")
         else:

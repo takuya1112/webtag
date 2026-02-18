@@ -10,6 +10,7 @@ from ..exceptions import (
     ExpiredTokenError,
     InvalidTokenError,
     TokenAlreadyRevoked,
+    TokenAlreadyUsed,
 )
 
 logger = get_logger(__name__)
@@ -41,6 +42,13 @@ class ValidateRefreshToken:
                 entity.user_id.value,
             )
             raise TokenAlreadyRevoked("Token already revoked")
+
+        if entity.is_used():
+            logger.warning(
+                "Token already used: user_id=%s",
+                entity.user_id.value,
+            )
+            raise TokenAlreadyUsed("Token already used", user_id=entity.user_id)
 
         if entity.is_expired(now_vo):
             logger.warning(

@@ -23,7 +23,7 @@ class SQLAlchemyUserRepository:
         """
         model = self._to_model(user)
         self.session.add(model)
-        logger.info("User added: %s", str(user.id.value))
+        logger.debug("User added: user_id=%s", user.id.value)
 
     def update(self, user: UserEntity) -> None:
         """Update a user
@@ -42,7 +42,7 @@ class SQLAlchemyUserRepository:
         model.deactivated_at = (
             user.deactivated_at.value if user.deactivated_at else None
         )
-        logger.info("User updated %s", str(user.id.value))
+        logger.debug("User updated: user_id=%s", user.id.value)
 
     def find_by_id(self, user_id: UserId) -> UserEntity | None:
         """Find a user by user id
@@ -55,9 +55,9 @@ class SQLAlchemyUserRepository:
         """
         model = self._find_model_by_id(user_id)
         if model:
-            logger.debug("User found by user id: %s", str(user_id.value))
+            logger.debug("User found by user id: %s", user_id.value)
         else:
-            logger.debug("User not found by user id: %s", str(user_id.value))
+            logger.debug("User not found by user id: %s", user_id.value)
         return self._to_entity(model) if model else None
 
     def find_by_email(self, email: Email) -> UserEntity | None:
@@ -105,7 +105,7 @@ class SQLAlchemyUserRepository:
         """
         model = self._find_model_by_id(user_id)
         if model is None:
-            logger.warning("User not found by user id: %s", str(user_id.value))
+            logger.warning("User not found by user id: %s", user_id.value)
             raise UserNotFoundError("User not found")
         return model
 

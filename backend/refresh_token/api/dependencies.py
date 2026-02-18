@@ -12,7 +12,6 @@ from shared.infrastructure.uow import UnitOfWork, get_uow_dependency
 from ..application import (
     CreateRefreshToken,
     RefreshAccessToken,
-    ValidateRefreshToken,
 )
 from ..domain.factory import RefreshTokenFactory
 from ..infrastructure.repository import SQLAlchemyRefreshTokenRepository
@@ -95,28 +94,8 @@ CreateRefreshTokenDep = Annotated[
 ]
 
 
-def get_validate_refresh_token(
-    uow: UOWDep,
-    hasher: HasherDep,
-    clock: ClockDep,
-):
-    repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
-    return ValidateRefreshToken(
-        repository=repository,
-        hasher=hasher,
-        clock=clock,
-    )
-
-
-ValidateRefreshTokenDep = Annotated[
-    ValidateRefreshToken,
-    Depends(get_validate_refresh_token),
-]
-
-
 def get_refresh_access_token(
     uow: UOWDep,
-    validator: ValidateRefreshTokenDep,
     factory: FactoryDep,
     hasher: HasherDep,
     clock: ClockDep,
@@ -124,7 +103,6 @@ def get_refresh_access_token(
     repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
     return RefreshAccessToken(
         repository=repository,
-        validator=validator,
         factory=factory,
         hasher=hasher,
         clock=clock,

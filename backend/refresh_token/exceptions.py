@@ -1,31 +1,42 @@
-from user.domain.value_objects import UserId
+from fastapi import status
+from shared.exceptions import AppException
 
 
-class RefreshTokenError(Exception):
+class RefreshTokenError(AppException):
     pass
 
 
 class TokenNotFoundError(RefreshTokenError):
-    pass
+    status_code = status.HTTP_404_NOT_FOUND
+    default_message = "Token not found"
+    error_code = "TOKEN_NOT_FOUND"
 
 
 class InvalidTokenError(RefreshTokenError):
-    pass
+    status_code = status.HTTP_401_UNAUTHORIZED
+    default_message = "Invalid token"
+    error_code = "INVALID_TOKEN"
 
 
 class TokenAlreadyUsed(RefreshTokenError):
-    def __init__(self, message: str, user_id: UserId | None = None):
-        super().__init__(message)
-        self.user_id = user_id
+    status_code = status.HTTP_409_CONFLICT
+    default_message = "Token already used"
+    error_code = "TOKEN_ALREADY_USED"
 
 
 class TokenAlreadyRevoked(RefreshTokenError):
-    pass
+    status_code = status.HTTP_409_CONFLICT
+    default_message = "Token already revoked"
+    error_code = "TOKEN_ALREADY_REVOKED"
 
 
 class ExpiredTokenError(RefreshTokenError):
-    pass
+    status_code = status.HTTP_401_UNAUTHORIZED
+    default_message = "Token expired"
+    error_code = "TOKEN_EXPIRED"
 
 
 class TokenStolenError(RefreshTokenError):
-    pass
+    status_code = status.HTTP_401_UNAUTHORIZED
+    default_message = "Token stolen"
+    error_code = "TOKEN_STOLEN"

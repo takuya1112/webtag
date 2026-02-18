@@ -24,7 +24,7 @@ class SQLAlchemyRefreshTokenRepository:
         """
         model = self._to_model(token)
         self.session.add(model)
-        logger.info("Token added")
+        logger.debug("Token added")
 
     def update(self, token: RefreshTokenEntity) -> None:
         """Update a refresh token
@@ -37,8 +37,9 @@ class SQLAlchemyRefreshTokenRepository:
         """
         model = self._get_model_by_hashed_token_or_raise(token.token_hash)
         model.expires_at = token.expires_at.value
+        model.used_at = token.used_at.value if token.used_at else None
         model.revoked_at = token.revoked_at.value if token.revoked_at else None
-        logger.info("Token updated successfully")
+        logger.debug("Token updated")
 
     def find_by_user_id(self, user_id: UserId) -> list[RefreshTokenEntity]:
         """Find all refresh tokens by user id
@@ -53,7 +54,7 @@ class SQLAlchemyRefreshTokenRepository:
             RefreshTokenModel.user_id == user_id.value
         )
         models = self.session.scalars(stmt).all()
-        logger.debug("Found %s tokens by user_id", len(models))
+        logger.debug("Found %d tokens by user_id", len(models))
         return [self._to_entity(model) for model in models]
 
     def find_by_hashed_token(
@@ -88,7 +89,7 @@ class SQLAlchemyRefreshTokenRepository:
             RefreshTokenModel.user_id == user_id.value
         )
         delete_count = self.session.execute(stmt).rowcount
-        logger.info("Deleted %s tokens by user_id", delete_count)
+        logger.info("Deleted %d tokens by user_id", delete_count)
         return delete_count
 
     def delete_by_hashed_token(self, token_hash: HashedToken) -> int:
@@ -104,7 +105,7 @@ class SQLAlchemyRefreshTokenRepository:
             RefreshTokenModel.token_hash == token_hash.value
         )
         delete_count = self.session.execute(stmt).rowcount
-        logger.info("Deleted %s tokens by hashed token", delete_count)
+        logger.info("Deleted %d tokens by hashed token", delete_count)
         return delete_count
 
     def delete_expired_tokens(self, now: AwareDatetime) -> int:
@@ -117,7 +118,7 @@ class SQLAlchemyRefreshTokenRepository:
             RefreshTokenModel.expires_at <= now.value
         )
         delete_count = self.session.execute(stmt).rowcount
-        logger.info("Deleted %s expired tokens", delete_count)
+        logger.info("Deleted %d expired tokens", delete_count)
         return delete_count
 
     def delete_old_revoked_tokens(self, cutoff: AwareDatetime) -> int:
@@ -131,7 +132,7 @@ class SQLAlchemyRefreshTokenRepository:
             RefreshTokenModel.revoked_at < cutoff.value,
         )
         delete_count = self.session.execute(stmt).rowcount
-        logger.info("Deleted %s old revoked tokens", delete_count)
+        logger.info("Deleted %d old revoked tokens", delete_count)
         return delete_count
 
     def _find_model_by_hashed_token(

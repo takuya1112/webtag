@@ -1,8 +1,10 @@
 from core import setup_logging
 from fastapi import FastAPI
-from refresh_token.api import router
+from refresh_token.api import router as refresh_token_router
+from shared.api.exception_handler import register_exception_handler
 
 setup_logging()
 
 app = FastAPI()
-app.include_router(router)
+register_exception_handler(app)
+app.include_router(refresh_token_router)

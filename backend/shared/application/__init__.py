@@ -1,3 +1,3 @@
-from .retry import retryable
+from .uow import UnitOfWork
 
-__all__ = ["retryable"]
+__all__ = ["UnitOfWork"]

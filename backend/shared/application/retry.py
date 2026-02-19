@@ -81,20 +81,20 @@
 #     return decorator
 
 
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_exponential,
-)
+# from tenacity import (
+#     retry,
+#     stop_after_attempt,
+#     wait_exponential,
+# )
 
 
-def retryable(
-    max_attempts: int = 3,
-    min_wait: int = 1,
-    max_wait: int = 10,
-):
-    return retry(
-        stop=stop_after_attempt(max_attempts),
-        wait=wait_exponential(min=min_wait, max=max_wait),
-        reraise=True,
-    )
+# def retryable(
+#     max_attempts: int = 3,
+#     min_wait: int = 1,
+#     max_wait: int = 10,
+# ):
+#     return retry(
+#         stop=stop_after_attempt(max_attempts),
+#         wait=wait_exponential(min=min_wait, max=max_wait),
+#         reraise=True,
+#     )

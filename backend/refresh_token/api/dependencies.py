@@ -7,7 +7,7 @@ from shared.infrastructure.security import (
     SecureTokenGenerator,
     UUIDGv7generator,
 )
-from shared.infrastructure.uow import UnitOfWork, get_uow_dependency
+from shared.infrastructure.uow import SQLAlchemyUnitOfWork, get_uow_dependency
 
 from ..application import (
     CreateRefreshToken,
@@ -50,7 +50,7 @@ ClockDep = Annotated[
     Depends(get_clock_now),
 ]
 UOWDep = Annotated[
-    UnitOfWork,
+    SQLAlchemyUnitOfWork,
     Depends(get_uow_dependency),
 ]
 
@@ -80,9 +80,9 @@ def get_create_refresh_token(
     factory: FactoryDep,
     clock: ClockDep,
 ):
-    repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
     return CreateRefreshToken(
-        repository=repository,
+        uow=uow,
+        repository=SQLAlchemyRefreshTokenRepository,
         factory=factory,
         clock=clock,
     )

@@ -3,7 +3,7 @@ from .base import Base
 from .clock import SystemClock
 from .engine import engine
 from .session import SessionLocal
-from .uow import UnitOfWork, get_uow_dependency
+from .uow import SQLAlchemyUnitOfWork, get_uow_dependency
 
 __all__ = [
     "security",
@@ -11,6 +11,6 @@ __all__ = [
     "SystemClock",
     "engine",
     "SessionLocal",
-    "UnitOfWork",
+    "SQLAlchemyUnitOfWork",
     "get_uow_dependency",
 ]

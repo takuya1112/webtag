@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from core.config import settings
 from core.logging import get_logger
-from shared.application.retry import retryable
 from shared.domain.security import TokenHasher
 from shared.domain.value_objects import AwareDatetime
 from shared.infrastructure.clock import Clock
@@ -33,7 +32,7 @@ class RefreshAccessToken:
         self.hasher = hasher
         self.clock = clock
 
-    @retryable()
+    # TODO retry and check unique
     def execute(self, refresh_token: str) -> str:
         token_hash_vo = HashedToken(self.hasher.hash(refresh_token))
         entity = self.repository.find_by_hashed_token(token_hash_vo)

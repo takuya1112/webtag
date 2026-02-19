@@ -1,7 +1,5 @@
-from abc import ABC, abstractmethod
+from typing import Protocol
 
 
-class TokenGenerator(ABC):
-    @abstractmethod
-    def generate(self) -> str:
-        pass
+class TokenGenerator(Protocol):
+    def generate(self) -> str: ...

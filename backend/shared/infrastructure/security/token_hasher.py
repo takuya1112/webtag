@@ -3,10 +3,8 @@ import hmac
 
 from core.config import settings
 
-from ...domain.security import TokenHasher
 
-
-class HMACHasher(TokenHasher):
+class HMACHasher:
     def hash(self, token: str) -> str:
         digest = hmac.new(
             key=settings.TOKEN_HASH_SECRET.encode("utf-8"),

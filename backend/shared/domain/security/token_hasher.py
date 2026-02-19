@@ -1,11 +1,7 @@
-from abc import ABC, abstractmethod
+from typing import Protocol
 
 
-class TokenHasher(ABC):
-    @abstractmethod
-    def hash(self, token: str) -> str:
-        pass
+class TokenHasher(Protocol):
+    def hash(self, token: str) -> str: ...
 
-    @abstractmethod
-    def verify(self, token: str, hashed_token: str) -> bool:
-        pass
+    def verify(self, token: str, hashed_token: str) -> bool: ...

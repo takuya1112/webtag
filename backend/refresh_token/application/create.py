@@ -3,7 +3,7 @@ from uuid import UUID
 
 from core.config import settings
 from core.logging import get_logger
-from shared.application.retry import retry
+from shared.application.retry import retryable
 from shared.domain.clock import Clock
 from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
@@ -25,7 +25,7 @@ class CreateRefreshToken:
         self.factory = factory
         self.clock = clock
 
-    @retry()
+    @retryable()
     def execute(self, user_id: UUID) -> str:
         user_id_vo = UserId(user_id)
         expires_at_vo = AwareDatetime(

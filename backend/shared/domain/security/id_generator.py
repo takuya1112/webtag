@@ -1,8 +1,6 @@
-from abc import ABC, abstractmethod
+from typing import Protocol
 from uuid import UUID
 
 
-class IdGenerator(ABC):
-    @abstractmethod
-    def generate(self) -> UUID:
-        pass
+class IdGenerator(Protocol):
+    def generate(self) -> UUID: ...

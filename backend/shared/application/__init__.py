@@ -1,3 +1,3 @@
-from .retry import retry
+from .retry import retryable
 
-__all__ = ["retry"]
+__all__ = ["retryable"]

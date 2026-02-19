@@ -10,7 +10,12 @@ from shared.infrastructure.clock import Clock
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
 from ..domain.value_objects import HashedToken
-from ..exceptions import InvalidTokenError, TokenAlreadyUsed, TokenStolenError
+from ..exceptions import (
+    InvalidTokenError,
+    RefreshTokenDomainError,
+    TokenAlreadyUsed,
+    TokenStolenError,
+)
 
 logger = get_logger(__name__)
 
@@ -47,6 +52,9 @@ class RefreshAccessToken:
             )
             self.repository.delete_all_by_user_id(entity.user_id)
             raise TokenStolenError("Token reuse detected") from None
+        except RefreshTokenDomainError:
+            logger.warning("Invalid token: user_id=%s", entity.user_id.value)
+            raise InvalidTokenError() from None
 
         entity.mark_used(now_vo)
         self.repository.update(entity)

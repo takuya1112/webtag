@@ -21,6 +21,9 @@ class UserRepository(Protocol):
 
         Args:
             user (UserEntity): The user to update
+
+        Raises:
+            UserNotFoundError: if none found
         """
         ...
 

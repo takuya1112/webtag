@@ -29,13 +29,13 @@ class CreateRefreshToken:
 
     # TODO retry and check unique
     def execute(self, user_id: UUID) -> str:
-        user_id_vo = UserId(user_id)
-        expires_at_vo = AwareDatetime(
-            self.clock.now()
-            + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-        )
         with self.uow:
             repo = self.uow.get_repo(self.repository)
+            user_id_vo = UserId(user_id)
+            expires_at_vo = AwareDatetime(
+                self.clock.now()
+                + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+            )
             entity, raw_token = self.factory.create(
                 user_id=user_id_vo,
                 expires_at=expires_at_vo,

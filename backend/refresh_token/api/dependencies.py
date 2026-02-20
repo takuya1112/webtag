@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from core.config import settings
 from fastapi import Depends
 from shared.infrastructure.clock import SystemClock
 from shared.infrastructure.security import (
@@ -100,12 +101,13 @@ def get_refresh_access_token(
     hasher: HasherDep,
     clock: ClockDep,
 ):
-    repository = uow.get_repo(SQLAlchemyRefreshTokenRepository)
     return RefreshAccessToken(
-        repository=repository,
+        uow=uow,
+        repository=SQLAlchemyRefreshTokenRepository,
         factory=factory,
         hasher=hasher,
         clock=clock,
+        expire_days=settings.REFRESH_TOKEN_EXPIRE_DAYS,
     )
 
 

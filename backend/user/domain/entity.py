@@ -36,16 +36,16 @@ class UserEntity:
         self.name = new_name
         self.updated_at = now
 
+    def change_email(self, new_email: Email, now: AwareDatetime) -> None:
+        self.email = new_email
+        self.updated_at = now
+
     def change_password(
         self,
         new_password_hash: HashedPassword,
         now: AwareDatetime,
     ) -> None:
         self.password_hash = new_password_hash
-        self.updated_at = now
-
-    def change_email(self, new_email: Email, now: AwareDatetime) -> None:
-        self.email = new_email
         self.updated_at = now
 
     def can_login(self) -> bool:

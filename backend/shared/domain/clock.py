@@ -1,8 +1,6 @@
-from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Protocol
 
 
-class Clock(ABC):
-    @abstractmethod
-    def now(self) -> datetime:
-        pass
+class Clock(Protocol):
+    def now(self) -> datetime: ...

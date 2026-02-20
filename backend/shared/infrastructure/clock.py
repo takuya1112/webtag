@@ -1,8 +1,6 @@
 from datetime import UTC, datetime
 
-from ..domain.clock import Clock
 
-
-class SystemClock(Clock):
+class SystemClock:
     def now(self) -> datetime:
         return datetime.now(UTC)

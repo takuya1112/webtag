@@ -25,11 +25,7 @@ class UserName:
             logger.warning("UserName must be filled")
             raise ValueError("UserName must be filled")
 
-        min_len = UserConfig.NAME_LENGTH_MIN
         max_len = UserConfig.NAME_LENGTH_MAX
-        if len(self.value) < min_len:
-            logger.warning("UserName at least %d characters", min_len)
-            raise ValueError("UserName is too short")
 
         if len(self.value) > max_len:
             logger.warning("UserName at most %d characters", max_len)

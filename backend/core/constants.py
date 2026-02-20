@@ -1,5 +1,4 @@
 class UserConfig:
-    NAME_LENGTH_MIN = 1
     NAME_LENGTH_MAX = 50
     EMAIL_LENGTH_MAX = 254
     PASSWORD_LENGTH_MIN = 8
@@ -11,7 +10,6 @@ class UserConfig:
 
 
 class ArticleConfig:
-    TITLE_LENGTH_MIN = 1
     TITLE_LENGTH_MAX = 255
     URL_LENGTH_MAX = 2083
 
@@ -20,7 +18,6 @@ class ArticleConfig:
 
 
 class TagConfig:
-    NAME_LENGTH_MIN = 1
     NAME_LENGTH_MAX = 50
 
     DB_NAME_LENGTH_MAX = 100

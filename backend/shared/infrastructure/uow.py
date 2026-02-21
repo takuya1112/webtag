@@ -1,4 +1,3 @@
-from contextlib import contextmanager
 from typing import Dict, Generator, Type, TypeVar
 
 from sqlalchemy.orm import Session, sessionmaker
@@ -20,6 +19,8 @@ class SQLAlchemyUnitOfWork:
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
+        if self.session is None:
+            return
         try:
             if exc_type is not None:
                 self.session.rollback()
@@ -41,7 +42,6 @@ class SQLAlchemyUnitOfWork:
         return self._repository[repository_type]
 
 
-@contextmanager
 def get_uow_dependency() -> Generator[SQLAlchemyUnitOfWork, None, None]:
     with SQLAlchemyUnitOfWork(SessionLocal) as uow:
         yield uow

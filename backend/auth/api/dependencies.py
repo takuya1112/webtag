@@ -10,12 +10,12 @@ from ..application import Signup
 from ..infrastructure.jwt_service import PyJwtService
 
 
-def get_jwt_service() -> PyJwtService:
+def get_jwt_service(clock: ClockDep) -> PyJwtService:
     return PyJwtService(
         secret=settings.JWT_SECRET,
         algorithm=settings.JWT_ALGORITHM,
         expire_minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-        clock=ClockDep,
+        clock=clock,
     )
 
 

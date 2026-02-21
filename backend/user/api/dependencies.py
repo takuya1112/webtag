@@ -5,7 +5,7 @@ from shared.api.dependencies import (
     Argon2HasherDep,
     ClockDep,
     UOWDep,
-    UUIDv7generator,
+    UUIDv7GeneratorDep,
 )
 
 from ..application import CreateUser
@@ -14,7 +14,7 @@ from ..infrastructure import SQLAlchemyUserRepository
 
 
 def get_user_factory(
-    id_generator: UUIDv7generator,
+    id_generator: UUIDv7GeneratorDep,
     clock: ClockDep,
 ) -> UserFactory:
     return UserFactory(
@@ -31,13 +31,12 @@ UserFactoryDep = Annotated[
 
 def get_create_user(
     uow: UOWDep,
-    repository: SQLAlchemyUserRepository,
     factory: UserFactoryDep,
     password_hasher: Argon2HasherDep,
 ) -> CreateUser:
     return CreateUser(
         uow=uow,
-        repository=repository,
+        repository=SQLAlchemyUserRepository,
         factory=factory,
         password_hasher=password_hasher,
     )

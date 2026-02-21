@@ -1,8 +1,10 @@
+from article.infrastructure import ArticleModel, ArticleTagModel  # noqa
 from auth.api import router as auth_router
 from core import setup_logging
 from fastapi import FastAPI
 from refresh_token.api import router as refresh_token_router
 from shared.api import register_exception_handler
+from tag.infrastructure.model import TagModel  #  noqa
 
 setup_logging()
 

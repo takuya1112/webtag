@@ -1,0 +1,10 @@
+fastapi
+pydantic[email]
+pydantic-settings
+sqlalchemy
+psycopg2-binary
+alembic
+PyJWT
+passlib[argon2]
+uvicorn[standard]
+uuid6

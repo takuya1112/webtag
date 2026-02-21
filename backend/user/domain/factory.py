@@ -7,8 +7,8 @@ from .value_objects import Email, HashedPassword, UserId, UserName
 
 
 class UserFactory:
-    def __init__(self, generator: IdGenerator, clock: Clock) -> None:
-        self.generator = generator
+    def __init__(self, id_generator: IdGenerator, clock: Clock) -> None:
+        self.id_generator = id_generator
         self.clock = clock
 
     def create(
@@ -17,7 +17,7 @@ class UserFactory:
         email: Email,
         password_hash: HashedPassword,
     ) -> UserEntity:
-        id = UserId(self.generator.generate())
+        id = UserId(self.id_generator.generate())
         now = AwareDatetime((self.clock.now()))
         return UserEntity(
             id=id,

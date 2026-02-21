@@ -1,28 +1,18 @@
 from fastapi import APIRouter
 
 from .dependencies import (
-    ClockDep,
     CreateRefreshTokenDep,
-    FactoryDep,
-    HasherDep,
-    IdGeneratorDep,
     RefreshAccessTokenDep,
-    TokenGeneratorDep,
-    UOWDep,
+    RefreshTokenFactoryDep,
 )
 from .endpoints import refresh
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/refresh-token", tags=["refresh-token"])
 router.include_router(refresh.router)
 
 __all__ = [
-    "ClockDep",
     "CreateRefreshTokenDep",
-    "FactoryDep",
-    "HasherDep",
-    "IdGeneratorDep",
     "RefreshAccessTokenDep",
-    "TokenGeneratorDep",
-    "UOWDep",
+    "RefreshTokenFactoryDep",
     "router",
 ]

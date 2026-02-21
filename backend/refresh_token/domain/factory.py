@@ -12,12 +12,12 @@ class RefreshTokenFactory:
     def __init__(
         self,
         token_generator: TokenGenerator,
-        hasher: TokenHasher,
+        token_hasher: TokenHasher,
         id_generator: IdGenerator,
         clock: Clock,
     ) -> None:
         self.token_generator = token_generator
-        self.hasher = hasher
+        self.token_hasher = token_hasher
         self.id_generator = id_generator
         self.clock = clock
 
@@ -28,7 +28,7 @@ class RefreshTokenFactory:
     ) -> tuple[RefreshTokenEntity, str]:
         id = RefreshTokenId(self.id_generator.generate())
         raw_token = self.token_generator.generate()
-        token_hash = HashedToken(self.hasher.hash(raw_token))
+        token_hash = HashedToken(self.token_hasher.hash(raw_token))
         now = AwareDatetime(self.clock.now())
         entity = RefreshTokenEntity(
             id=id,

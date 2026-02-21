@@ -1,4 +1,5 @@
 class UserConfig:
+    NAME_LENGTH_MIN = 1
     NAME_LENGTH_MAX = 50
     EMAIL_LENGTH_MAX = 254
     PASSWORD_LENGTH_MIN = 8

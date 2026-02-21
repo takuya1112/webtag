@@ -1,7 +1,6 @@
 from datetime import timedelta
 from uuid import UUID
 
-from core.config import settings
 from core.logging import get_logger
 from shared.application import UnitOfWork
 from shared.domain.clock import Clock
@@ -21,11 +20,13 @@ class CreateRefreshToken:
         repository: type[RefreshTokenRepository],
         factory: RefreshTokenFactory,
         clock: Clock,
+        expire_days: int,
     ):
         self.uow = uow
         self.repository = repository
         self.factory = factory
         self.clock = clock
+        self.expire_days = expire_days
 
     # TODO retry and check unique
     def execute(self, user_id: UUID) -> str:
@@ -33,8 +34,7 @@ class CreateRefreshToken:
             repo = self.uow.get_repo(self.repository)
             user_id_vo = UserId(user_id)
             expires_at_vo = AwareDatetime(
-                self.clock.now()
-                + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+                self.clock.now() + timedelta(days=self.expire_days)
             )
             entity, raw_token = self.factory.create(
                 user_id=user_id_vo,

@@ -7,5 +7,3 @@ __pycache__/
 .gitignore
 
 README.md
-
-.tests

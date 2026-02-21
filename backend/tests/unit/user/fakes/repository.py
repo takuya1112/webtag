@@ -10,7 +10,11 @@ class FakeUserRepository:
         self.store.append(user)
 
     def update(self, user: UserEntity) -> None:
-        pass
+        for index, u in enumerate(self.store):
+            if user.id == u.id:
+                self.store[index] = user
+                return
+        raise ValueError("User not found by user id: %s", user.id.value)
 
     def find_by_id(self, user_id: UserId) -> UserEntity | None:
         return next(

@@ -31,7 +31,7 @@ def get_token_hasher() -> HMACHasher:
     return HMACHasher()
 
 
-HasherDep = Annotated[
+HMACHasherDep = Annotated[
     HMACHasher,
     Depends(get_token_hasher),
 ]

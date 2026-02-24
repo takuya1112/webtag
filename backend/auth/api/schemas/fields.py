@@ -14,6 +14,7 @@ ValidateNameRequired = Annotated[
     ),
 ]
 
+
 ValidatePasswordRequired = Annotated[
     str,
     StringConstraints(

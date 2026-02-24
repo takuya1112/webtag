@@ -3,10 +3,19 @@ from typing import Annotated
 from core.config import settings
 from fastapi import Depends
 from refresh_token.api.dependencies import CreateRefreshTokenDep
-from shared.api.dependencies import ClockDep
+from refresh_token.infrastructure.repository import (
+    SQLAlchemyRefreshTokenRepository,
+)
+from shared.api.dependencies import (
+    Argon2HasherDep,
+    ClockDep,
+    HMACHasherDep,
+    UOWDep,
+)
 from user.api.dependencies import CreateUserDep
+from user.infrastructure.repository import SQLAlchemyUserRepository
 
-from ..application import Signup
+from ..application import Login, Logout, Signup
 from ..infrastructure.jwt_service import PyJwtService
 
 
@@ -40,4 +49,44 @@ def get_signup(
 SignupDep = Annotated[
     Signup,
     Depends(get_signup),
+]
+
+
+def get_login(
+    uow: UOWDep,
+    create_refresh_token: CreateRefreshTokenDep,
+    jwt_service: JwtServiceDep,
+    password_hasher: Argon2HasherDep,
+):
+    return Login(
+        uow=uow,
+        repository=SQLAlchemyUserRepository,
+        create_refresh_token=create_refresh_token,
+        jwt_service=jwt_service,
+        password_hasher=password_hasher,
+    )
+
+
+LoginDep = Annotated[
+    Login,
+    Depends(get_login),
+]
+
+
+def get_logout(
+    uow: UOWDep,
+    token_hasher: HMACHasherDep,
+    clock: ClockDep,
+):
+    return Logout(
+        uow=uow,
+        repository=SQLAlchemyRefreshTokenRepository,
+        token_hasher=token_hasher,
+        clock=clock,
+    )
+
+
+LogoutDep = Annotated[
+    Logout,
+    Depends(get_logout),
 ]

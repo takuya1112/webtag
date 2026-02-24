@@ -1,8 +1,6 @@
-from core.constants import UserConfig
 from pydantic import (
     BaseModel,
     EmailStr,
-    field_validator,
     model_validator,
 )
 from typing_extensions import Self
@@ -16,13 +14,6 @@ class SignupRequest(BaseModel):
     password: ValidatePasswordRequired
     password_repeat: ValidatePasswordRequired
 
-    @field_validator("email")
-    @classmethod
-    def validate_email(cls, v: str) -> str:
-        if len(v) > UserConfig.EMAIL_LENGTH_MAX:
-            raise ValueError("Email is too long")
-        return v
-
     @model_validator(mode="after")
     def check_passwords_match(self) -> Self:
         if self.password != self.password_repeat:
@@ -31,5 +22,15 @@ class SignupRequest(BaseModel):
 
 
 class SignupResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: ValidatePasswordRequired
+
+
+class LoginResponse(BaseModel):
     access_token: str
     refresh_token: str

@@ -4,7 +4,7 @@ from core.config import settings
 from fastapi import Depends
 from shared.api.dependencies import (
     ClockDep,
-    HasherDep,
+    HMACHasherDep,
     TokenGeneratorDep,
     UOWDep,
     UUIDv7GeneratorDep,
@@ -20,7 +20,7 @@ from ..infrastructure.repository import SQLAlchemyRefreshTokenRepository
 
 def get_refresh_token_factory(
     token_generator: TokenGeneratorDep,
-    token_hasher: HasherDep,
+    token_hasher: HMACHasherDep,
     id_generator: UUIDv7GeneratorDep,
     clock: ClockDep,
 ):
@@ -61,7 +61,7 @@ CreateRefreshTokenDep = Annotated[
 def get_refresh_access_token(
     uow: UOWDep,
     factory: RefreshTokenFactoryDep,
-    hasher: HasherDep,
+    hasher: HMACHasherDep,
     clock: ClockDep,
 ):
     return RefreshAccessToken(

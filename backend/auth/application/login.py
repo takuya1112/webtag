@@ -33,8 +33,13 @@ class Login:
             user = repo.find_by_email(email_vo)
 
             if not user:
-                raise InvalidCredentialsError()
+                logger.warning("Email or password Wrong")
+                raise InvalidCredentialsError(message="Email or password Wrong")
             if not user.can_login():
+                logger.warning(
+                    "User not allowed to login: user_id=%s",
+                    user.id.value,
+                )
                 raise InvalidCredentialsError()
 
             verified, new_hash = (
@@ -44,7 +49,8 @@ class Login:
                 )
             )
             if not verified:
-                raise InvalidCredentialsError()
+                logger.warning("Email or password Wrong")
+                raise InvalidCredentialsError(message="Email or password Wrong")
 
             # TODO update new hash commit error
             # if new_hash:

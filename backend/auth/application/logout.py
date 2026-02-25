@@ -29,11 +29,20 @@ class Logout:
             token_hash = HashedToken(self.token_hasher.hash(refresh_token))
             entity = repo.find_by_hashed_token(token_hash)
             if entity is None:
-                raise InvalidTokenError()
+                logger.warning("Refresh token not found")
+                raise InvalidTokenError(message="Refresh token not found")
             now_vo = AwareDatetime(self.clock.now())
             try:
                 entity.revoke(now_vo)
+                repo.update(entity)
             except TokenAlreadyRevoked:
-                raise InvalidTokenError()
+                logger.warning(
+                    "Refresh token already revoked: user_id=%s",
+                    entity.user_id.value,
+                )
+                raise InvalidTokenError("Refresh token already revoked")
             self.uow.commit()
-        logger.info("Refresh token revoked: user_id=%s", entity.user_id.value)
+        logger.info(
+            "Refresh token revoked: user_id=%s",
+            entity.user_id.value,
+        )

@@ -46,7 +46,7 @@ class RefreshAccessToken:
 
             if not entity:
                 logger.warning("Token not exist")
-                raise InvalidTokenError(message="Token not exist")
+                raise InvalidTokenError()
 
             try:
                 entity.ensure_useable(now_vo)
@@ -56,13 +56,13 @@ class RefreshAccessToken:
                     entity.user_id.value,
                 )
                 repo.delete_all_by_user_id(entity.user_id)
-                raise TokenStolenError(message="Token reuse detected") from None
+                raise TokenStolenError() from None
             except RefreshTokenDomainError:
                 logger.warning(
                     "Invalid token: user_id=%s",
                     entity.user_id.value,
                 )
-                raise InvalidTokenError(message="Invalid token") from None
+                raise InvalidTokenError() from None
 
             entity.mark_used(now_vo)
             repo.update(entity)

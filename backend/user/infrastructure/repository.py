@@ -106,7 +106,7 @@ class SQLAlchemyUserRepository:
         model = self._find_model_by_id(user_id)
         if model is None:
             logger.warning("User not found by user id: %s", user_id.value)
-            raise UserNotFoundError("User not found")
+            raise UserNotFoundError()
         return model
 
     def _to_entity(self, model: UserModel) -> UserEntity:

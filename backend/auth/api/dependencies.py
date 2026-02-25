@@ -1,7 +1,9 @@
 from typing import Annotated
 
+from core import get_logger
 from core.config import settings
 from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from refresh_token.api.dependencies import CreateRefreshTokenDep
 from refresh_token.infrastructure.repository import (
     SQLAlchemyRefreshTokenRepository,
@@ -13,10 +15,19 @@ from shared.api.dependencies import (
     UOWDep,
 )
 from user.api.dependencies import CreateUserDep
+from user.domain.entity import UserEntity
+from user.domain.value_objects import UserId
 from user.infrastructure.repository import SQLAlchemyUserRepository
 
 from ..application import Login, Logout, Signup
+from ..exceptions import (
+    ExpiredAccessTokenError,
+    InvalidAccessTokenError,
+    UserUnauthorizedError,
+)
 from ..infrastructure.jwt_service import PyJwtService
+
+logger = get_logger(__name__)
 
 
 def get_jwt_service(clock: ClockDep) -> PyJwtService:
@@ -89,4 +100,42 @@ def get_logout(
 LogoutDep = Annotated[
     Logout,
     Depends(get_logout),
+]
+
+security = HTTPBearer()
+CredentialsDep = Annotated[
+    HTTPAuthorizationCredentials,
+    Depends(security),
+]
+
+
+def get_current_user(
+    credentials: CredentialsDep,
+    uow: UOWDep,
+    jwt_service: JwtServiceDep,
+) -> UserEntity:
+    token = credentials.credentials
+    try:
+        user_id = UserId(jwt_service.verify(token))
+    except (ExpiredAccessTokenError, InvalidAccessTokenError):
+        logger.warning("Invalid token")
+        raise UserUnauthorizedError()
+
+    with uow:
+        repo = uow.get_repo(SQLAlchemyUserRepository)
+        user = repo.find_by_id(user_id)
+
+    if not user:
+        logger.warning("User not found: user_id=%s", user_id.value)
+        raise UserUnauthorizedError()
+
+    if not user.can_login():
+        logger.warning("User can't login: user_id=%s", user_id.value)
+        raise UserUnauthorizedError()
+    return user
+
+
+CurrentUserDep = Annotated[
+    UserEntity,
+    Depends(get_current_user),
 ]

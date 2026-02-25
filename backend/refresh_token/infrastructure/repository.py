@@ -170,7 +170,7 @@ class SQLAlchemyRefreshTokenRepository:
         model = self._find_model_by_hashed_token(token_hash)
         if model is None:
             logger.warning("Token not found")
-            raise TokenNotFoundError("Token not found")
+            raise TokenNotFoundError()
         return model
 
     def _to_entity(self, model: RefreshTokenModel) -> RefreshTokenEntity:

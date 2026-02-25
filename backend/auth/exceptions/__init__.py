@@ -6,6 +6,7 @@ from .domain import (
 from .http import (
     AuthError,
     InvalidCredentialsError,
+    UserUnauthorizedError,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "InvalidAccessTokenError",
     "AuthError",
     "InvalidCredentialsError",
+    "UserUnauthorizedError",
 ]

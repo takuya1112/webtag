@@ -34,7 +34,7 @@ class Login:
 
             if not user:
                 logger.warning("Email or password Wrong")
-                raise InvalidCredentialsError(message="Email or password Wrong")
+                raise InvalidCredentialsError()
             if not user.can_login():
                 logger.warning(
                     "User not allowed to login: user_id=%s",
@@ -50,7 +50,7 @@ class Login:
             )
             if not verified:
                 logger.warning("Email or password Wrong")
-                raise InvalidCredentialsError(message="Email or password Wrong")
+                raise InvalidCredentialsError()
 
             # TODO update new hash commit error
             # if new_hash:

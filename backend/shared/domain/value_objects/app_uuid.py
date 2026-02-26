@@ -25,3 +25,8 @@ class AppUuid:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}('{self.value}')"
+
+    def __eq__(self, other: "AppUuid | UUID") -> bool:
+        if isinstance(other, AppUuid):
+            return self.value == other.value
+        return self.value == other

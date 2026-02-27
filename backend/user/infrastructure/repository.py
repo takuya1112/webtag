@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from ..domain.entity import UserEntity
 from ..domain.value_objects import Email, HashedPassword, UserId, UserName
-from ..exceptions import UserNotFoundError
+from .exceptions import UserNotFoundError
 from .model import UserModel
 
 logger = get_logger(__name__)

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from shared.domain.value_objects import AwareDatetime
 
-from ..exceptions import UserAlreadyActive, UserAlreadyInactive
+from .exceptions import UserAlreadyActive, UserAlreadyInactive
 from .value_objects import Email, HashedPassword, UserId, UserName
 
 

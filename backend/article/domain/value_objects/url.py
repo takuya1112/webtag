@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 from core.constants import ArticleConfig
 from core.logging import get_logger
@@ -16,6 +17,10 @@ class URL:
         if not self.value:
             logger.warning("URL must be filled")
             raise ValueError("URL must be filled")
+
+        parsed = urlparse(self.value)
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError("URL must start with http:// or https://")
 
         max_len = ArticleConfig.DB_URL_LENGTH_MAX
         if len(self.value) > max_len:

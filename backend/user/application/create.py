@@ -5,7 +5,7 @@ from shared.domain.security import PasswordHasher
 from ..domain.factory import UserFactory
 from ..domain.repository import UserRepository
 from ..domain.value_objects import Email, HashedPassword, UserId, UserName
-from ..exceptions.http import EmailAlreadyExistError
+from ..exceptions.application import EmailAlreadyExistError
 
 logger = get_logger(__name__)
 
@@ -31,7 +31,7 @@ class CreateUser:
 
             if repo.find_by_email(email_vo):
                 logger.warning("Email already exist")
-                raise EmailAlreadyExistError(message="Email already exist")
+                raise EmailAlreadyExistError("Email already exist")
 
             password_hash_vo = HashedPassword(
                 self.password_hasher.hash(password)

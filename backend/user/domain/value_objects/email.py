@@ -2,9 +2,8 @@ import re
 from dataclasses import dataclass
 
 from core.constants import UserConfig
-from core.logging import get_logger
 
-logger = get_logger(__name__)
+from ...exceptions.domain import InvalidEmailError
 
 EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
@@ -15,17 +14,13 @@ class Email:
 
     def __post_init__(self):
         if not self.value:
-            logger.warning("Email must be filled")
-            raise ValueError("Email must be filled")
+            raise InvalidEmailError("Email must be filled")
 
-        max_len = UserConfig.DB_EMAIL_LENGTH_MAX
-        if len(self.value) > max_len:
-            logger.warning("Email at most %d characters", max_len)
-            raise ValueError("Email is too long")
+        if len(self.value) > UserConfig.DB_EMAIL_LENGTH_MAX:
+            raise InvalidEmailError("Email is too long")
 
         if not EMAIL_REGEX.match(self.value):
-            logger.warning("Invalid email format: %s", self.value)
-            raise ValueError("Invalid email")
+            raise InvalidEmailError("Invalid email")
 
     def __str__(self) -> str:
         return self.value

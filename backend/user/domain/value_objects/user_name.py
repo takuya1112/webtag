@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
 from core.constants import UserConfig
-from core.logging import get_logger
 
-logger = get_logger(__name__)
+from ...exceptions.domain import InvalidUserNameError
 
 
 @dataclass(frozen=True)
@@ -11,9 +10,8 @@ class UserName:
     """User name value object
 
     Raises:
-        ValueError: raise if user name is empty
-        ValueError: raise if user name is too short
-        ValueError: raise if user name is too long
+        InvalidUserNameError: raise if user name is empty
+        InvalidUserNameError: raise if user name is too long
     """
 
     value: str
@@ -22,14 +20,10 @@ class UserName:
         object.__setattr__(self, "value", self.value.strip())
 
         if not self.value:
-            logger.warning("UserName must be filled")
-            raise ValueError("UserName must be filled")
+            raise InvalidUserNameError("UserName must be filled")
 
-        max_len = UserConfig.NAME_LENGTH_MAX
-
-        if len(self.value) > max_len:
-            logger.warning("UserName at most %d characters", max_len)
-            raise ValueError("UserName is too long")
+        if len(self.value) > UserConfig.NAME_LENGTH_MAX:
+            raise InvalidUserNameError("UserName is too long")
 
     def __str__(self) -> str:
         return self.value

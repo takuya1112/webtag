@@ -1,0 +1,2 @@
+class SharedInfrastructureError(Exception):
+    pass

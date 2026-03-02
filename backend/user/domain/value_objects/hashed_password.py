@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from core.constants import UserConfig
 
-from ...exceptions.domain import InvalidHashedPasswordError
+from ..exceptions import InvalidHashedPasswordError
 
 
 @dataclass(frozen=True)

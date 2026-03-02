@@ -6,7 +6,7 @@ from .dependencies import (
     UOWDep,
     UUIDv7GeneratorDep,
 )
-from .exception_handler import app_exception_handler, register_exception_handler
+from .exception_handler_utils import create_json_response
 
 __all__ = [
     "Argon2Hasher",
@@ -15,6 +15,5 @@ __all__ = [
     "TokenGeneratorDep",
     "UOWDep",
     "UUIDv7GeneratorDep",
-    "app_exception_handler",
-    "register_exception_handler",
+    create_json_response,
 ]

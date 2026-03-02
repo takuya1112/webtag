@@ -1,0 +1,2 @@
+class SharedApplicationError(Exception):
+    pass

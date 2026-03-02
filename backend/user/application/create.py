@@ -5,7 +5,7 @@ from shared.domain.security import PasswordHasher
 from ..domain.factory import UserFactory
 from ..domain.repository import UserRepository
 from ..domain.value_objects import Email, HashedPassword, UserId, UserName
-from ..exceptions.application import EmailAlreadyExistError
+from .exceptions import EmailAlreadyExistError
 
 logger = get_logger(__name__)
 

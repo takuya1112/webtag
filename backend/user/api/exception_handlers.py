@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, status
 
 from ..application.exceptions import (
     EmailAlreadyExistError,
@@ -14,19 +13,27 @@ from ..domain.exceptions import (
 from ..infrastructure.exceptions import (
     UserNotFoundError,
 )
+from .handlers import (
+    create_user_application_handler,
+    create_user_domain_handler,
+    create_user_infrastructure_handler,
+)
 
-EXCEPTION_HANDLERS = {
-    # Application
+APPLICATION_EXCEPTION_HANDLERS = {
     EmailAlreadyExistError: (
         status.HTTP_409_CONFLICT,
         "EMAIL_ALREADY_EXIST",
     ),
-    # Infrastructure
+}
+
+INFRASTRUCTURE_EXCEPTION_HANDLER = {
     UserNotFoundError: (
         status.HTTP_404_NOT_FOUND,
         "USER_NOT_FOUND",
     ),
-    # Domain
+}
+
+DOMAIN_EXCEPTION_HANDLER = {
     InvalidEmailError: (
         status.HTTP_400_BAD_REQUEST,
         "INVALID_EMAIL",
@@ -50,28 +57,35 @@ EXCEPTION_HANDLERS = {
 }
 
 
-def _create_handler(status_code: int, error_code: str):
-    async def handler(
-        request: Request,
-        exc: Exception,
-    ) -> JSONResponse:
-        return JSONResponse(
-            status_code=status_code,
-            content={
-                "error_code": error_code,
-                "detail": str(exc),
-            },
-        )
-
-    return handler
-
-
-# Registration
 def register_user_exception_handlers(app: FastAPI) -> None:
-    for exc_type, (status_code, error_code) in EXCEPTION_HANDLERS.items():
+    for exc_type, (
+        status_code,
+        error_code,
+    ) in APPLICATION_EXCEPTION_HANDLERS.items():
         app.add_exception_handler(
             exc_type,
-            _create_handler(
+            create_user_application_handler(
+                status_code=status_code,
+                error_code=error_code,
+            ),
+        )
+
+    for exc_type, (
+        status_code,
+        error_code,
+    ) in INFRASTRUCTURE_EXCEPTION_HANDLER.items():
+        app.add_exception_handler(
+            exc_type,
+            create_user_infrastructure_handler(
+                status_code=status_code,
+                error_code=error_code,
+            ),
+        )
+
+    for exc_type, (status_code, error_code) in DOMAIN_EXCEPTION_HANDLER.items():
+        app.add_exception_handler(
+            exc_type,
+            create_user_domain_handler(
                 status_code=status_code,
                 error_code=error_code,
             ),

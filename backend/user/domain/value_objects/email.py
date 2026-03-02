@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from core.constants import UserConfig
 
-from ...exceptions.domain import InvalidEmailError
+from ..exceptions import InvalidEmailError
 
 EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 

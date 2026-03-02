@@ -1,9 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from core.logging import get_logger
-
-logger = get_logger(__name__)
+from ..exceptions import InvalidAwareDatetimeError
 
 
 @dataclass(frozen=True)
@@ -11,15 +9,14 @@ class AwareDatetime:
     """Datetime value object
 
     Raises:
-        ValueError: raise if value is not timezone-aware
+        InvalidAwareDatetimeError: raise if value is not timezone-aware
     """
 
     value: datetime
 
     def __post_init__(self):
         if self.value.tzinfo is None:
-            logger.warning("AwareDatetime must be timezone-aware")
-            raise ValueError("AwareDatetime must be timezone-aware")
+            raise InvalidAwareDatetimeError()
 
     def __str__(self) -> str:
         return self.value.isoformat()

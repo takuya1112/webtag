@@ -1,0 +1,23 @@
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from shared.api.exception_handlers import register_shared_exception_handlers
+from user.api.exception_handlers import register_user_exception_handlers
+
+
+def register_all_exception_handler(app: FastAPI) -> None:
+
+    register_shared_exception_handlers(app)
+    register_user_exception_handlers(app)
+
+    @app.exception_handler(Exception)
+    async def unhandled_exception_handler(
+        request: Request,
+        exc: Exception,
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "error_code": "INTERNAL_ERROR",
+                "detail": "internal error",
+            },
+        )

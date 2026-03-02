@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from core.constants import UserConfig
 
-from ...exceptions.domain import InvalidUserNameError
+from ..exceptions import InvalidUserNameError
 
 
 @dataclass(frozen=True)

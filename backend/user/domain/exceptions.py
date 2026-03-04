@@ -2,9 +2,19 @@ from typing import Any
 
 
 class UserDomainError(Exception):
-    def __init__(self, **params: Any) -> None:
+    @property
+    def context(self) -> dict[str, Any]:
+        return {}
+
+
+class BaseTooLongError(UserDomainError):
+    def __init__(self, max_length: int) -> None:
         super().__init__()
-        self.params: dict[str, Any] = params
+        self.max_length = max_length
+
+    @property
+    def context(self) -> dict[str, Any]:
+        return {"max_length": self.max_length}
 
 
 class UserAlreadyInactive(UserDomainError):
@@ -19,9 +29,8 @@ class EmailEmptyError(UserDomainError):
     pass
 
 
-class EmailTooLongError(UserDomainError):
-    def __init__(self, max_length: int) -> None:
-        super().__init__(max_length=max_length)
+class EmailTooLongError(BaseTooLongError):
+    pass
 
 
 class EmailInvalidFormatError(UserDomainError):
@@ -32,15 +41,13 @@ class HashedPasswordEmptyError(UserDomainError):
     pass
 
 
-class HashedPasswordTooLongError(UserDomainError):
-    def __init__(self, max_length: int) -> None:
-        super().__init__(max_length=max_length)
+class HashedPasswordTooLongError(BaseTooLongError):
+    pass
 
 
 class UserNameEmptyError(UserDomainError):
     pass
 
 
-class UserNameTooLongError(UserDomainError):
-    def __init__(self, max_length: int) -> None:
-        super().__init__(max_length=max_length)
+class UserNameTooLongError(BaseTooLongError):
+    pass

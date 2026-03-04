@@ -2,9 +2,9 @@ from typing import Any
 
 
 class UserInfrastructureError(Exception):
-    def __init__(self, **params: Any) -> None:
-        super().__init__()
-        self.params: dict[str, Any] = params
+    @property
+    def context(self) -> dict[str, Any]:
+        return {}
 
 
 class UserNotFoundError(UserInfrastructureError):

@@ -1,3 +1,4 @@
+from core.logging import get_logger
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
@@ -12,16 +13,22 @@ from ..infrastructure.exceptions import (
 )
 from .error_messages import get_error_message
 
+logger = get_logger(__name__)
+
 
 def create_user_application_handler(status_code: int, error_code: str):
     async def handler(
         request: Request,
         exc: UserApplicationError,
     ) -> JSONResponse:
-
+        logger.debug(
+            "User application error: %s",
+            exc.__class__.__name__,
+        )
+        params = exc.context
         detail = get_error_message(
             error_code,
-            **exc.params,
+            **params,
         )
 
         headers = None
@@ -45,11 +52,19 @@ def create_user_infrastructure_handler(status_code: int, error_code: str):
         request: Request,
         exc: UserInfrastructureError,
     ) -> JSONResponse:
-
+        logger.error(
+            "User infrastructure error: %s",
+            exc.__class__.__name__,
+            exc_info=True,
+        )
+        params = exc.context
         detail = get_error_message(
             error_code,
-            **exc.params,
+            **params,
         )
+
+        if status_code >= 500:
+            detail = "An error occurred"
 
         headers = None
         if status_code == status.HTTP_401_UNAUTHORIZED:
@@ -72,10 +87,14 @@ def create_user_domain_handler(status_code: int, error_code: str):
         request: Request,
         exc: UserDomainError,
     ) -> JSONResponse:
-
+        logger.debug(
+            "User domain error: %s",
+            exc.__class__.__name__,
+        )
+        params = exc.context
         detail = get_error_message(
             error_code,
-            **exc.params,
+            **params,
         )
 
         headers = None

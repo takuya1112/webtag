@@ -31,7 +31,7 @@ class CreateUser:
 
             if repo.find_by_email(email_vo):
                 logger.warning("Email already exist")
-                raise EmailAlreadyExistError("Email already exist")
+                raise EmailAlreadyExistError()
 
             password_hash_vo = HashedPassword(
                 self.password_hasher.hash(password)

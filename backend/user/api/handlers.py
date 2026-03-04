@@ -1,6 +1,5 @@
-from fastapi import Request
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
-from shared.api.exception_handler_utils import create_json_response
 
 from ..application.exceptions import (
     UserApplicationError,
@@ -11,6 +10,7 @@ from ..domain.exceptions import (
 from ..infrastructure.exceptions import (
     UserInfrastructureError,
 )
+from .error_messages import get_error_message
 
 
 def create_user_application_handler(status_code: int, error_code: str):
@@ -18,10 +18,23 @@ def create_user_application_handler(status_code: int, error_code: str):
         request: Request,
         exc: UserApplicationError,
     ) -> JSONResponse:
-        return create_json_response(
+
+        detail = get_error_message(
+            error_code,
+            **exc.params,
+        )
+
+        headers = None
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            headers = {"WWW-Authenticate": "Bearer"}
+
+        return JSONResponse(
             status_code=status_code,
-            error_code=error_code,
-            detail=str(exc),
+            content={
+                "error_code": error_code,
+                "detail": detail,
+            },
+            headers=headers,
         )
 
     return handler
@@ -32,10 +45,23 @@ def create_user_infrastructure_handler(status_code: int, error_code: str):
         request: Request,
         exc: UserInfrastructureError,
     ) -> JSONResponse:
-        return create_json_response(
+
+        detail = get_error_message(
+            error_code,
+            **exc.params,
+        )
+
+        headers = None
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            headers = {"WWW-Authenticate": "Bearer"}
+
+        return JSONResponse(
             status_code=status_code,
-            error_code=error_code,
-            detail=str(exc),
+            content={
+                "error_code": error_code,
+                "detail": detail,
+            },
+            headers=headers,
         )
 
     return handler
@@ -46,10 +72,23 @@ def create_user_domain_handler(status_code: int, error_code: str):
         request: Request,
         exc: UserDomainError,
     ) -> JSONResponse:
-        return create_json_response(
+
+        detail = get_error_message(
+            error_code,
+            **exc.params,
+        )
+
+        headers = None
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            headers = {"WWW-Authenticate": "Bearer"}
+
+        return JSONResponse(
             status_code=status_code,
-            error_code=error_code,
-            detail=str(exc),
+            content={
+                "error_code": error_code,
+                "detail": detail,
+            },
+            headers=headers,
         )
 
     return handler

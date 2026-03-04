@@ -2,15 +2,22 @@ from fastapi import FastAPI, status
 
 from ..application.exceptions import (
     EmailAlreadyExistError,
+    UserApplicationError,
 )
 from ..domain.exceptions import (
-    InvalidEmailError,
-    InvalidHashedPasswordError,
-    InvalidUserNameError,
+    EmailEmptyError,
+    EmailInvalidFormatError,
+    EmailTooLongError,
+    HashedPasswordEmptyError,
+    HashedPasswordTooLongError,
     UserAlreadyActive,
     UserAlreadyInactive,
+    UserDomainError,
+    UserNameEmptyError,
+    UserNameTooLongError,
 )
 from ..infrastructure.exceptions import (
+    UserInfrastructureError,
     UserNotFoundError,
 )
 from .handlers import (
@@ -19,32 +26,57 @@ from .handlers import (
     create_user_infrastructure_handler,
 )
 
-APPLICATION_EXCEPTION_HANDLERS = {
+APPLICATION_EXCEPTION_HANDLERS: dict[
+    type[UserApplicationError],
+    tuple[int, str],
+] = {
     EmailAlreadyExistError: (
         status.HTTP_409_CONFLICT,
         "EMAIL_ALREADY_EXIST",
     ),
 }
 
-INFRASTRUCTURE_EXCEPTION_HANDLER = {
+INFRASTRUCTURE_EXCEPTION_HANDLER: dict[
+    type[UserInfrastructureError],
+    tuple[int, str],
+] = {
     UserNotFoundError: (
         status.HTTP_404_NOT_FOUND,
         "USER_NOT_FOUND",
     ),
 }
 
-DOMAIN_EXCEPTION_HANDLER = {
-    InvalidEmailError: (
+DOMAIN_EXCEPTION_HANDLER: dict[
+    type[UserDomainError],
+    tuple[int, str],
+] = {
+    EmailEmptyError: (
         status.HTTP_400_BAD_REQUEST,
-        "INVALID_EMAIL",
+        "EMAIL_EMPTY",
     ),
-    InvalidHashedPasswordError: (
+    EmailTooLongError: (
         status.HTTP_400_BAD_REQUEST,
-        "INVALID_HASHED_PASSWORD",
+        "EMAIL_TOO_LONG",
     ),
-    InvalidUserNameError: (
+    EmailInvalidFormatError: (
         status.HTTP_400_BAD_REQUEST,
-        "INVALID_USER_NAME",
+        "EMAIL_INVALID_FORMAT",
+    ),
+    HashedPasswordEmptyError: (
+        status.HTTP_400_BAD_REQUEST,
+        "HASHED_PASSWORD_EMPTY",
+    ),
+    HashedPasswordTooLongError: (
+        status.HTTP_400_BAD_REQUEST,
+        "HASHED_PASSWORD_TOO_LONG",
+    ),
+    UserNameEmptyError: (
+        status.HTTP_400_BAD_REQUEST,
+        "USER_NAME_EMPTY",
+    ),
+    UserNameTooLongError: (
+        status.HTTP_400_BAD_REQUEST,
+        "USER_NAME_TOO_LONG",
     ),
     UserAlreadyActive: (
         status.HTTP_400_BAD_REQUEST,

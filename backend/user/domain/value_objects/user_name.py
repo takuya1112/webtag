@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from core.constants import UserConfig
 
-from ..exceptions import InvalidUserNameError
+from ..exceptions import UserNameEmptyError, UserNameTooLongError
 
 
 @dataclass(frozen=True)
@@ -10,8 +10,8 @@ class UserName:
     """User name value object
 
     Raises:
-        InvalidUserNameError: raise if user name is empty
-        InvalidUserNameError: raise if user name is too long
+        UserNameEmptyError: raise if user name is empty
+        UserNameTooLongError: raise if user name is too long
     """
 
     value: str
@@ -20,10 +20,12 @@ class UserName:
         object.__setattr__(self, "value", self.value.strip())
 
         if not self.value:
-            raise InvalidUserNameError("UserName must be filled")
+            raise UserNameEmptyError()
 
         if len(self.value) > UserConfig.NAME_LENGTH_MAX:
-            raise InvalidUserNameError("UserName is too long")
+            raise UserNameTooLongError(
+                max_length=UserConfig.NAME_LENGTH_MAX,
+            )
 
     def __str__(self) -> str:
         return self.value

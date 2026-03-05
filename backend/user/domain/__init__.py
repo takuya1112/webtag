@@ -1,12 +1,16 @@
 from . import value_objects
 from .entity import UserEntity
 from .exceptions import (
-    InvalidEmailError,
-    InvalidHashedPasswordError,
-    InvalidUserNameError,
+    EmailEmptyError,
+    EmailInvalidFormatError,
+    EmailTooLongError,
+    HashedPasswordEmptyError,
+    HashedPasswordTooLongError,
     UserAlreadyActive,
     UserAlreadyInactive,
     UserDomainError,
+    UserNameEmptyError,
+    UserNameTooLongError,
 )
 from .factory import UserFactory
 from .repository import UserRepository
@@ -14,12 +18,16 @@ from .repository import UserRepository
 __all__ = [
     "value_objects",
     "UserEntity",
-    "InvalidEmailError",
-    "InvalidHashedPasswordError",
-    "InvalidUserNameError",
+    "EmailEmptyError",
+    "EmailInvalidFormatError",
+    "EmailTooLongError",
+    "HashedPasswordEmptyError",
+    "HashedPasswordTooLongError",
     "UserAlreadyActive",
     "UserAlreadyInactive",
     "UserDomainError",
+    "UserNameEmptyError",
+    "UserNameTooLongError",
     "UserFactory",
     "UserRepository",
 ]

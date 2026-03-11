@@ -3,37 +3,12 @@ from typing import Annotated
 from fastapi import Depends
 
 from ..infrastructure.clock import SystemClock
-from ..infrastructure.security import (
-    Argon2Hasher,
-    HMACHasher,
-    SecureTokenGenerator,
-    UUIDv7generator,
-)
+from ..infrastructure.id_generator import UUIDv7generator
 from ..infrastructure.uow import SQLAlchemyUnitOfWork, get_uow_dependency
 
 UOWDep = Annotated[
     SQLAlchemyUnitOfWork,
     Depends(get_uow_dependency),
-]
-
-
-def get_token_generator() -> SecureTokenGenerator:
-    return SecureTokenGenerator()
-
-
-TokenGeneratorDep = Annotated[
-    SecureTokenGenerator,
-    Depends(get_token_generator),
-]
-
-
-def get_token_hasher() -> HMACHasher:
-    return HMACHasher()
-
-
-HMACHasherDep = Annotated[
-    HMACHasher,
-    Depends(get_token_hasher),
 ]
 
 
@@ -54,14 +29,4 @@ def get_clock_now() -> SystemClock:
 ClockDep = Annotated[
     SystemClock,
     Depends(get_clock_now),
-]
-
-
-def get_argon2_hasher() -> Argon2Hasher:
-    return Argon2Hasher()
-
-
-Argon2HasherDep = Annotated[
-    Argon2Hasher,
-    Depends(get_argon2_hasher),
 ]

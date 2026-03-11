@@ -3,16 +3,18 @@ from datetime import timedelta
 from core.logging import get_logger
 from shared.application import UnitOfWork
 from shared.domain.clock import Clock
-from shared.domain.security import TokenHasher
 from shared.domain.value_objects import AwareDatetime
 
-from ..domain.factory import RefreshTokenFactory
-from ..domain.repository import RefreshTokenRepository
-from ..domain.value_objects import HashedToken
-from ..exceptions import (
-    InvalidTokenError,
+from ..domain.exceptions import (
+    RefreshTokenAlreadyUsed,
     RefreshTokenDomainError,
-    TokenAlreadyUsed,
+)
+from ..domain.factory import RefreshTokenFactory
+from ..domain.refresh_token_hasher import RefreshTokenHasher
+from ..domain.repository import RefreshTokenRepository
+from ..domain.value_objects import RefreshTokenHash
+from .exceptions import (
+    InvalidTokenError,
     TokenStolenError,
 )
 
@@ -25,7 +27,7 @@ class RefreshAccessToken:
         uow: UnitOfWork,
         repository: type[RefreshTokenRepository],
         factory: RefreshTokenFactory,
-        hasher: TokenHasher,
+        hasher: RefreshTokenHasher,
         clock: Clock,
         expire_days: int,
     ):
@@ -40,7 +42,7 @@ class RefreshAccessToken:
     def execute(self, refresh_token: str) -> str:
         with self.uow:
             repo = self.uow.get_repo(self.repository)
-            token_hash_vo = HashedToken(self.hasher.hash(refresh_token))
+            token_hash_vo = RefreshTokenHash(self.hasher.hash(refresh_token))
             now_vo = AwareDatetime(self.clock.now())
             entity = repo.find_by_hashed_token(token_hash_vo)
 
@@ -50,7 +52,7 @@ class RefreshAccessToken:
 
             try:
                 entity.ensure_useable(now_vo)
-            except TokenAlreadyUsed:
+            except RefreshTokenAlreadyUsed:
                 logger.error(
                     "Token reuse detected, Revoking all tokens for user_id=%s",
                     entity.user_id.value,

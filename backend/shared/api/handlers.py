@@ -1,4 +1,4 @@
-from fastapi import Request
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
 from ..application.exceptions import (
@@ -10,7 +10,6 @@ from ..domain.exceptions import (
 from ..infrastructure.exceptions import (
     SharedInfrastructureError,
 )
-from .exception_handler_utils import create_json_response
 
 
 def create_shared_application_handler(status_code: int, error_code: str):
@@ -18,10 +17,14 @@ def create_shared_application_handler(status_code: int, error_code: str):
         request: Request,
         exc: SharedApplicationError,
     ) -> JSONResponse:
-        return create_json_response(
+        headers = None
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            headers = {"WWW-Authenticate": "Bearer"}
+
+        return JSONResponse(
             status_code=status_code,
             error_code=error_code,
-            detail=str(exc),
+            headers=headers,
         )
 
     return handler
@@ -32,10 +35,14 @@ def create_shared_infrastructure_handler(status_code: int, error_code: str):
         request: Request,
         exc: SharedDomainError,
     ) -> JSONResponse:
-        return create_json_response(
+        headers = None
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            headers = {"WWW-Authenticate": "Bearer"}
+
+        return JSONResponse(
             status_code=status_code,
             error_code=error_code,
-            detail=str(exc),
+            headers=headers,
         )
 
     return handler
@@ -46,10 +53,14 @@ def create_shared_domain_handler(status_code: int, error_code: str):
         request: Request,
         exc: SharedInfrastructureError,
     ) -> JSONResponse:
-        return create_json_response(
+        headers = None
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            headers = {"WWW-Authenticate": "Bearer"}
+
+        return JSONResponse(
             status_code=status_code,
             error_code=error_code,
-            detail=str(exc),
+            headers=headers,
         )
 
     return handler

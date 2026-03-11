@@ -1,5 +1,5 @@
 from shared.domain.clock import Clock
-from shared.domain.security import IdGenerator
+from shared.domain.id_generator import IdGenerator
 from shared.domain.value_objects import AwareDatetime
 
 from .entity import UserEntity

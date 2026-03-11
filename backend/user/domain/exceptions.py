@@ -25,6 +25,10 @@ class UserAlreadyActive(UserDomainError):
     pass
 
 
+class UserIdInvalidError(UserDomainError):
+    pass
+
+
 class EmailEmptyError(UserDomainError):
     pass
 

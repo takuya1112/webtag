@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import Depends
 from shared.api.dependencies import (
-    Argon2HasherDep,
     ClockDep,
     UOWDep,
     UUIDv7GeneratorDep,
@@ -10,7 +9,18 @@ from shared.api.dependencies import (
 
 from ..application import CreateUser
 from ..domain.factory import UserFactory
-from ..infrastructure import SQLAlchemyUserRepository
+from ..infrastructure.password_hasher import Argon2Hasher
+from ..infrastructure.repository import SQLAlchemyUserRepository
+
+
+def get_argon2_hasher() -> Argon2Hasher:
+    return Argon2Hasher()
+
+
+Argon2HasherDep = Annotated[
+    Argon2Hasher,
+    Depends(get_argon2_hasher),
+]
 
 
 def get_user_factory(

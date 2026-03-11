@@ -13,6 +13,7 @@ from .exceptions import (
     UserNameTooLongError,
 )
 from .factory import UserFactory
+from .password_hasher import PasswordHasher
 from .repository import UserRepository
 
 __all__ = [
@@ -29,5 +30,6 @@ __all__ = [
     "UserNameEmptyError",
     "UserNameTooLongError",
     "UserFactory",
+    "PasswordHasher",
     "UserRepository",
 ]

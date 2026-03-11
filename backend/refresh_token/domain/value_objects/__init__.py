@@ -1,4 +1,7 @@
-from .hashed_token import HashedToken
+from .refresh_token_hash import RefreshTokenHash
 from .refresh_token_id import RefreshTokenId
 
-__all__ = ["HashedToken", "RefreshTokenId"]
+__all__ = [
+    "RefreshTokenHash",
+    "RefreshTokenId",
+]

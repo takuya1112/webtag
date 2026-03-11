@@ -4,7 +4,7 @@ from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
 
 from .entity import RefreshTokenEntity
-from .value_objects import HashedToken
+from .value_objects import RefreshTokenHash
 
 
 @runtime_checkable
@@ -43,12 +43,12 @@ class RefreshTokenRepository(Protocol):
 
     def find_by_hashed_token(
         self,
-        token_hash: HashedToken,
+        token_hash: RefreshTokenHash,
     ) -> RefreshTokenEntity | None:
         """Find a refresh token by hashed token
 
         Args:
-            token_hash (HashedToken): hashed token to find
+            token_hash (RefreshTokenHash): hashed token to find
 
         Returns:
             RefreshTokenEntity | None: Return None, if none found
@@ -66,11 +66,11 @@ class RefreshTokenRepository(Protocol):
         """
         ...
 
-    def delete_by_hashed_token(self, token_hash: HashedToken) -> int:
+    def delete_by_hashed_token(self, token_hash: RefreshTokenHash) -> int:
         """Delete refresh token by hashed token
 
         Args:
-            token_hash (HashedToken): hashed token to delete
+            token_hash (RefreshTokenHash): hashed token to delete
 
         Returns:
             int: delete count

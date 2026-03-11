@@ -1,8 +1,8 @@
 from core.logging import get_logger
 from shared.application.uow import UnitOfWork
-from shared.domain.security import PasswordHasher
 
 from ..domain.factory import UserFactory
+from ..domain.password_hasher import PasswordHasher
 from ..domain.repository import UserRepository
 from ..domain.value_objects import Email, HashedPassword, UserId, UserName
 from .exceptions import EmailAlreadyExistError

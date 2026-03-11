@@ -4,9 +4,12 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 from user.domain.value_objects import UserId
 
-from ..domain import RefreshTokenEntity
-from ..domain.value_objects import HashedToken, RefreshTokenId
-from ..exceptions import TokenNotFoundError
+from ..domain.entity import RefreshTokenEntity
+from ..domain.value_objects import (
+    RefreshTokenHash,
+    RefreshTokenId,
+)
+from .exceptions import RefreshTokenTokenNotFoundError
 from .model import RefreshTokenModel
 
 logger = get_logger(__name__)
@@ -59,12 +62,12 @@ class SQLAlchemyRefreshTokenRepository:
 
     def find_by_hashed_token(
         self,
-        token_hash: HashedToken,
+        token_hash: RefreshTokenHash,
     ) -> RefreshTokenEntity | None:
         """Find a refresh token by hashed token
 
         Args:
-            token_hash (HashedToken): hashed token to find
+            token_hash (RefreshTokenHash): hashed token to find
 
         Returns:
             RefreshTokenEntity | None: Return None, if none found
@@ -92,11 +95,11 @@ class SQLAlchemyRefreshTokenRepository:
         logger.info("Deleted %d tokens by user_id", delete_count)
         return delete_count
 
-    def delete_by_hashed_token(self, token_hash: HashedToken) -> int:
+    def delete_by_hashed_token(self, token_hash: RefreshTokenHash) -> int:
         """Delete refresh token by hashed token
 
         Args:
-            token_hash (HashedToken): hashed token to delete
+            token_hash (RefreshTokenHash): hashed token to delete
 
         Returns:
             int: delete count
@@ -137,12 +140,12 @@ class SQLAlchemyRefreshTokenRepository:
 
     def _find_model_by_hashed_token(
         self,
-        token_hash: HashedToken,
+        token_hash: RefreshTokenHash,
     ) -> RefreshTokenModel | None:
         """Find a SQLAlchemy model by hashed token
 
         Args:
-            token_hash (HashedToken): Hashed token to find
+            token_hash (RefreshTokenHash): Hashed token to find
 
         Returns:
             RefreshTokenModel | None: return none, if none found
@@ -154,15 +157,15 @@ class SQLAlchemyRefreshTokenRepository:
 
     def _get_model_by_hashed_token_or_raise(
         self,
-        token_hash: HashedToken,
+        token_hash: RefreshTokenHash,
     ) -> RefreshTokenModel:
         """Get a SQLAlchemy model by hashed token
 
         Args:
-            token_hash (HashedToken): Hashed token to find
+            token_hash (RefreshTokenHash): Hashed token to find
 
         Raises:
-            TokenNotFoundError: if none found
+            RefreshTokenTokenNotFoundError: if none found
 
         Returns:
             RefreshTokenModel: SQLAlchemy model
@@ -170,7 +173,7 @@ class SQLAlchemyRefreshTokenRepository:
         model = self._find_model_by_hashed_token(token_hash)
         if model is None:
             logger.warning("Token not found")
-            raise TokenNotFoundError()
+            raise RefreshTokenTokenNotFoundError()
         return model
 
     def _to_entity(self, model: RefreshTokenModel) -> RefreshTokenEntity:
@@ -178,7 +181,7 @@ class SQLAlchemyRefreshTokenRepository:
         return RefreshTokenEntity(
             id=RefreshTokenId(model.id),
             user_id=UserId(model.user_id),
-            token_hash=HashedToken(model.token_hash),
+            token_hash=RefreshTokenHash(model.token_hash),
             created_at=AwareDatetime(model.created_at),
             expires_at=AwareDatetime(model.expires_at),
             used_at=AwareDatetime(model.used_at) if model.used_at else None,

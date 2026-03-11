@@ -15,7 +15,14 @@ class AppUuid:
     value: UUID
 
     def __post_init__(self):
-        if not isinstance(self.value, UUID):
+        if isinstance(self.value, str):
+            try:
+                uuid = UUID(self.value)
+                object.__setattr__(self, "value", uuid)
+            except ValueError:
+                raise InvalidUuidError() from None
+
+        elif not isinstance(self.value, UUID):
             raise InvalidUuidError()
 
     def __str__(self) -> str:

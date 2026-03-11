@@ -1,5 +1,5 @@
 from article.infrastructure import ArticleModel, ArticleTagModel  # noqa
-from auth.api import router as auth_router
+from authentication.api import router as authentication_router
 from core import setup_logging
 from fastapi import FastAPI
 from refresh_token.api import router as refresh_token_router
@@ -11,4 +11,4 @@ setup_logging()
 app = FastAPI()
 register_exception_handler(app)
 app.include_router(refresh_token_router)
-app.include_router(auth_router)
+app.include_router(authentication_router)

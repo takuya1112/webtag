@@ -1,0 +1,2 @@
+class AccessTokenInfrastructureError(Exception):
+    pass

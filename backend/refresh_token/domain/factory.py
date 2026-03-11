@@ -1,18 +1,19 @@
 from shared.domain.clock import Clock
-from shared.domain.security import IdGenerator, TokenGenerator, TokenHasher
+from shared.domain.security import IdGenerator
 from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
 
-from ..domain.value_objects import RefreshTokenId
 from .entity import RefreshTokenEntity
-from .value_objects import HashedToken
+from .refresh_token_generator import RefreshTokenGenerator
+from .refresh_token_hasher import RefreshTokenHasher
+from .value_objects import RefreshTokenHash, RefreshTokenId
 
 
 class RefreshTokenFactory:
     def __init__(
         self,
-        token_generator: TokenGenerator,
-        token_hasher: TokenHasher,
+        token_generator: RefreshTokenGenerator,
+        token_hasher: RefreshTokenHasher,
         id_generator: IdGenerator,
         clock: Clock,
     ) -> None:
@@ -28,7 +29,7 @@ class RefreshTokenFactory:
     ) -> tuple[RefreshTokenEntity, str]:
         id = RefreshTokenId(self.id_generator.generate())
         raw_token = self.token_generator.generate()
-        token_hash = HashedToken(self.token_hasher.hash(raw_token))
+        token_hash = RefreshTokenHash(self.token_hasher.hash(raw_token))
         now = AwareDatetime(self.clock.now())
         entity = RefreshTokenEntity(
             id=id,

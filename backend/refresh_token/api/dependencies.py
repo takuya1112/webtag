@@ -4,8 +4,6 @@ from core.config import settings
 from fastapi import Depends
 from shared.api.dependencies import (
     ClockDep,
-    HMACHasherDep,
-    TokenGeneratorDep,
     UOWDep,
     UUIDv7GeneratorDep,
 )
@@ -15,11 +13,33 @@ from ..application import (
     RefreshAccessToken,
 )
 from ..domain.factory import RefreshTokenFactory
+from ..infrastructure.refresh_token_generator import SecureRefreshTokenGenerator
+from ..infrastructure.refresh_token_hasher import HMACHasher
 from ..infrastructure.repository import SQLAlchemyRefreshTokenRepository
 
 
+def get_token_generator() -> SecureRefreshTokenGenerator:
+    return SecureRefreshTokenGenerator()
+
+
+RefreshTokenGeneratorDep = Annotated[
+    SecureRefreshTokenGenerator,
+    Depends(get_token_generator),
+]
+
+
+def get_token_hasher() -> HMACHasher:
+    return HMACHasher()
+
+
+HMACHasherDep = Annotated[
+    HMACHasher,
+    Depends(get_token_hasher),
+]
+
+
 def get_refresh_token_factory(
-    token_generator: TokenGeneratorDep,
+    token_generator: RefreshTokenGeneratorDep,
     token_hasher: HMACHasherDep,
     id_generator: UUIDv7GeneratorDep,
     clock: ClockDep,

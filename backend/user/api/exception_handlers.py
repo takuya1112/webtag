@@ -36,7 +36,7 @@ APPLICATION_EXCEPTION_HANDLERS: dict[
     ),
 }
 
-INFRASTRUCTURE_EXCEPTION_HANDLER: dict[
+INFRASTRUCTURE_EXCEPTION_HANDLERS: dict[
     type[UserInfrastructureError],
     tuple[int, str],
 ] = {
@@ -46,7 +46,7 @@ INFRASTRUCTURE_EXCEPTION_HANDLER: dict[
     ),
 }
 
-DOMAIN_EXCEPTION_HANDLER: dict[
+DOMAIN_EXCEPTION_HANDLERS: dict[
     type[UserDomainError],
     tuple[int, str],
 ] = {
@@ -105,7 +105,7 @@ def register_user_exception_handlers(app: FastAPI) -> None:
     for exc_type, (
         status_code,
         error_code,
-    ) in INFRASTRUCTURE_EXCEPTION_HANDLER.items():
+    ) in INFRASTRUCTURE_EXCEPTION_HANDLERS.items():
         app.add_exception_handler(
             exc_type,
             create_user_infrastructure_handler(
@@ -114,7 +114,10 @@ def register_user_exception_handlers(app: FastAPI) -> None:
             ),
         )
 
-    for exc_type, (status_code, error_code) in DOMAIN_EXCEPTION_HANDLER.items():
+    for exc_type, (
+        status_code,
+        error_code,
+    ) in DOMAIN_EXCEPTION_HANDLERS.items():
         app.add_exception_handler(
             exc_type,
             create_user_domain_handler(

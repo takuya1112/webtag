@@ -1,10 +1,17 @@
 from core.logging import get_logger
-from shared.domain.value_objects.aware_datetime import AwareDatetime
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..domain.entity import UserEntity
-from ..domain.value_objects import Email, HashedPassword, UserId, UserName
+from ..domain.value_objects import (
+    CreatedAt,
+    DeactivatedAt,
+    Email,
+    HashedPassword,
+    UpdatedAt,
+    UserId,
+    UserName,
+)
 from .exceptions import UserNotFoundError
 from .model import UserModel
 
@@ -116,9 +123,9 @@ class SQLAlchemyUserRepository:
             name=UserName(model.name),
             email=Email(model.email),
             password_hash=HashedPassword(model.password_hash),
-            created_at=AwareDatetime(model.created_at),
-            updated_at=AwareDatetime(model.updated_at),
-            deactivated_at=AwareDatetime(model.deactivated_at)
+            created_at=CreatedAt(model.created_at),
+            updated_at=UpdatedAt(model.updated_at),
+            deactivated_at=DeactivatedAt(model.deactivated_at)
             if model.deactivated_at
             else None,
         )

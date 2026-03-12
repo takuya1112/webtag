@@ -5,14 +5,18 @@ from ..application.exceptions import (
     UserApplicationError,
 )
 from ..domain.exceptions import (
+    CreatedAtInvalidError,
+    DeactivatedAtInvalidError,
     EmailEmptyError,
     EmailInvalidFormatError,
     EmailTooLongError,
     HashedPasswordEmptyError,
     HashedPasswordTooLongError,
+    UpdatedAtInvalidError,
     UserAlreadyActive,
     UserAlreadyInactive,
     UserDomainError,
+    UserIdInvalidError,
     UserNameEmptyError,
     UserNameTooLongError,
 )
@@ -50,6 +54,10 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     type[UserDomainError],
     tuple[int, str],
 ] = {
+    UserIdInvalidError: (
+        status.HTTP_400_BAD_REQUEST,
+        "USER_ID_INVALID",
+    ),
     EmailEmptyError: (
         status.HTTP_400_BAD_REQUEST,
         "EMAIL_EMPTY",
@@ -77,6 +85,18 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     UserNameTooLongError: (
         status.HTTP_400_BAD_REQUEST,
         "USER_NAME_TOO_LONG",
+    ),
+    CreatedAtInvalidError: (
+        status.HTTP_400_BAD_REQUEST,
+        "CREATE_At_INVALID",
+    ),
+    UpdatedAtInvalidError: (
+        status.HTTP_400_BAD_REQUEST,
+        "UPDATED_At_INVALID",
+    ),
+    DeactivatedAtInvalidError: (
+        status.HTTP_400_BAD_REQUEST,
+        "DEACTIVATED_At_INVALID",
     ),
     UserAlreadyActive: (
         status.HTTP_400_BAD_REQUEST,

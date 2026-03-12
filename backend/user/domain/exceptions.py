@@ -55,3 +55,15 @@ class UserNameEmptyError(UserDomainError):
 
 class UserNameTooLongError(BaseTooLongError):
     pass
+
+
+class CreatedAtInvalidError(UserDomainError):
+    pass
+
+
+class UpdatedAtInvalidError(UserDomainError):
+    pass
+
+
+class DeactivatedAtInvalidError(UserDomainError):
+    pass

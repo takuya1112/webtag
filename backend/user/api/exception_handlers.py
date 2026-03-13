@@ -88,15 +88,15 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     ),
     CreatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "CREATE_At_INVALID",
+        "CREATE_AT_INVALID",
     ),
     UpdatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "UPDATED_At_INVALID",
+        "UPDATED_AT_INVALID",
     ),
     DeactivatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "DEACTIVATED_At_INVALID",
+        "DEACTIVATED_AT_INVALID",
     ),
     UserAlreadyActive: (
         status.HTTP_400_BAD_REQUEST,

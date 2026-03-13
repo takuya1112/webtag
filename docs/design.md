@@ -169,7 +169,7 @@ WHERE revoked_at IS NOT NULL
 
 ## 6. ER Diagram
 
-![ER_Diagram](./assets/ER%20diagram.drawio.png)
+![ER_Diagram](./assets/ERdiagram.drawio.png)
 
 ## 7. API Design
 

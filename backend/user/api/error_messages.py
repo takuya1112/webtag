@@ -18,11 +18,11 @@ ERROR_MESSAGES = {
     "HASHED_PASSWORD_EMPTY": "Hashed password must be filled",
     "HASHED_PASSWORD_TOO_LONG": "Hashed password is too long (max: {max_length} characters)",
     # Created at
-    "CREATE_At_INVALID": "Created at must be timezone-aware",
+    "CREATE_AT_INVALID": "Created at must be timezone-aware",
     # Updated at
-    "UPDATED_At_INVALID": "Updated at must be timezone-aware",
+    "UPDATED_AT_INVALID": "Updated at must be timezone-aware",
     # Deactivated at
-    "DEACTIVATED_At_INVALID": "Deactivated at must be timezone-aware",
+    "DEACTIVATED_AT_INVALID": "Deactivated at must be timezone-aware",
     # User Entity
     "USER_ALREADY_ACTIVE": "User is already active",
     "USER_ALREADY_INACTIVE": "User is already inactive",

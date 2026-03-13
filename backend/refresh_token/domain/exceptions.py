@@ -1,4 +1,13 @@
+from typing import Any
+
+
 class RefreshTokenDomainError(Exception):
+    @property
+    def context(self) -> dict[str, Any]:
+        return {}
+
+
+class RefreshTokenIdInvalidError(RefreshTokenDomainError):
     pass
 
 

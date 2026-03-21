@@ -3,12 +3,12 @@ from shared.domain.id_generator import IdGenerator
 
 from .entity import UserEntity
 from .value_objects import (
-    CreatedAt,
-    Email,
-    HashedPassword,
-    UpdatedAt,
+    UserCreatedAt,
+    UserEmail,
+    UserHashedPassword,
     UserId,
     UserName,
+    UserUpdatedAt,
 )
 
 
@@ -20,8 +20,8 @@ class UserFactory:
     def create(
         self,
         name: UserName,
-        email: Email,
-        password_hash: HashedPassword,
+        email: UserEmail,
+        password_hash: UserHashedPassword,
     ) -> UserEntity:
         id = UserId(self.id_generator.generate())
         now = self.clock.now()
@@ -30,7 +30,7 @@ class UserFactory:
             name=name,
             email=email,
             password_hash=password_hash,
-            created_at=CreatedAt(now),
-            updated_at=UpdatedAt(now),
+            created_at=UserCreatedAt(now),
+            updated_at=UserUpdatedAt(now),
             deactivated_at=None,
         )

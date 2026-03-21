@@ -4,13 +4,13 @@ from sqlalchemy.orm import Session
 
 from ..domain.entity import UserEntity
 from ..domain.value_objects import (
-    CreatedAt,
-    DeactivatedAt,
-    Email,
-    HashedPassword,
-    UpdatedAt,
+    UserCreatedAt,
+    UserDeactivatedAt,
+    UserEmail,
+    UserHashedPassword,
     UserId,
     UserName,
+    UserUpdatedAt,
 )
 from .exceptions import UserNotFoundError
 from .model import UserModel
@@ -67,11 +67,11 @@ class SQLAlchemyUserRepository:
             logger.debug("User not found by user id: %s", user_id.value)
         return self._to_entity(model) if model else None
 
-    def find_by_email(self, email: Email) -> UserEntity | None:
+    def find_by_email(self, email: UserEmail) -> UserEntity | None:
         """Find a user by email
 
         Args:
-            email (Email): Email to find
+            email (UserEmail): Email to find
 
         Returns:
             UserEntity | None: Return none, if none found
@@ -121,11 +121,11 @@ class SQLAlchemyUserRepository:
         return UserEntity(
             id=UserId(model.id),
             name=UserName(model.name),
-            email=Email(model.email),
-            password_hash=HashedPassword(model.password_hash),
-            created_at=CreatedAt(model.created_at),
-            updated_at=UpdatedAt(model.updated_at),
-            deactivated_at=DeactivatedAt(model.deactivated_at)
+            email=UserEmail(model.email),
+            password_hash=UserHashedPassword(model.password_hash),
+            created_at=UserCreatedAt(model.created_at),
+            updated_at=UserUpdatedAt(model.updated_at),
+            deactivated_at=UserDeactivatedAt(model.deactivated_at)
             if model.deactivated_at
             else None,
         )

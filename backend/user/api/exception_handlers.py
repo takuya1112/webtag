@@ -1,24 +1,24 @@
 from fastapi import FastAPI, status
 
 from ..application.exceptions import (
-    EmailAlreadyExistError,
     UserApplicationError,
+    UserEmailAlreadyExistError,
 )
 from ..domain.exceptions import (
-    CreatedAtInvalidError,
-    DeactivatedAtInvalidError,
-    EmailEmptyError,
-    EmailInvalidFormatError,
-    EmailTooLongError,
-    HashedPasswordEmptyError,
-    HashedPasswordTooLongError,
-    UpdatedAtInvalidError,
     UserAlreadyActive,
     UserAlreadyInactive,
+    UserCreatedAtInvalidError,
+    UserDeactivatedAtInvalidError,
     UserDomainError,
+    UserEmailEmptyError,
+    UserEmailInvalidFormatError,
+    UserEmailTooLongError,
+    UserHashedPasswordEmptyError,
+    UserHashedPasswordTooLongError,
     UserIdInvalidError,
     UserNameEmptyError,
     UserNameTooLongError,
+    UserUpdatedAtInvalidError,
 )
 from ..infrastructure.exceptions import (
     UserInfrastructureError,
@@ -34,7 +34,7 @@ APPLICATION_EXCEPTION_HANDLERS: dict[
     type[UserApplicationError],
     tuple[int, str],
 ] = {
-    EmailAlreadyExistError: (
+    UserEmailAlreadyExistError: (
         status.HTTP_409_CONFLICT,
         "EMAIL_ALREADY_EXIST",
     ),
@@ -58,23 +58,23 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
         status.HTTP_400_BAD_REQUEST,
         "USER_ID_INVALID",
     ),
-    EmailEmptyError: (
+    UserEmailEmptyError: (
         status.HTTP_400_BAD_REQUEST,
         "EMAIL_EMPTY",
     ),
-    EmailTooLongError: (
+    UserEmailTooLongError: (
         status.HTTP_400_BAD_REQUEST,
         "EMAIL_TOO_LONG",
     ),
-    EmailInvalidFormatError: (
+    UserEmailInvalidFormatError: (
         status.HTTP_400_BAD_REQUEST,
         "EMAIL_INVALID_FORMAT",
     ),
-    HashedPasswordEmptyError: (
+    UserHashedPasswordEmptyError: (
         status.HTTP_400_BAD_REQUEST,
         "HASHED_PASSWORD_EMPTY",
     ),
-    HashedPasswordTooLongError: (
+    UserHashedPasswordTooLongError: (
         status.HTTP_400_BAD_REQUEST,
         "HASHED_PASSWORD_TOO_LONG",
     ),
@@ -86,15 +86,15 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
         status.HTTP_400_BAD_REQUEST,
         "USER_NAME_TOO_LONG",
     ),
-    CreatedAtInvalidError: (
+    UserCreatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
         "CREATE_AT_INVALID",
     ),
-    UpdatedAtInvalidError: (
+    UserUpdatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
         "UPDATED_AT_INVALID",
     ),
-    DeactivatedAtInvalidError: (
+    UserDeactivatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
         "DEACTIVATED_AT_INVALID",
     ),

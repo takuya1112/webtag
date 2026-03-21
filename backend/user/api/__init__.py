@@ -1,9 +1,9 @@
 from .dependencies import Argon2HasherDep, CreateUserDep, UserFactoryDep
 from .error_messages import ERROR_MESSAGES, get_error_message
 from .exception_handlers import (
-    APPLICATION_EXCEPTION_HANDLERS,
-    DOMAIN_EXCEPTION_HANDLERS,
-    INFRASTRUCTURE_EXCEPTION_HANDLERS,
+    USER_APPLICATION_EXCEPTION_HANDLERS,
+    USER_DOMAIN_EXCEPTION_HANDLERS,
+    USER_INFRASTRUCTURE_EXCEPTION_HANDLERS,
     register_user_exception_handlers,
 )
 from .handlers import (
@@ -18,9 +18,9 @@ __all__ = [
     "UserFactoryDep",
     "ERROR_MESSAGES",
     "get_error_message",
-    "APPLICATION_EXCEPTION_HANDLERS",
-    "DOMAIN_EXCEPTION_HANDLERS",
-    "INFRASTRUCTURE_EXCEPTION_HANDLERS",
+    "USER_APPLICATION_EXCEPTION_HANDLERS",
+    "USER_DOMAIN_EXCEPTION_HANDLERS",
+    "USER_INFRASTRUCTURE_EXCEPTION_HANDLERS",
     "register_user_exception_handlers",
     "create_user_application_handler",
     "create_user_domain_handler",

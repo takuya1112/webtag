@@ -30,17 +30,17 @@ from .handlers import (
     create_user_infrastructure_handler,
 )
 
-APPLICATION_EXCEPTION_HANDLERS: dict[
+USER_APPLICATION_EXCEPTION_HANDLERS: dict[
     type[UserApplicationError],
     tuple[int, str],
 ] = {
     UserEmailAlreadyExistError: (
         status.HTTP_409_CONFLICT,
-        "EMAIL_ALREADY_EXIST",
+        "USER_EMAIL_ALREADY_EXIST",
     ),
 }
 
-INFRASTRUCTURE_EXCEPTION_HANDLERS: dict[
+USER_INFRASTRUCTURE_EXCEPTION_HANDLERS: dict[
     type[UserInfrastructureError],
     tuple[int, str],
 ] = {
@@ -50,7 +50,7 @@ INFRASTRUCTURE_EXCEPTION_HANDLERS: dict[
     ),
 }
 
-DOMAIN_EXCEPTION_HANDLERS: dict[
+USER_DOMAIN_EXCEPTION_HANDLERS: dict[
     type[UserDomainError],
     tuple[int, str],
 ] = {
@@ -60,23 +60,23 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     ),
     UserEmailEmptyError: (
         status.HTTP_400_BAD_REQUEST,
-        "EMAIL_EMPTY",
+        "USER_EMAIL_EMPTY",
     ),
     UserEmailTooLongError: (
         status.HTTP_400_BAD_REQUEST,
-        "EMAIL_TOO_LONG",
+        "USER_EMAIL_TOO_LONG",
     ),
     UserEmailInvalidFormatError: (
         status.HTTP_400_BAD_REQUEST,
-        "EMAIL_INVALID_FORMAT",
+        "USER_EMAIL_INVALID_FORMAT",
     ),
     UserHashedPasswordEmptyError: (
         status.HTTP_400_BAD_REQUEST,
-        "HASHED_PASSWORD_EMPTY",
+        "USER_HASHED_PASSWORD_EMPTY",
     ),
     UserHashedPasswordTooLongError: (
         status.HTTP_400_BAD_REQUEST,
-        "HASHED_PASSWORD_TOO_LONG",
+        "USER_HASHED_PASSWORD_TOO_LONG",
     ),
     UserNameEmptyError: (
         status.HTTP_400_BAD_REQUEST,
@@ -88,15 +88,15 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     ),
     UserCreatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "CREATE_AT_INVALID",
+        "USER_CREATE_AT_INVALID",
     ),
     UserUpdatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "UPDATED_AT_INVALID",
+        "USER_UPDATED_AT_INVALID",
     ),
     UserDeactivatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "DEACTIVATED_AT_INVALID",
+        "USER_DEACTIVATED_AT_INVALID",
     ),
     UserAlreadyActive: (
         status.HTTP_400_BAD_REQUEST,
@@ -113,7 +113,7 @@ def register_user_exception_handlers(app: FastAPI) -> None:
     for exc_type, (
         status_code,
         error_code,
-    ) in APPLICATION_EXCEPTION_HANDLERS.items():
+    ) in USER_APPLICATION_EXCEPTION_HANDLERS.items():
         app.add_exception_handler(
             exc_type,
             create_user_application_handler(
@@ -125,7 +125,7 @@ def register_user_exception_handlers(app: FastAPI) -> None:
     for exc_type, (
         status_code,
         error_code,
-    ) in INFRASTRUCTURE_EXCEPTION_HANDLERS.items():
+    ) in USER_INFRASTRUCTURE_EXCEPTION_HANDLERS.items():
         app.add_exception_handler(
             exc_type,
             create_user_infrastructure_handler(
@@ -137,7 +137,7 @@ def register_user_exception_handlers(app: FastAPI) -> None:
     for exc_type, (
         status_code,
         error_code,
-    ) in DOMAIN_EXCEPTION_HANDLERS.items():
+    ) in USER_DOMAIN_EXCEPTION_HANDLERS.items():
         app.add_exception_handler(
             exc_type,
             create_user_domain_handler(

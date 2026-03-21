@@ -11,12 +11,15 @@ from ..domain.exceptions import (
 from ..infrastructure.exceptions import (
     UserInfrastructureError,
 )
-from .error_messages import get_error_message
+from .error_messages import get_user_error_message
 
 logger = get_logger(__name__)
 
 
-def create_user_application_handler(status_code: int, error_code: str):
+def create_user_application_handler(
+    status_code: int,
+    error_code: str,
+):
     async def handler(
         request: Request,
         exc: UserApplicationError,
@@ -26,7 +29,7 @@ def create_user_application_handler(status_code: int, error_code: str):
             exc.__class__.__name__,
         )
         params = exc.context
-        detail = get_error_message(
+        detail = get_user_error_message(
             error_code,
             **params,
         )
@@ -47,7 +50,10 @@ def create_user_application_handler(status_code: int, error_code: str):
     return handler
 
 
-def create_user_infrastructure_handler(status_code: int, error_code: str):
+def create_user_infrastructure_handler(
+    status_code: int,
+    error_code: str,
+):
     async def handler(
         request: Request,
         exc: UserInfrastructureError,
@@ -58,7 +64,7 @@ def create_user_infrastructure_handler(status_code: int, error_code: str):
             exc_info=True,
         )
         params = exc.context
-        detail = get_error_message(
+        detail = get_user_error_message(
             error_code,
             **params,
         )
@@ -82,7 +88,10 @@ def create_user_infrastructure_handler(status_code: int, error_code: str):
     return handler
 
 
-def create_user_domain_handler(status_code: int, error_code: str):
+def create_user_domain_handler(
+    status_code: int,
+    error_code: str,
+):
     async def handler(
         request: Request,
         exc: UserDomainError,
@@ -92,7 +101,7 @@ def create_user_domain_handler(status_code: int, error_code: str):
             exc.__class__.__name__,
         )
         params = exc.context
-        detail = get_error_message(
+        detail = get_user_error_message(
             error_code,
             **params,
         )

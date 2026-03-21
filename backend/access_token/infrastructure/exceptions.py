@@ -1,2 +1,7 @@
+from typing import Any
+
+
 class AccessTokenInfrastructureError(Exception):
-    pass
+    @property
+    def context(self) -> dict[str, Any]:
+        return {}

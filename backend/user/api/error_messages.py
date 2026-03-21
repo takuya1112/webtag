@@ -1,6 +1,6 @@
 from typing import Any
 
-ERROR_MESSAGES = {
+USER_ERROR_MESSAGES = {
     # Application
     "USER_EMAIL_ALREADY_EXIST": "Email already exists",
     # Infrastructure
@@ -29,8 +29,8 @@ ERROR_MESSAGES = {
 }
 
 
-def get_error_message(error_code: str, **params: Any) -> str:
-    template = ERROR_MESSAGES[error_code]
+def get_user_error_message(error_code: str, **params: Any) -> str:
+    template = USER_ERROR_MESSAGES[error_code]
     try:
         return template.format(**params)
     except KeyError:

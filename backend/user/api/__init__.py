@@ -1,5 +1,5 @@
 from .dependencies import Argon2HasherDep, CreateUserDep, UserFactoryDep
-from .error_messages import ERROR_MESSAGES, get_error_message
+from .error_messages import USER_ERROR_MESSAGES, get_error_message
 from .exception_handlers import (
     USER_APPLICATION_EXCEPTION_HANDLERS,
     USER_DOMAIN_EXCEPTION_HANDLERS,
@@ -16,7 +16,7 @@ __all__ = [
     "Argon2HasherDep",
     "CreateUserDep",
     "UserFactoryDep",
-    "ERROR_MESSAGES",
+    "USER_ERROR_MESSAGES",
     "get_error_message",
     "USER_APPLICATION_EXCEPTION_HANDLERS",
     "USER_DOMAIN_EXCEPTION_HANDLERS",

@@ -3,21 +3,21 @@ from dataclasses import dataclass
 from core.constants import UserConfig
 
 from ..exceptions import (
-    UserHashedPasswordEmptyError,
-    UserHashedPasswordTooLongError,
+    HashedPasswordEmptyError,
+    HashedPasswordTooLongError,
 )
 
 
 @dataclass(frozen=True)
-class UserHashedPassword:
+class HashedPassword:
     value: str
 
     def __post_init__(self):
         if not self.value:
-            raise UserHashedPasswordEmptyError()
+            raise HashedPasswordEmptyError()
 
         if len(self.value) > UserConfig.DB_PASSWORD_LENGTH_MAX:
-            raise UserHashedPasswordTooLongError(
+            raise HashedPasswordTooLongError(
                 max_length=UserConfig.DB_PASSWORD_LENGTH_MAX,
             )
 

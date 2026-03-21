@@ -8,13 +8,14 @@ from ..domain.exceptions import (
 from ..infrastructure.exceptions import (
     AccessTokenInfrastructureError,
 )
+from .handlers import create_domain_handler
 
-ACCESS_TOKEN_INFRASTRUCTURE_EXCEPTION_HANDLERS: dict[
+INFRASTRUCTURE_EXCEPTION_HANDLERS: dict[
     type[AccessTokenInfrastructureError],
     tuple[int, str],
 ] = {}
 
-ACCESS_TOKEN_DOMAIN_EXCEPTION_HANDLERS: dict[
+DOMAIN_EXCEPTION_HANDLERS: dict[
     type[AccessTokenDomainError],
     tuple[int, str],
 ] = {
@@ -29,5 +30,15 @@ ACCESS_TOKEN_DOMAIN_EXCEPTION_HANDLERS: dict[
 }
 
 
-def register_access_token_exception_handler(app: FastAPI) -> None:
-    pass
+def register_access_token_exception_handlers(app: FastAPI) -> None:
+    for exc_type, (
+        status_code,
+        error_code,
+    ) in DOMAIN_EXCEPTION_HANDLERS.items():
+        app.add_exception_handler(
+            exc_type,
+            create_domain_handler(
+                status_code=status_code,
+                error_code=error_code,
+            ),
+        )

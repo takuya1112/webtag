@@ -4,29 +4,29 @@ from dataclasses import dataclass
 from core.constants import UserConfig
 
 from ..exceptions import (
-    UserEmailEmptyError,
-    UserEmailInvalidFormatError,
-    UserEmailTooLongError,
+    EmailEmptyError,
+    EmailInvalidFormatError,
+    EmailTooLongError,
 )
 
 EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
 
 @dataclass(frozen=True)
-class UserEmail:
+class Email:
     value: str
 
     def __post_init__(self):
         if not self.value:
-            raise UserEmailEmptyError()
+            raise EmailEmptyError()
 
         if len(self.value) > UserConfig.DB_EMAIL_LENGTH_MAX:
-            raise UserEmailTooLongError(
+            raise EmailTooLongError(
                 max_length=UserConfig.DB_EMAIL_LENGTH_MAX,
             )
 
         if not EMAIL_REGEX.match(self.value):
-            raise UserEmailInvalidFormatError()
+            raise EmailInvalidFormatError()
 
     def __str__(self) -> str:
         return self.value

@@ -29,23 +29,23 @@ class UserIdInvalidError(UserDomainError):
     pass
 
 
-class UserEmailEmptyError(UserDomainError):
+class EmailEmptyError(UserDomainError):
     pass
 
 
-class UserEmailTooLongError(BaseTooLongError):
+class EmailTooLongError(BaseTooLongError):
     pass
 
 
-class UserEmailInvalidFormatError(UserDomainError):
+class EmailInvalidFormatError(UserDomainError):
     pass
 
 
-class UserHashedPasswordEmptyError(UserDomainError):
+class HashedPasswordEmptyError(UserDomainError):
     pass
 
 
-class UserHashedPasswordTooLongError(BaseTooLongError):
+class HashedPasswordTooLongError(BaseTooLongError):
     pass
 
 
@@ -57,13 +57,13 @@ class UserNameTooLongError(BaseTooLongError):
     pass
 
 
-class UserCreatedAtInvalidError(UserDomainError):
+class CreatedAtInvalidError(UserDomainError):
     pass
 
 
-class UserUpdatedAtInvalidError(UserDomainError):
+class UpdatedAtInvalidError(UserDomainError):
     pass
 
 
-class UserDeactivatedAtInvalidError(UserDomainError):
+class DeactivatedAtInvalidError(UserDomainError):
     pass

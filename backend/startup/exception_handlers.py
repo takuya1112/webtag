@@ -1,5 +1,5 @@
 from access_token.api.exception_handlers import (
-    register_access_token_exception_handler,
+    register_access_token_exception_handlers,
 )
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
@@ -9,7 +9,7 @@ from user.api.exception_handlers import register_user_exception_handlers
 def register_all_exception_handler(app: FastAPI) -> None:
 
     register_user_exception_handlers(app)
-    register_access_token_exception_handler(app)
+    register_access_token_exception_handlers(app)
 
     @app.exception_handler(Exception)
     async def unhandled_exception_handler(

@@ -4,13 +4,8 @@ from shared.application.uow import UnitOfWork
 from ..domain.factory import UserFactory
 from ..domain.password_hasher import PasswordHasher
 from ..domain.repository import UserRepository
-from ..domain.value_objects import (
-    UserEmail,
-    UserHashedPassword,
-    UserId,
-    UserName,
-)
-from .exceptions import UserEmailAlreadyExistError
+from ..domain.value_objects import Email, HashedPassword, UserId, UserName
+from .exceptions import EmailAlreadyExistError
 
 logger = get_logger(__name__)
 
@@ -32,13 +27,13 @@ class CreateUser:
         with self.uow:
             repo = self.uow.get_repo(self.repository)
             name_vo = UserName(name)
-            email_vo = UserEmail(email)
+            email_vo = Email(email)
 
             if repo.find_by_email(email_vo):
                 logger.warning("Email already exist")
-                raise UserEmailAlreadyExistError()
+                raise EmailAlreadyExistError()
 
-            password_hash_vo = UserHashedPassword(
+            password_hash_vo = HashedPassword(
                 self.password_hasher.hash(password)
             )
             entity = self.factory.create(

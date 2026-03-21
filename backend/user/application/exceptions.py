@@ -7,5 +7,5 @@ class UserApplicationError(Exception):
         return {}
 
 
-class UserEmailAlreadyExistError(UserApplicationError):
+class EmailAlreadyExistError(UserApplicationError):
     pass

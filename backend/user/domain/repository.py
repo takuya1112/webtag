@@ -1,7 +1,7 @@
 from typing import Protocol, runtime_checkable
 
 from .entity import UserEntity
-from .value_objects import UserEmail, UserId
+from .value_objects import Email, UserId
 
 
 @runtime_checkable
@@ -38,11 +38,11 @@ class UserRepository(Protocol):
         """
         ...
 
-    def find_by_email(self, email: UserEmail) -> UserEntity | None:
+    def find_by_email(self, email: Email) -> UserEntity | None:
         """Find a user by email
 
         Args:
-            email (UserEmail): Email to find
+            email (Email): Email to find
 
         Returns:
             UserEntity | None: Return none, if none found

@@ -57,13 +57,13 @@ class UserNameTooLongError(BaseTooLongError):
     pass
 
 
-class CreatedAtInvalidError(UserDomainError):
+class UserCreatedAtInvalidError(UserDomainError):
     pass
 
 
-class UpdatedAtInvalidError(UserDomainError):
+class UserUpdatedAtInvalidError(UserDomainError):
     pass
 
 
-class DeactivatedAtInvalidError(UserDomainError):
+class UserDeactivatedAtInvalidError(UserDomainError):
     pass

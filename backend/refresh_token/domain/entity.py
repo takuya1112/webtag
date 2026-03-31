@@ -8,7 +8,14 @@ from .exceptions import (
     RefreshTokenAlreadyRevoked,
     RefreshTokenAlreadyUsed,
 )
-from .value_objects import RefreshTokenHash, RefreshTokenId
+from .value_objects import (
+    CreatedAt,
+    ExpiredAt,
+    RefreshTokenHash,
+    RefreshTokenId,
+    RevokedAt,
+    UsedAt,
+)
 
 
 @dataclass
@@ -16,10 +23,10 @@ class RefreshTokenEntity:
     id: RefreshTokenId
     user_id: UserId
     token_hash: RefreshTokenHash
-    created_at: AwareDatetime
-    expires_at: AwareDatetime
-    used_at: AwareDatetime | None = None
-    revoked_at: AwareDatetime | None = None
+    created_at: CreatedAt
+    expires_at: ExpiredAt
+    used_at: UsedAt | None = None
+    revoked_at: RevokedAt | None = None
 
     def ensure_useable(self, now: AwareDatetime) -> None:
         if self.is_expired(now):

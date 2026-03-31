@@ -3,12 +3,12 @@ from datetime import datetime
 from shared.domain.exceptions import InvalidAwareDatetimeError
 from shared.domain.value_objects import AwareDatetime
 
-from ..exceptions import UserDeactivatedAtInvalidError
+from ..exceptions import RefreshTokenRevokedAtError
 
 
-class DeactivatedAt(AwareDatetime):
+class RevokedAt(AwareDatetime):
     def __init__(self, value: datetime):
         try:
             super().__init__(value)
         except InvalidAwareDatetimeError:
-            raise UserDeactivatedAtInvalidError() from None
+            raise RefreshTokenRevokedAtError() from None

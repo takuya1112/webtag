@@ -3,7 +3,7 @@ from datetime import datetime
 from shared.domain.exceptions import InvalidAwareDatetimeError
 from shared.domain.value_objects import AwareDatetime
 
-from ..exceptions import CreatedAtInvalidError
+from ..exceptions import UserCreatedAtInvalidError
 
 
 class CreatedAt(AwareDatetime):
@@ -11,4 +11,4 @@ class CreatedAt(AwareDatetime):
         try:
             super().__init__(value)
         except InvalidAwareDatetimeError:
-            raise CreatedAtInvalidError() from None
+            raise UserCreatedAtInvalidError() from None

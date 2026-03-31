@@ -15,6 +15,22 @@ class RefreshTokenHashEmptyError(RefreshTokenDomainError):
     pass
 
 
+class RefreshTokenCreatedAtInvalidError(RefreshTokenDomainError):
+    pass
+
+
+class RefreshTokenExpiredAtError(RefreshTokenDomainError):
+    pass
+
+
+class RefreshTokenUsedAtError(RefreshTokenDomainError):
+    pass
+
+
+class RefreshTokenRevokedAtError(RefreshTokenDomainError):
+    pass
+
+
 class ExpiredRefreshTokenError(RefreshTokenDomainError):
     pass
 

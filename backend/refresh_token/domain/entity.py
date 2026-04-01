@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
 
 from .exceptions import (
@@ -28,16 +27,16 @@ class RefreshTokenEntity:
     used_at: UsedAt | None = None
     revoked_at: RevokedAt | None = None
 
-    def ensure_useable(self, now: AwareDatetime) -> None:
-        if self.is_expired(now):
+    def ensure_useable(self, expires_at: ExpiredAt) -> None:
+        if self.is_expired(expires_at):
             raise ExpiredRefreshTokenError()
         if self.is_used():
             raise RefreshTokenAlreadyUsed()
         if self.is_revoked():
             raise RefreshTokenAlreadyRevoked()
 
-    def is_expired(self, now: AwareDatetime) -> bool:
-        return self.expires_at <= now
+    def is_expired(self, expires_at: ExpiredAt) -> bool:
+        return self.expires_at <= expires_at
 
     def is_used(self) -> bool:
         return self.used_at is not None
@@ -45,12 +44,12 @@ class RefreshTokenEntity:
     def is_revoked(self) -> bool:
         return self.revoked_at is not None
 
-    def mark_used(self, now: AwareDatetime) -> None:
+    def mark_used(self, used_at: UsedAt) -> None:
         if self.is_used():
             raise RefreshTokenAlreadyUsed()
-        self.used_at = now
+        self.used_at = used_at
 
-    def revoke(self, now: AwareDatetime) -> None:
+    def revoke(self, revoked_at: RevokedAt) -> None:
         if self.is_revoked():
             raise RefreshTokenAlreadyRevoked()
-        self.revoked_at = now
+        self.revoked_at = revoked_at

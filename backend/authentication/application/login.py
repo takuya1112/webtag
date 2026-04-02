@@ -6,7 +6,7 @@ from user.domain.password_hasher import PasswordHasher
 from user.domain.repository import UserRepository
 from user.domain.value_objects import Email
 
-from ..exceptions import InvalidCredentialsError
+from .exceptions import InvalidCredentialsError
 
 logger = get_logger(__name__)
 

@@ -8,12 +8,8 @@ from refresh_token.api.dependencies import CreateRefreshTokenDep, HMACHasherDep
 from refresh_token.infrastructure.repository import (
     SQLAlchemyRefreshTokenRepository,
 )
-from shared.api.dependencies import (
-    Argon2HasherDep,
-    ClockDep,
-    UOWDep,
-)
-from user.api.dependencies import CreateUserDep
+from shared.api.dependencies import ClockDep, UOWDep
+from user.api.dependencies import Argon2HasherDep, CreateUserDep
 from user.domain.entity import UserEntity
 from user.infrastructure.repository import SQLAlchemyUserRepository
 

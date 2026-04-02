@@ -4,11 +4,11 @@ from uuid import UUID
 from core.logging import get_logger
 from shared.application import UnitOfWork
 from shared.domain.clock import Clock
-from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
+from ..domain.value_objects import expires_at
 
 logger = get_logger(__name__)
 
@@ -33,7 +33,7 @@ class CreateRefreshToken:
         with self.uow:
             repo = self.uow.get_repo(self.repository)
             user_id_vo = UserId(user_id)
-            expires_at_vo = AwareDatetime(
+            expires_at_vo = expires_at(
                 self.clock.now() + timedelta(days=self.expire_days)
             )
             entity, raw_token = self.factory.create(

@@ -1,5 +1,10 @@
+from typing import Any
+
+
 class RefreshTokenInfrastructureError(Exception):
-    pass
+    @property
+    def context(self) -> dict[str, Any]:
+        return {}
 
 
 class RefreshTokenTokenNotFoundError(RefreshTokenInfrastructureError):

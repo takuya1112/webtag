@@ -5,20 +5,20 @@ from ..application.exceptions import (
     UserApplicationError,
 )
 from ..domain.exceptions import (
-    CreatedAtInvalidError,
-    DeactivatedAtInvalidError,
     EmailEmptyError,
     EmailInvalidFormatError,
     EmailTooLongError,
     HashedPasswordEmptyError,
     HashedPasswordTooLongError,
-    UpdatedAtInvalidError,
     UserAlreadyActive,
     UserAlreadyInactive,
+    UserCreatedAtInvalidError,
+    UserDeactivatedAtInvalidError,
     UserDomainError,
     UserIdInvalidError,
     UserNameEmptyError,
     UserNameTooLongError,
+    UserUpdatedAtInvalidError,
 )
 from ..infrastructure.exceptions import (
     UserInfrastructureError,
@@ -86,17 +86,17 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
         status.HTTP_400_BAD_REQUEST,
         "USER_NAME_TOO_LONG",
     ),
-    CreatedAtInvalidError: (
+    UserCreatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "CREATE_AT_INVALID",
+        "USER_CREATE_AT_INVALID",
     ),
-    UpdatedAtInvalidError: (
+    UserUpdatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "UPDATED_AT_INVALID",
+        "USER_UPDATED_AT_INVALID",
     ),
-    DeactivatedAtInvalidError: (
+    UserDeactivatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,
-        "DEACTIVATED_AT_INVALID",
+        "USER_DEACTIVATED_AT_INVALID",
     ),
     UserAlreadyActive: (
         status.HTTP_400_BAD_REQUEST,

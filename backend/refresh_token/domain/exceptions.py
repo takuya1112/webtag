@@ -7,10 +7,6 @@ class RefreshTokenDomainError(Exception):
         return {}
 
 
-class RefreshTokenIdInvalidError(RefreshTokenDomainError):
-    pass
-
-
 class RefreshTokenHashEmptyError(RefreshTokenDomainError):
     pass
 
@@ -19,25 +15,25 @@ class RefreshTokenCreatedAtInvalidError(RefreshTokenDomainError):
     pass
 
 
-class RefreshTokenExpiredAtError(RefreshTokenDomainError):
+class RefreshTokenExpiredAtInvalidError(RefreshTokenDomainError):
     pass
 
 
-class RefreshTokenUsedAtError(RefreshTokenDomainError):
+class RefreshTokenUsedAtInvalidError(RefreshTokenDomainError):
     pass
 
 
-class RefreshTokenRevokedAtError(RefreshTokenDomainError):
+class RefreshTokenRevokedAtInvalidError(RefreshTokenDomainError):
     pass
 
 
-class ExpiredRefreshTokenError(RefreshTokenDomainError):
+class RefreshTokenExpiredError(RefreshTokenDomainError):
     pass
 
 
-class RefreshTokenAlreadyUsed(RefreshTokenDomainError):
+class RefreshTokenAlreadyUsedError(RefreshTokenDomainError):
     pass
 
 
-class RefreshTokenAlreadyRevoked(RefreshTokenDomainError):
+class RefreshTokenAlreadyRevokedError(RefreshTokenDomainError):
     pass

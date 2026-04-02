@@ -7,11 +7,7 @@ class RefreshTokenApplicationError(Exception):
         return {}
 
 
-class TokenNotFoundError(RefreshTokenApplicationError):
-    pass
-
-
-class InvalidTokenError(RefreshTokenApplicationError):
+class InvalidRefreshTokenError(RefreshTokenApplicationError):
     pass
 
 

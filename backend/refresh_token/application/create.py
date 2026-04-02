@@ -8,7 +8,7 @@ from user.domain.value_objects import UserId
 
 from ..domain.factory import RefreshTokenFactory
 from ..domain.repository import RefreshTokenRepository
-from ..domain.value_objects import expires_at
+from ..domain.value_objects import ExpiredAt
 
 logger = get_logger(__name__)
 
@@ -33,7 +33,7 @@ class CreateRefreshToken:
         with self.uow:
             repo = self.uow.get_repo(self.repository)
             user_id_vo = UserId(user_id)
-            expires_at_vo = expires_at(
+            expires_at_vo = ExpiredAt(
                 self.clock.now() + timedelta(days=self.expire_days)
             )
             entity, raw_token = self.factory.create(

@@ -6,14 +6,13 @@ from shared.domain.clock import Clock
 
 from ..domain.exceptions import (
     RefreshTokenAlreadyUsed,
-    RefreshTokenDomainError,
 )
 from ..domain.factory import RefreshTokenFactory
 from ..domain.refresh_token_hasher import RefreshTokenHasher
 from ..domain.repository import RefreshTokenRepository
-from ..domain.value_objects import RefreshTokenHash, expires_at
+from ..domain.value_objects import ExpiredAt, RefreshTokenHash, UsedAt
 from .exceptions import (
-    InvalidTokenError,
+    InvalidRefreshTokenError,
     TokenStolenError,
 )
 
@@ -42,35 +41,28 @@ class RefreshAccessToken:
         with self.uow:
             repo = self.uow.get_repo(self.repository)
             token_hash_vo = RefreshTokenHash(self.hasher.hash(refresh_token))
-            now_vo = expires_at(self.clock.now())
+            now = self.clock.now()
             entity = repo.find_by_hashed_token(token_hash_vo)
 
             if not entity:
                 logger.warning("Token not exist")
-                raise InvalidTokenError()
+                raise InvalidRefreshTokenError()
 
             try:
-                entity.ensure_useable(now_vo)
+                entity.ensure_useable(ExpiredAt(now))
             except RefreshTokenAlreadyUsed:
                 logger.error(
                     "Token reuse detected, Revoking all tokens for user_id=%s",
                     entity.user_id.value,
                 )
                 repo.delete_all_by_user_id(entity.user_id)
+                self.uow.commit()
                 raise TokenStolenError() from None
-            except RefreshTokenDomainError:
-                logger.warning(
-                    "Invalid token: user_id=%s",
-                    entity.user_id.value,
-                )
-                raise InvalidTokenError() from None
 
-            entity.mark_used(now_vo)
+            entity.mark_used(UsedAt(now))
             repo.update(entity)
 
-            expires_at_vo = expires_at(
-                now_vo.value + timedelta(days=self.expire_days)
-            )
+            expires_at_vo = ExpiredAt(now + timedelta(days=self.expire_days))
             new_entity, raw_token = self.factory.create(
                 user_id=entity.user_id,
                 expires_at=expires_at_vo,

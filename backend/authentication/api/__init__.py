@@ -9,6 +9,14 @@ from .dependencies import (
     SignupDep,
 )
 from .endpoints import login, logout, signup
+from .error_messages import ERROR_MESSAGES, get_error_message
+from .exception_handlers import (
+    APPLICATION_EXCEPTION_HANDLERS,
+    register_auth_exception_handlers,
+)
+from .handlers import (
+    create_application_handler,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 router.include_router(signup.router)
@@ -22,5 +30,10 @@ __all__ = [
     "JwtServiceDep",
     "LoginDep",
     "SignupDep",
+    "ERROR_MESSAGES",
+    "get_error_message",
+    "APPLICATION_EXCEPTION_HANDLERS",
+    "register_auth_exception_handlers",
+    "create_application_handler",
     "router",
 ]

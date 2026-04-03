@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from user.domain.value_objects import UserId
 
 from .exceptions import (
-    ExpiredRefreshTokenError,
-    RefreshTokenAlreadyRevoked,
-    RefreshTokenAlreadyUsed,
+    RefreshTokenAlreadyRevokedError,
+    RefreshTokenAlreadyUsedError,
+    RefreshTokenExpiredError,
 )
 from .value_objects import (
     CreatedAt,
@@ -29,11 +29,11 @@ class RefreshTokenEntity:
 
     def ensure_useable(self, expires_at: ExpiredAt) -> None:
         if self.is_expired(expires_at):
-            raise ExpiredRefreshTokenError()
+            raise RefreshTokenExpiredError()
         if self.is_used():
-            raise RefreshTokenAlreadyUsed()
+            raise RefreshTokenAlreadyUsedError()
         if self.is_revoked():
-            raise RefreshTokenAlreadyRevoked()
+            raise RefreshTokenAlreadyRevokedError()
 
     def is_expired(self, expires_at: ExpiredAt) -> bool:
         return self.expires_at <= expires_at
@@ -46,10 +46,10 @@ class RefreshTokenEntity:
 
     def mark_used(self, used_at: UsedAt) -> None:
         if self.is_used():
-            raise RefreshTokenAlreadyUsed()
+            raise RefreshTokenAlreadyUsedError()
         self.used_at = used_at
 
     def revoke(self, revoked_at: RevokedAt) -> None:
         if self.is_revoked():
-            raise RefreshTokenAlreadyRevoked()
+            raise RefreshTokenAlreadyRevokedError()
         self.revoked_at = revoked_at

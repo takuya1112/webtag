@@ -7,6 +7,10 @@ class RefreshTokenDomainError(Exception):
         return {}
 
 
+class RefreshTokenIdInvalidError(RefreshTokenDomainError):
+    pass
+
+
 class RefreshTokenHashEmptyError(RefreshTokenDomainError):
     pass
 

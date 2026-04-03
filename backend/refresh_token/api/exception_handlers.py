@@ -13,6 +13,7 @@ from ..domain.exceptions import (
     RefreshTokenExpiredAtInvalidError,
     RefreshTokenExpiredError,
     RefreshTokenHashEmptyError,
+    RefreshTokenIdInvalidError,
     RefreshTokenRevokedAtInvalidError,
     RefreshTokenUsedAtInvalidError,
 )
@@ -57,6 +58,10 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     RefreshTokenHashEmptyError: (
         status.HTTP_400_BAD_REQUEST,
         "REFRESH_TOKEN_HASH_EMPTY",
+    ),
+    RefreshTokenIdInvalidError: (
+        status.HTTP_400_BAD_REQUEST,
+        "REFRESH_TOKEN_ID_INVALID",
     ),
     RefreshTokenCreatedAtInvalidError: (
         status.HTTP_400_BAD_REQUEST,

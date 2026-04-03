@@ -1,8 +1,8 @@
 from .create import CreateUser
-from .exceptions import UserApplicationError, UserEmailAlreadyExistError
+from .exceptions import EmailAlreadyExistError, UserApplicationError
 
 __all__ = [
     "CreateUser",
+    "EmailAlreadyExistError",
     "UserApplicationError",
-    "UserEmailAlreadyExistError",
 ]

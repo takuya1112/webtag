@@ -5,7 +5,7 @@ from shared.application import UnitOfWork
 from shared.domain.clock import Clock
 
 from ..domain.exceptions import (
-    RefreshTokenAlreadyUsed,
+    RefreshTokenAlreadyUsedError,
 )
 from ..domain.factory import RefreshTokenFactory
 from ..domain.refresh_token_hasher import RefreshTokenHasher
@@ -50,7 +50,7 @@ class RefreshAccessToken:
 
             try:
                 entity.ensure_useable(ExpiredAt(now))
-            except RefreshTokenAlreadyUsed:
+            except RefreshTokenAlreadyUsedError:
                 logger.error(
                     "Token reuse detected, Revoking all tokens for user_id=%s",
                     entity.user_id.value,

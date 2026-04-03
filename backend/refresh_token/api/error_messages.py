@@ -6,6 +6,8 @@ ERROR_MESSAGES = {
     "TOKEN_STOLEN": "Token may have been stolen",
     # Infrastructure
     "REFRESH_TOKEN_NOT_FOUND": "Refresh token not found",
+    # Refresh token id
+    "REFRESH_TOKEN_ID_INVALID": "Refresh token id is invalid",
     # Refresh token hash
     "REFRESH_TOKEN_HASH_EMPTY": "Refresh token hash must be filled",
     # Created at

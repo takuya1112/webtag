@@ -3,7 +3,7 @@ from datetime import datetime
 from shared.domain.exceptions import InvalidAwareDatetimeError
 from shared.domain.value_objects import AwareDatetime
 
-from ..exceptions import RefreshTokenRevokedAtError
+from ..exceptions import RefreshTokenRevokedAtInvalidError
 
 
 class RevokedAt(AwareDatetime):
@@ -11,4 +11,4 @@ class RevokedAt(AwareDatetime):
         try:
             super().__init__(value)
         except InvalidAwareDatetimeError:
-            raise RefreshTokenRevokedAtError() from None
+            raise RefreshTokenRevokedAtInvalidError() from None

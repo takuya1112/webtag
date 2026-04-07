@@ -1,13 +1,16 @@
 from core.logging import get_logger
-from shared.domain.value_objects import AwareDatetime
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 from user.domain.value_objects import UserId
 
 from ..domain.entity import RefreshTokenEntity
 from ..domain.value_objects import (
+    CreatedAt,
+    ExpiredAt,
     RefreshTokenHash,
     RefreshTokenId,
+    RevokedAt,
+    UsedAt,
 )
 from .exceptions import RefreshTokenTokenNotFoundError
 from .model import RefreshTokenModel
@@ -111,20 +114,20 @@ class SQLAlchemyRefreshTokenRepository:
         logger.info("Deleted %d tokens by hashed token", delete_count)
         return delete_count
 
-    def delete_expired_tokens(self, now: AwareDatetime) -> int:
+    def delete_expired_tokens(self, expired_at: ExpiredAt) -> int:
         """Deletes all expired refresh tokens
 
         Returns:
             int: delete count
         """
         stmt = delete(RefreshTokenModel).where(
-            RefreshTokenModel.expires_at <= now.value
+            RefreshTokenModel.expires_at <= expired_at.value
         )
         delete_count = self.session.execute(stmt).rowcount
         logger.info("Deleted %d expired tokens", delete_count)
         return delete_count
 
-    def delete_old_revoked_tokens(self, cutoff: AwareDatetime) -> int:
+    def delete_old_revoked_tokens(self, cutoff: RevokedAt) -> int:
         """Deletes all old revoked tokens
 
         Returns:
@@ -182,10 +185,10 @@ class SQLAlchemyRefreshTokenRepository:
             id=RefreshTokenId(model.id),
             user_id=UserId(model.user_id),
             token_hash=RefreshTokenHash(model.token_hash),
-            created_at=AwareDatetime(model.created_at),
-            expires_at=AwareDatetime(model.expires_at),
-            used_at=AwareDatetime(model.used_at) if model.used_at else None,
-            revoked_at=AwareDatetime(model.revoked_at)
+            created_at=CreatedAt(model.created_at),
+            expires_at=ExpiredAt(model.expires_at),
+            used_at=UsedAt(model.used_at) if model.used_at else None,
+            revoked_at=RevokedAt(model.revoked_at)
             if model.revoked_at
             else None,
         )

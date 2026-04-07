@@ -1,10 +1,9 @@
 from typing import Protocol, runtime_checkable
 
-from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
 
 from .entity import RefreshTokenEntity
-from .value_objects import RefreshTokenHash
+from .value_objects import ExpiredAt, RefreshTokenHash, RevokedAt
 
 
 @runtime_checkable
@@ -77,7 +76,7 @@ class RefreshTokenRepository(Protocol):
         """
         ...
 
-    def delete_expired_tokens(self, now: AwareDatetime) -> int:
+    def delete_expired_tokens(self, expired_at: ExpiredAt) -> int:
         """Deletes all expired refresh tokens
 
         Returns:
@@ -85,7 +84,7 @@ class RefreshTokenRepository(Protocol):
         """
         ...
 
-    def delete_old_revoked_tokens(self, cutoff: AwareDatetime) -> int:
+    def delete_old_revoked_tokens(self, cutoff: RevokedAt) -> int:
         """Deletes all old revoked tokens
 
         Returns:

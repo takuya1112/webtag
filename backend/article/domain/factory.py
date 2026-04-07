@@ -19,7 +19,6 @@ class ArticleFactory:
     ) -> ArticleEntity:
         id = ArticleId(self.id_generator.generate())
         now = self.clock.now()
-
         return ArticleEntity(
             id=id,
             user_id=user_id,

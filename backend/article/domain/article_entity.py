@@ -1,10 +1,16 @@
 from dataclasses import dataclass
 
-from shared.domain.value_objects import AwareDatetime
 from user.domain.value_objects import UserId
 
-from ..exceptions import ArticleAlreadyDeleted, ArticleNotDeleted
-from .value_objects import URL, ArticleId, ArticleTitle
+from .exceptions import ArticleAlreadyDeleted, ArticleNotDeleted
+from .value_objects import (
+    URL,
+    ArticleId,
+    ArticleTitle,
+    CreatedAt,
+    DeletedAt,
+    UpdatedAt,
+)
 
 
 @dataclass
@@ -13,34 +19,38 @@ class ArticleEntity:
     user_id: UserId
     title: ArticleTitle
     url: URL
-    created_at: AwareDatetime
-    updated_at: AwareDatetime
-    deleted_at: AwareDatetime | None = None
+    created_at: CreatedAt
+    updated_at: UpdatedAt
+    deleted_at: DeletedAt | None = None
 
     @property
     def is_deleted(self) -> bool:
         return self.deleted_at is not None
 
-    def restore(self, now: AwareDatetime) -> None:
+    def restore(self, updated_at: UpdatedAt) -> None:
         if not self.is_deleted:
             raise ArticleNotDeleted()
         self.deleted_at = None
-        self.updated_at = now
+        self.updated_at = updated_at
 
-    def soft_delete(self, now: AwareDatetime) -> None:
+    def soft_delete(self, deleted_at: DeletedAt, updated_at: UpdatedAt) -> None:
         if self.is_deleted:
             raise ArticleAlreadyDeleted()
-        self.deleted_at = now
-        self.updated_at = now
+        self.deleted_at = deleted_at
+        self.updated_at = updated_at
 
-    def change_title(self, new_title: ArticleTitle, now: AwareDatetime) -> None:
+    def change_title(
+        self,
+        new_title: ArticleTitle,
+        updated_at: UpdatedAt,
+    ) -> None:
         if self.is_deleted:
             raise ArticleAlreadyDeleted()
         self.title = new_title
-        self.updated_at = now
+        self.updated_at = updated_at
 
-    def change_url(self, new_url: URL, now: AwareDatetime) -> None:
+    def change_url(self, new_url: URL, updated_at: UpdatedAt) -> None:
         if self.is_deleted:
             raise ArticleAlreadyDeleted()
         self.url = new_url
-        self.updated_at = now
+        self.updated_at = updated_at

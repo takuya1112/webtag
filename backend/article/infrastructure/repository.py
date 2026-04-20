@@ -21,7 +21,7 @@ class SQLAlchemyArticleRepository:
         self.session = session
 
     def add(self, article: ArticleEntity) -> None:
-        """Add a article
+        """Add an article
 
         Args:
             article (ArticleEntity): The article to add

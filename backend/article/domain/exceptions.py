@@ -19,6 +19,26 @@ class ArticleIdInvalidError(ArticleDomainError):
     pass
 
 
+class ArticleTitleEmptyError(ArticleDomainError):
+    pass
+
+
+class ArticleTitleTooLongError(ArticleDomainError):
+    pass
+
+
+class ArticleUrlEmptyError(ArticleDomainError):
+    pass
+
+
+class ArticleUrlInvalidFormatError(ArticleDomainError):
+    pass
+
+
+class ArticleUrlTooLongError(ArticleDomainError):
+    pass
+
+
 class ArticleCreatedAtInvalidError(ArticleDomainError):
     pass
 

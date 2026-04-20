@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
 from core.constants import ArticleConfig
-from core.logging import get_logger
 
-logger = get_logger(__name__)
+from ..exceptions import ArticleTitleEmptyError, ArticleTitleTooLongError
 
 
 @dataclass(frozen=True)
@@ -14,14 +13,12 @@ class ArticleTitle:
         object.__setattr__(self, "value", self.value.strip())
 
         if not self.value:
-            logger.warning("ArticleTitle must be filled")
-            raise ValueError("ArticleTitle must be filled")
+            raise ArticleTitleEmptyError() from None
 
         max_len = ArticleConfig.TITLE_LENGTH_MAX
 
         if len(self.value) > max_len:
-            logger.warning("ArticleTitle at most %d characters", max_len)
-            raise ValueError("ArticleTitle is too long")
+            raise ArticleTitleTooLongError(max_len) from None
 
     def __str__(self) -> str:
         return self.value

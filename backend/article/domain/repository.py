@@ -9,14 +9,14 @@ class ArticleRepository(Protocol):
     """Article repository interface"""
 
     def add(self, article: ArticleEntity) -> None:
-        """Add a article
+        """Add an article
 
         Args:
             article (ArticleEntity): The article to add
         """
 
     def soft_delete(self, article: ArticleEntity) -> None:
-        """Soft delete a article
+        """Soft delete an article
 
         Args:
             article (ArticleEntity): The article to soft delete
@@ -35,20 +35,20 @@ class ArticleRepository(Protocol):
         """Find all article"""
 
     def update(self, article: ArticleEntity) -> None:
-        """Update a article
+        """Update an article
 
         Args:
             article (ArticleEntity): The article to update
         """
 
     def restore(self, article: ArticleEntity) -> None:
-        """Restore a deleted article
+        """Restore an deleted article
 
         Args:
             article (ArticleEntity): The deleted article to restore
         """
 
-    def restore_all(self) -> None:
+    def restore_all(self) -> int:
         """Restore all deleted article"""
 
     def hard_delete_deleted(self, article: ArticleEntity) -> None:

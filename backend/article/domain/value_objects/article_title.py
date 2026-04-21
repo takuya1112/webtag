@@ -15,10 +15,9 @@ class ArticleTitle:
         if not self.value:
             raise ArticleTitleEmptyError() from None
 
-        max_len = ArticleConfig.TITLE_LENGTH_MAX
-
-        if len(self.value) > max_len:
-            raise ArticleTitleTooLongError(max_len) from None
+        max_length = ArticleConfig.TITLE_LENGTH_MAX
+        if len(self.value) > max_length:
+            raise ArticleTitleTooLongError(max_length=max_length) from None
 
     def __str__(self) -> str:
         return self.value

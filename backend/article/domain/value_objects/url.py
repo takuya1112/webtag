@@ -24,9 +24,9 @@ class URL:
         if parsed.scheme not in ("http", "https"):
             raise ArticleUrlInvalidFormatError() from None
 
-        max_len = ArticleConfig.DB_URL_LENGTH_MAX
-        if len(self.value) > max_len:
-            raise ArticleUrlTooLongError(max_len) from None
+        max_length = ArticleConfig.DB_URL_LENGTH_MAX
+        if len(self.value) > max_length:
+            raise ArticleUrlTooLongError(max_length=max_length) from None
 
     def __str__(self) -> str:
         return self.value

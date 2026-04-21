@@ -4,7 +4,11 @@ from typing import Any
 class ArticleDomainError(Exception):
     @property
     def context(self) -> dict[str, Any]:
-        return {}
+        return {
+            key: value
+            for key, value in self.__dict__.items()
+            if not key.startswith("_")
+        }
 
 
 class ArticleAlreadyDeleted(ArticleDomainError):
@@ -24,7 +28,9 @@ class ArticleTitleEmptyError(ArticleDomainError):
 
 
 class ArticleTitleTooLongError(ArticleDomainError):
-    pass
+    def __init__(self, max_length: int) -> None:
+        super().__init__()
+        self.max_length = max_length
 
 
 class ArticleUrlEmptyError(ArticleDomainError):
@@ -36,7 +42,9 @@ class ArticleUrlInvalidFormatError(ArticleDomainError):
 
 
 class ArticleUrlTooLongError(ArticleDomainError):
-    pass
+    def __init__(self, max_length: int) -> None:
+        super().__init__()
+        self.max_length = max_length
 
 
 class ArticleCreatedAtInvalidError(ArticleDomainError):

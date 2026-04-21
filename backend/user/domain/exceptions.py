@@ -4,17 +4,17 @@ from typing import Any
 class UserDomainError(Exception):
     @property
     def context(self) -> dict[str, Any]:
-        return {}
+        return {
+            key: value
+            for key, value in self.__dict__.items()
+            if not key.startswith("_")
+        }
 
 
-class BaseTooLongError(UserDomainError):
+class UserBaseTooLongError(UserDomainError):
     def __init__(self, max_length: int) -> None:
         super().__init__()
         self.max_length = max_length
-
-    @property
-    def context(self) -> dict[str, Any]:
-        return {"max_length": self.max_length}
 
 
 class UserAlreadyInactive(UserDomainError):
@@ -33,7 +33,7 @@ class EmailEmptyError(UserDomainError):
     pass
 
 
-class EmailTooLongError(BaseTooLongError):
+class EmailTooLongError(UserBaseTooLongError):
     pass
 
 
@@ -45,7 +45,7 @@ class HashedPasswordEmptyError(UserDomainError):
     pass
 
 
-class HashedPasswordTooLongError(BaseTooLongError):
+class HashedPasswordTooLongError(UserBaseTooLongError):
     pass
 
 
@@ -53,7 +53,7 @@ class UserNameEmptyError(UserDomainError):
     pass
 
 
-class UserNameTooLongError(BaseTooLongError):
+class UserNameTooLongError(UserBaseTooLongError):
     pass
 
 

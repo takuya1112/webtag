@@ -11,6 +11,12 @@ class ArticleDomainError(Exception):
         }
 
 
+class ArticleBaseTooLongError(ArticleDomainError):
+    def __init__(self, max_length: int) -> None:
+        super().__init__()
+        self.max_length = max_length
+
+
 class ArticleAlreadyDeleted(ArticleDomainError):
     pass
 
@@ -27,10 +33,8 @@ class ArticleTitleEmptyError(ArticleDomainError):
     pass
 
 
-class ArticleTitleTooLongError(ArticleDomainError):
-    def __init__(self, max_length: int) -> None:
-        super().__init__()
-        self.max_length = max_length
+class ArticleTitleTooLongError(ArticleBaseTooLongError):
+    pass
 
 
 class ArticleUrlEmptyError(ArticleDomainError):
@@ -41,10 +45,8 @@ class ArticleUrlInvalidFormatError(ArticleDomainError):
     pass
 
 
-class ArticleUrlTooLongError(ArticleDomainError):
-    def __init__(self, max_length: int) -> None:
-        super().__init__()
-        self.max_length = max_length
+class ArticleUrlTooLongError(ArticleBaseTooLongError):
+    pass
 
 
 class ArticleCreatedAtInvalidError(ArticleDomainError):

@@ -1,7 +1,7 @@
 from typing import Any
 
 
-class AccessTokenDomainError(Exception):
+class ArticleInfrastructureError(Exception):
     @property
     def context(self) -> dict[str, Any]:
         return {
@@ -9,11 +9,3 @@ class AccessTokenDomainError(Exception):
             for key, value in self.__dict__.items()
             if not key.startswith("_")
         }
-
-
-class ExpiredAccessTokenError(AccessTokenDomainError):
-    pass
-
-
-class InvalidAccessTokenError(AccessTokenDomainError):
-    pass

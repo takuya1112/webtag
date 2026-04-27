@@ -1,11 +1,11 @@
 from .entity import ArticleEntity
 from .exceptions import (
-    ArticleAlreadyDeleted,
+    ArticleAlreadyDeletedError,
     ArticleCreatedAtInvalidError,
     ArticleDeletedAtInvalidError,
     ArticleDomainError,
     ArticleIdInvalidError,
-    ArticleNotDeleted,
+    ArticleNotDeletedError,
     ArticleTitleEmptyError,
     ArticleTitleTooLongError,
     ArticleUpdatedAtInvalidError,
@@ -18,12 +18,12 @@ from .repository import ArticleRepository
 
 __all__ = [
     "ArticleEntity",
-    "ArticleAlreadyDeleted",
+    "ArticleAlreadyDeletedError",
     "ArticleCreatedAtInvalidError",
     "ArticleDeletedAtInvalidError",
     "ArticleDomainError",
     "ArticleIdInvalidError",
-    "ArticleNotDeleted",
+    "ArticleNotDeletedError",
     "ArticleTitleEmptyError",
     "ArticleTitleTooLongError",
     "ArticleUpdatedAtInvalidError",

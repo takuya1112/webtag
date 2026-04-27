@@ -11,12 +11,12 @@ ERROR_MESSAGES = {
     "USER_NAME_EMPTY": "User name must be filled",
     "USER_NAME_TOO_LONG": "User name is too long (max: {max_length} characters)",
     # Email
-    "EMAIL_EMPTY": "Email must be filled",
-    "EMAIL_TOO_LONG": "Email is too long (max: {max_length} characters)",
-    "EMAIL_INVALID_FORMAT": "Invalid email format",
+    "USER_EMAIL_EMPTY": "Email must be filled",
+    "USER_EMAIL_TOO_LONG": "Email is too long (max: {max_length} characters)",
+    "USER_EMAIL_INVALID_FORMAT": "Invalid email format",
     # Hashed password
-    "HASHED_PASSWORD_EMPTY": "Hashed password must be filled",
-    "HASHED_PASSWORD_TOO_LONG": "Hashed password is too long (max: {max_length} characters)",
+    "USER_HASHED_PASSWORD_EMPTY": "Hashed password must be filled",
+    "USER_HASHED_PASSWORD_TOO_LONG": "Hashed password is too long (max: {max_length} characters)",
     # Created at
     "USER_CREATE_AT_INVALID": "Created at must be timezone-aware",
     # Updated at

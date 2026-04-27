@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from user.domain.value_objects import UserId
 
-from .exceptions import ArticleAlreadyDeleted, ArticleNotDeleted
+from .exceptions import ArticleAlreadyDeletedError, ArticleNotDeletedError
 from .value_objects import (
     URL,
     ArticleId,
@@ -29,13 +29,13 @@ class ArticleEntity:
 
     def restore(self, updated_at: UpdatedAt) -> None:
         if not self.is_deleted:
-            raise ArticleNotDeleted()
+            raise ArticleNotDeletedError()
         self.deleted_at = None
         self.updated_at = updated_at
 
     def soft_delete(self, deleted_at: DeletedAt, updated_at: UpdatedAt) -> None:
         if self.is_deleted:
-            raise ArticleAlreadyDeleted()
+            raise ArticleAlreadyDeletedError()
         self.deleted_at = deleted_at
         self.updated_at = updated_at
 
@@ -45,12 +45,12 @@ class ArticleEntity:
         updated_at: UpdatedAt,
     ) -> None:
         if self.is_deleted:
-            raise ArticleAlreadyDeleted()
+            raise ArticleAlreadyDeletedError()
         self.title = new_title
         self.updated_at = updated_at
 
     def change_url(self, new_url: URL, updated_at: UpdatedAt) -> None:
         if self.is_deleted:
-            raise ArticleAlreadyDeleted()
+            raise ArticleAlreadyDeletedError()
         self.url = new_url
         self.updated_at = updated_at

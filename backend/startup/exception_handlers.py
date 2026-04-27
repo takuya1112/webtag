@@ -1,6 +1,7 @@
 from access_token.api.exception_handlers import (
     register_access_token_exception_handlers,
 )
+from article.api.exception_handlers import register_article_exception_handlers
 from authentication.api.exception_handlers import (
     register_auth_exception_handlers,
 )
@@ -18,6 +19,7 @@ def register_all_exception_handler(app: FastAPI) -> None:
     register_access_token_exception_handlers(app)
     register_refresh_token_exception_handlers(app)
     register_auth_exception_handlers(app)
+    register_article_exception_handlers(app)
 
     @app.exception_handler(Exception)
     async def unhandled_exception_handler(

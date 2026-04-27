@@ -17,14 +17,6 @@ class ArticleBaseTooLongError(ArticleDomainError):
         self.max_length = max_length
 
 
-class ArticleAlreadyDeleted(ArticleDomainError):
-    pass
-
-
-class ArticleNotDeleted(ArticleDomainError):
-    pass
-
-
 class ArticleIdInvalidError(ArticleDomainError):
     pass
 
@@ -58,4 +50,12 @@ class ArticleUpdatedAtInvalidError(ArticleDomainError):
 
 
 class ArticleDeletedAtInvalidError(ArticleDomainError):
+    pass
+
+
+class ArticleAlreadyDeletedError(ArticleDomainError):
+    pass
+
+
+class ArticleNotDeletedError(ArticleDomainError):
     pass

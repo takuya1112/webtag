@@ -60,23 +60,23 @@ DOMAIN_EXCEPTION_HANDLERS: dict[
     ),
     EmailEmptyError: (
         status.HTTP_400_BAD_REQUEST,
-        "EMAIL_EMPTY",
+        "USER_EMAIL_EMPTY",
     ),
     EmailTooLongError: (
         status.HTTP_400_BAD_REQUEST,
-        "EMAIL_TOO_LONG",
+        "USER_EMAIL_TOO_LONG",
     ),
     EmailInvalidFormatError: (
         status.HTTP_400_BAD_REQUEST,
-        "EMAIL_INVALID_FORMAT",
+        "USER_EMAIL_INVALID_FORMAT",
     ),
     HashedPasswordEmptyError: (
         status.HTTP_400_BAD_REQUEST,
-        "HASHED_PASSWORD_EMPTY",
+        "USER_HASHED_PASSWORD_EMPTY",
     ),
     HashedPasswordTooLongError: (
         status.HTTP_400_BAD_REQUEST,
-        "HASHED_PASSWORD_TOO_LONG",
+        "USER_HASHED_PASSWORD_TOO_LONG",
     ),
     UserNameEmptyError: (
         status.HTTP_400_BAD_REQUEST,

@@ -55,10 +55,14 @@ class SQLAlchemyArticleRepository:
         )
         model = self.session.scalars(stmt).first()
         if model:
-            logger.debug("Article found by article id: %s", article_id.value)
+            logger.debug(
+                "Article found by article id: %s",
+                article_id.value,
+            )
         else:
             logger.debug(
-                "Article not found by article id: %s", article_id.value
+                "Article not found by article id: %s",
+                article_id.value,
             )
         return self._to_entity(model) if model else None
 
@@ -103,11 +107,29 @@ class SQLAlchemyArticleRepository:
 
     def find_deleted_by_id(self, article_id: ArticleId) -> ArticleEntity | None:
         """Find a deleted article by article id"""
-        pass
+        stmt = select(ArticleModel).where(
+            ArticleModel.id == article_id.value,
+            ArticleModel.deleted_at.is_not(None),
+        )
+        model = self.session.scalars(stmt).first()
+        if model:
+            logger.debug(
+                "Deleted article found by article id: %s",
+                article_id.value,
+            )
+        else:
+            logger.debug(
+                "Deleted article not found by article id: %s",
+                article_id.value,
+            )
+        return self._to_entity(model) if model else None
 
     def find_all_deleted(self) -> list[ArticleEntity]:
         """Find all deleted article"""
-        pass
+        stmt = select(ArticleModel).where(ArticleModel.deleted_at.is_not(None))
+        models = self.session.scalars(stmt).all()
+        logger.debug("%s article found", len(models))
+        return [self._to_entity(model) for model in models]
 
     def delete_outdated_articles(self) -> None:
         """Delete outdated deleted articles"""
